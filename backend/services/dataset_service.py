@@ -27,3 +27,19 @@ def get_dataset_content(dataset_id: str) -> bytes:
     """
     meta = get_dataset_meta(dataset_id)
     return storage_service.download_file(meta["file_path"])
+
+def get_dataset_by_name(name: str) -> dict:
+    """
+    Retrieves metadata for the dataset matching the name.
+    """
+    meta = supabase.get_dataset_by_name(name)
+    if not meta:
+        raise ValueError(f"Dataset with name matching '{name}' not found in database.")
+    return meta
+
+def get_dataset_content_by_name(name: str) -> bytes:
+    """
+    Retrieves dataset content by searching for the dataset name.
+    """
+    meta = get_dataset_by_name(name)
+    return storage_service.download_file(meta["file_path"])
