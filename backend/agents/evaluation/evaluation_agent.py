@@ -113,11 +113,11 @@ async def run_report_evaluation(investigation_id: str, report_text: str) -> str:
 ---
 
 ### 🛡️ Fleet Diagnostics & Evaluation Summary
-* **Overall Confidence Score:** {confidence}%
-* **Accuracy:** {accuracy}/100
-* **Completeness:** {completeness}/100
-* **Consistency:** {consistency}/100
-* **Hallucination Risk:** {hallucination_risk}/100
+* **Overall Confidence Score:** {confidence}% (AI Model Evaluation Estimate)
+* **Accuracy:** {accuracy}/100 (AI Model Evaluation Estimate)
+* **Completeness:** {completeness}/100 (AI Model Evaluation Estimate)
+* **Consistency:** {consistency}/100 (AI Model Evaluation Estimate)
+* **Hallucination Risk:** {hallucination_risk}/100 (AI Model Evaluation Estimate)
 
 *Evaluated by Boardroom AI Evaluation Agent.*
 """

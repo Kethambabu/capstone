@@ -64,4 +64,8 @@ def get_agent_config():
 # Apply Gemini Key Pool rotation monkeypatch globally on startup
 import backend.services.gemini_client_service
 
+import contextvars
+user_role_var = contextvars.ContextVar("user_role", default="Executive")
+
+
 

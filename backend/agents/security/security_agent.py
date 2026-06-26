@@ -80,8 +80,46 @@ def is_role_allowed_for_dataset(role: str, dataset_name: str) -> bool:
 
 
 def scan_safety_heuristics(question: str) -> dict:
-    """Heuristic scanner for prompt injections and malicious bypass attempts."""
+    """Heuristic scanner for prompt injections, harmful commands, restricted keywords, and length limits."""
+    # 1. Input Length Limits Check
+    if len(question) > 1000:
+        return {
+            "allowed": False,
+            "injection_score": 0.8,
+            "reason": "input_too_long",
+            "message": "Input prompt exceeds maximum allowed limit of 1000 characters."
+        }
+        
     q = question.lower()
+    
+    # 2. Harmful Command Filtering
+    harmful_patterns = [
+        "rm -rf", "chmod", "exec ", "eval(", "<script",
+        "drop table", "delete from", "insert into", "union select"
+    ]
+    for pattern in harmful_patterns:
+        if pattern in q:
+            return {
+                "allowed": False,
+                "injection_score": 0.9,
+                "reason": "harmful_command",
+                "message": "Harmful command pattern detected in input prompt."
+            }
+            
+    # 3. Restricted Keyword Checks
+    restricted_keywords = [
+        "api_key", "supabase_key", "database_url", "db_password"
+    ]
+    for keyword in restricted_keywords:
+        if keyword in q:
+            return {
+                "allowed": False,
+                "injection_score": 0.85,
+                "reason": "restricted_keyword",
+                "message": "Input prompt contains restricted system keywords."
+            }
+            
+    # 4. Enhanced Prompt Injection Detection
     unsafe_phrases = [
         "ignore all previous instructions",
         "ignore previous",
@@ -90,15 +128,20 @@ def scan_safety_heuristics(question: str) -> dict:
         "system override",
         "show all company data",
         "bypass security",
-        "reveal developer key"
+        "reveal developer key",
+        "you must now",
+        "developer mode",
+        "jailbreak"
     ]
     for phrase in unsafe_phrases:
         if phrase in q:
             return {
                 "allowed": False,
                 "injection_score": 0.95,
-                "reason": "prompt_injection"
+                "reason": "prompt_injection",
+                "message": "Potential prompt injection attempt detected."
             }
+            
     return None
 
 async def run_security_check(question: str, role: str, dataset_id: str = None) -> dict:
@@ -124,7 +167,7 @@ async def run_security_check(question: str, role: str, dataset_id: str = None) -
         print(f"[ADK TRACE] RBAC Block: User with role '{role}' is not allowed to run investigations on dataset '{dataset_name}'.")
         supabase.db_store_security_event("unauthorized_access", "HIGH", f"User with role {role} blocked from running investigation on dataset {dataset_name}.")
         
-        msg = "Access Denied: Viewers do not have permissions to run investigations." if role == "Viewer" else f"Access Denied: User with role '{role}' does not have permissions to access dataset '{dataset_name}'."
+        msg = "Viewers do not have permissions to run investigations." if role == "Viewer" else f"User with role '{role}' does not have permissions to access dataset '{dataset_name}'."
         return {
             "allowed": False,
             "injection_score": 0.0,

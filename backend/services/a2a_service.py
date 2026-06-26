@@ -20,6 +20,16 @@ async def a2a_send_message(sender: str, receiver: str, task: str, dataset: str) 
     
     response = {}
     if receiver == "forecast_agent":
+        from backend.config import user_role_var
+        from backend.agents.security.security_agent import is_role_allowed_for_dataset
+        role = user_role_var.get()
+        if not is_role_allowed_for_dataset(role, "forecast"):
+            return {
+                "forecast_growth": 0.0,
+                "confidence": 0,
+                "error": f"Access Denied: User with role '{role}' does not have permissions to access forecast data."
+            }
+
         from backend.agents.forecast.forecast_agent import forecast_agent
         from google.adk.runners import InMemoryRunner
         from google.genai import types

@@ -18,6 +18,12 @@ async def ask_revenue_agent(question: str) -> str:
     Returns:
         The analysis report from the Revenue Agent.
     """
+    from backend.config import user_role_var
+    from backend.agents.security.security_agent import is_role_allowed_for_dataset
+    role = user_role_var.get()
+    if not is_role_allowed_for_dataset(role, "sales"):
+        return f"Access Denied: User with role '{role}' does not have permissions to access revenue data."
+
     from backend.services.agentops_service import run_agent_with_ops
     
     async def run_rev():
@@ -61,6 +67,12 @@ async def ask_customer_agent(question: str) -> str:
     Returns:
         The customer segment analysis from the Customer Agent.
     """
+    from backend.config import user_role_var
+    from backend.agents.security.security_agent import is_role_allowed_for_dataset
+    role = user_role_var.get()
+    if not is_role_allowed_for_dataset(role, "customers"):
+        return f"Access Denied: User with role '{role}' does not have permissions to access customer data."
+
     from backend.services.agentops_service import run_agent_with_ops
 
     async def run_cust():
@@ -104,6 +116,12 @@ async def ask_risk_agent(question: str) -> str:
     Returns:
         The risk detection report from the Risk Agent.
     """
+    from backend.config import user_role_var
+    from backend.agents.security.security_agent import is_role_allowed_for_dataset
+    role = user_role_var.get()
+    if not is_role_allowed_for_dataset(role, "risks"):
+        return f"Access Denied: User with role '{role}' does not have permissions to access risk data."
+
     from backend.services.agentops_service import run_agent_with_ops
 
     async def run_risk():
@@ -240,21 +258,65 @@ from backend import config
 from google.adk import Workflow, Event
 
 def security_checkpoint(node_input: str):
-    from backend.agents.security.security_agent import scan_safety_heuristics
+    import re
+    from backend.config import user_role_var
+    from backend.agents.security.security_agent import scan_safety_heuristics, is_role_allowed_for_dataset
     
+    # 1. Dynamically extract role from input query if specified (e.g. "role: sales manager", "[Sales Manager]")
+    role_match = re.search(
+        r'(?:role:\s*|\[)(admin|sales manager|finance manager|viewer|analyst|ceo|executive|sales|finance)(?:\]|\b)',
+        node_input,
+        re.IGNORECASE
+    )
+    if role_match:
+        extracted_role = role_match.group(1).strip().title()
+        # Map shorthand names
+        if extracted_role == "Sales":
+            extracted_role = "Sales Manager"
+        elif extracted_role == "Finance":
+            extracted_role = "Finance Manager"
+        user_role_var.set(extracted_role)
+        print(f"[ADK TRACE] Extracted role '{extracted_role}' from query and updated context to: {extracted_role}")
+    
+    role = user_role_var.get()
+    
+    # 2. Extract dataset ID to check if role is allowed
+    dataset_name = ""
+    dataset_id_match = re.search(r'Dataset ID:\s*([a-zA-Z0-9_-]+)', node_input)
+    if dataset_id_match:
+        dataset_id = dataset_id_match.group(1).strip()
+        try:
+            from backend.services import dataset_service
+            dataset_meta = dataset_service.get_dataset_meta(dataset_id)
+            dataset_name = dataset_meta.get("name", "")
+        except Exception:
+            pass
+
     # Simple check for Viewer role
-    is_viewer = "role: viewer" in node_input.lower() or "viewer role" in node_input.lower()
+    is_viewer = role == "Viewer" or "role: viewer" in node_input.lower() or "viewer role" in node_input.lower()
+    role_allowed = is_role_allowed_for_dataset(role, dataset_name)
     heur_res = scan_safety_heuristics(node_input)
     
-    if is_viewer or heur_res:
-        reason = "unauthorized_access" if is_viewer else (heur_res.get("reason", "prompt_injection") if heur_res else "safety_violation")
+    if is_viewer or not role_allowed or heur_res:
+        reason = "unauthorized_access" if (is_viewer or not role_allowed) else (heur_res.get("reason", "prompt_injection") if heur_res else "safety_violation")
         # Store security event in DB
         try:
             from backend.database.supabase import db_store_security_event
             db_store_security_event(reason, "HIGH", f"Safety block in workflow: {node_input[:200]}")
         except Exception:
             pass
-        return Event(route="SECURITY_EVENT", output=f"⚠️ SECURITY BLOCK: Access Denied. Reason: {reason}.")
+            
+        if reason == "unauthorized_access":
+            if role == "Viewer":
+                msg = "Viewers do not have permissions to run investigations."
+            else:
+                msg = f"User with role '{role}' does not have permissions to access dataset '{dataset_name}'."
+        elif heur_res and heur_res.get("message"):
+            msg = heur_res.get("message")
+        else:
+            msg = "Request context violation."
+            
+        return Event(route="SECURITY_EVENT", output=f"⚠️ SECURITY BLOCK: Access Denied. Reason: {reason}. {msg}")
         
     return Event(route="CLEAN", output=node_input)
 
@@ -287,22 +349,27 @@ risk_analysis_agent = Agent(
 strategic_advisor_agent = Agent(
     model=config.GEMINI_MODEL,
     name="strategic_advisor_agent",
-    description="Strategic Advisor Agent that coordinates specialized sub-agents.",
+    description="Strategic Advisor Agent that coordinates specialized sub-agents based on question intent.",
     instruction="""You are the Boardroom AI Strategic Advisor Agent.
-Your goal is to coordinate a team of specialized sub-agents to compile a complete strategic business analysis report.
+Your goal is to coordinate a team of specialized sub-agents to compile a concise, executive-grade strategic business analysis report.
 You have the following specialized sub-agents:
-1. 'forecasting_agent': For revenue and growth projections.
-2. 'risk_analysis_agent': For anomaly and risk diagnostics.
-
-The available datasets are:
-- 'sales' (contains monthly revenue, region, product category, and date)
+1. 'revenue_agent': For revenue growth, sales trends, and regional splits.
+2. 'customer_agent': For customer churn, segments, and tier demographics.
+3. 'risk_analysis_agent': For anomaly and risk diagnostics.
+4. 'forecasting_agent': For growth forecasting and future projections.
 
 When a user asks a business question:
-1. Route the inquiry to 'risk_analysis_agent' to detect anomalies and regional risks in the 'sales' dataset.
-2. Route the inquiry to 'forecasting_agent' to perform growth forecasting using the 'sales' dataset.
-3. Formulate a combined summary of the findings and output it. Do not include headers like 'Status:' or 'BOARDROOM AI - EXECUTIVE ADVISORY REPORT' since the next node will format them.""",
+1. Identify the primary intent (revenue, customer, risk, forecast).
+2. Route the inquiry ONLY to the corresponding sub-agent first (e.g. 'revenue_agent' for sales questions like "What about my sales in June?"). Do not invoke other agents unless needed.
+3. If the user asks an exploratory question (e.g., "Why did revenue drop?") or the primary agent's findings show a significant variance/decline, route to 'risk_analysis_agent' and 'forecasting_agent' to get explaining context. Otherwise, bypass them to save tokens.
+4. Formulate the compiled findings into the final report structure:
+   - ## 1. Direct Answer: Answer the user's specific question directly and concisely first. (e.g., June Sales Summary with MoM/YoY growth and Status).
+   - ## 2. Executive Summary: Provide a brief high-level overview.
+   - ## 3. Key Findings & Data Trends: Detail the metrics of the active agents (e.g. Revenue diagnostics). Do not include customer demographics or unrelated details unless relevant.
+   - ## 4. Strategic Recommendations: Provide 2 specific, evidence-linked recommendations referencing specific regions, dates, and products.
+Do not include headers like 'Status:' or 'BOARDROOM AI - EXECUTIVE ADVISORY REPORT' since the next node will format them.""",
     tools=[mcp_toolset],
-    sub_agents=[forecasting_agent, risk_analysis_agent],
+    sub_agents=[revenue_agent, customer_agent, forecasting_agent, risk_analysis_agent],
     generate_content_config=config.get_agent_config()
 )
 
@@ -348,10 +415,9 @@ executive_orchestrator_fallback = Agent(
     instruction="""You are the Boardroom AI Executive Orchestrator Fallback.
 Your goal is to coordinate a fleet of sub-agents to compile a complete strategic business analysis report using fallback models.
 When a user asks a business question:
-1. Delegate the analysis gathering to the sub-agents by calling `ask_agents_in_parallel` with the user's question. This runs Revenue, Customer, and Risk analysis concurrently.
-2. Compile these findings into the final report by calling `ask_report_agent` with the collected findings text.
-3. Save the final report using the `memory` tool if needed, or simply return the report.
-4. Return the final compiled report to the user.""",
+1. Determine the query intent. Call the primary agent (e.g. ask_revenue_agent for sales queries).
+2. If exploratory or if a decline is found, call ask_risk_agent or forecast agents to get context. Otherwise, bypass them to save tokens.
+3. Return the compiled report following the target structure (Direct Answer, Executive Summary, Key Findings, Strategic Recommendations).""",
     tools=[ask_agents_in_parallel, ask_report_agent, mcp_toolset],
     generate_content_config=config.get_agent_config()
 )
