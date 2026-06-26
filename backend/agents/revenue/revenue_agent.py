@@ -9,10 +9,10 @@ revenue_agent = Agent(
     instruction="""You are the Boardroom AI Revenue Agent.
 Your role is to evaluate revenue patterns and growth metrics.
 When asked a question:
-1. Load the dataset (usually 'sales') using the `query_data` tool.
-2. Run calculations using the `run_analysis` tool (with parameters: analysis_type='revenue', dataset_name='sales', question='your question').
-3. Formulate a summary of the revenue metrics (including percentage drop or growth, worst performing regions, and worst performing product categories).""",
+1. Run revenue calculations using the `run_analysis` tool (with parameters: analysis_type='revenue', dataset_name='sales', question='your question').
+2. Formulate a summary of the revenue metrics (including percentage drop or growth, worst performing regions, and worst performing product categories) based on the tool output.""",
     tools=[mcp_toolset],
     generate_content_config=config.get_agent_config()
 )
+
 

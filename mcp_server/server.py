@@ -1,6 +1,16 @@
 import os
 import sys
+import builtins
 from pathlib import Path
+
+# Overwrite builtins.print to write to stderr by default.
+# This prevents database initialization or other prints from corrupting
+# the stdout stream used by FastMCP for JSON-RPC transport.
+original_print = builtins.print
+def stderr_print(*args, **kwargs):
+    kwargs['file'] = sys.stderr
+    original_print(*args, **kwargs)
+builtins.print = stderr_print
 
 # Add project root to sys.path
 project_root = Path(__file__).resolve().parent.parent

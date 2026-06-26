@@ -76,8 +76,12 @@ async def a2a_send_message(sender: str, receiver: str, task: str, dataset: str) 
     elif receiver == "security_agent":
         from backend.agents.security.security_agent import run_security_check
         async def run_security():
-            # task = question, dataset = role
-            return await run_security_check(task, dataset)
+            # task = question, dataset = role|dataset_id
+            role_part = dataset
+            dataset_id_part = None
+            if "|" in dataset:
+                role_part, dataset_id_part = dataset.split("|", 1)
+            return await run_security_check(task, role_part, dataset_id_part)
         response = await run_agent_with_ops("security_agent", run_security)
         
     elif receiver == "evaluation_agent":

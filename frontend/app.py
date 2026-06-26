@@ -105,30 +105,31 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Sidebar for controls
-st.sidebar.markdown("### 📂 Data Hub")
+st.sidebar.markdown("### 📂 Dataset Management")
 uploaded_files = st.sidebar.file_uploader(
     "Upload CSV Datasets (Select Multiple)", 
     type=["csv"], 
     accept_multiple_files=True
 )
 
-st.sidebar.markdown("### 🔑 Identity & Access")
-user_role = st.sidebar.selectbox(
-    "Select Session Role (RBAC):",
-    options=["Admin", "Executive", "Analyst", "Viewer"],
-    index=1 # Default to Executive
-)
+# Move RBAC and execution configurations to advanced settings
+with st.sidebar.expander("⚙️ Advanced Settings", expanded=False):
+    user_role = st.selectbox(
+        "Select Session Role (RBAC):",
+        options=["Admin", "CEO", "Finance Manager", "Sales Manager", "Analyst", "Viewer"],
+        index=1 # Default to CEO
+    )
 
-execution_mode_label = st.sidebar.selectbox(
-    "Select Execution Mode:",
-    options=[
-        "Quota-Saver Mode (Single-Query)",
-        "Multi-Agent Fleet (Parallel)",
-        "Multi-Agent Fleet (Sequential)"
-    ],
-    index=0,
-    help="Quota-Saver is recommended for Gemini Free Tier (uses 1 request)."
-)
+    execution_mode_label = st.selectbox(
+        "Select Execution Mode:",
+        options=[
+            "Quota-Saver Mode (Single-Query)",
+            "Multi-Agent Fleet (Parallel)",
+            "Multi-Agent Fleet (Sequential)"
+        ],
+        index=0,
+        help="Quota-Saver is recommended for Gemini Free Tier (uses 1 request)."
+    )
 
 # Map labels to API values
 mode_map = {
@@ -181,7 +182,7 @@ if dataset_options:
     selected_dataset_id = st.session_state["datasets"][selected_filename]
 
 # Main Workspace Tabs
-tab1, tab2, tab3 = st.tabs(["📊 Dataset Viewer", "🔍 Multi-Agent Insights", "📈 Observability & AgentOps"])
+tab1, tab2, tab3 = st.tabs(["📊 Dataset Explorer", "🔍 Strategic Advisory Portal", "📈 Fleet Telemetry & Ops"])
 
 with tab1:
     if selected_filename:
@@ -205,10 +206,10 @@ with tab1:
                     st.error(f"Error fetching dataset preview: {str(e)}")
                     
         if df is not None:
-            st.markdown(f"### {selected_filename} - Data Preview (First 10 Rows)")
+            st.markdown(f"### 📋 Preview: {selected_filename} (Top 10 Records)")
             st.dataframe(df.head(10), width="stretch")
             
-            st.markdown("### Data Summary Statistics")
+            st.markdown("### 📊 Descriptive Analytics Summary")
             st.dataframe(df.describe(include="all").astype(str), width="stretch")
     else:
         st.info("💡 Please upload one or more CSV datasets in the sidebar to preview data.")
@@ -216,16 +217,16 @@ with tab1:
 
 with tab2:
     if selected_filename and selected_dataset_id:
-        st.markdown("### Executive Orchestrator Portal")
-        st.write("The Executive Orchestrator coordinates the **Revenue Agent**, **Customer Agent**, and **Risk Agent**, then aggregates findings via the **Report Agent**.")
+        st.markdown("### 🧠 Strategic Advisory Hub")
+        st.write("Ask strategic business questions. The Orchestrator will activate specialized analyst agents (Revenue, Customer, Risk, Forecast) to generate a synthesized, evaluated advisory report.")
         st.write(f"Current Access Level: **{user_role}**")
         
         question = st.text_input(
-            "Ask the Executive Agent a strategic question:", 
+            "Enter your strategic inquiry:", 
             value="Why did revenue drop in May?"
         )
         
-        if st.button("Compile Executive Report", type="primary"):
+        if st.button("⚡ Generate Advisory Report", type="primary"):
             with st.spinner("Orchestrating agent fleet and compiling sub-reports..."):
                 try:
                     payload = {
@@ -255,15 +256,52 @@ with tab2:
                             
                             # Display active agents badge
                             if active_agents:
-                                st.markdown("##### ⚡ Dynamically Activated Modules (Routing Planner):")
+                                st.markdown("##### ⚡ Active Specialized Intelligence Modules:")
                                 cols = st.columns(len(active_agents))
                                 for i, agent in enumerate(active_agents):
                                     with cols[i]:
-                                        st.info(f"⚙️ **{agent.upper()} AGENT**")
+                                        st.info(f"💼 **{agent.upper()} Specialist**")
                                         
                             st.markdown('<div class="report-box">', unsafe_allow_html=True)
                             st.markdown(report)
                             st.markdown('</div>', unsafe_allow_html=True)
+                            
+                            # Render UI Hints
+                            ui_hints = data.get("ui_hints", [])
+                            if ui_hints:
+                                st.markdown("### 📊 Dynamic Visual Analytics")
+                                kpi_hints = [h for h in ui_hints if h["type"] == "kpi_card"]
+                                chart_hints = [h for h in ui_hints if h["type"] != "kpi_card"]
+                                
+                                # Render KPI Cards
+                                if kpi_hints:
+                                    kcols = st.columns(len(kpi_hints))
+                                    for idx, card in enumerate(kpi_hints):
+                                        with kcols[idx]:
+                                            st.metric(
+                                                label=card.get("label"), 
+                                                value=card.get("value"), 
+                                                help=card.get("description")
+                                            )
+                                            
+                                # Render Charts
+                                for chart in chart_hints:
+                                    chart_type = chart.get("type")
+                                    title = chart.get("title", "Data Visualization")
+                                    chart_data = pd.DataFrame(chart.get("data", []))
+                                    
+                                    if not chart_data.empty:
+                                        st.markdown(f"#### {title}")
+                                        if chart_type == "line_chart":
+                                            x = chart.get("x_axis")
+                                            y = chart.get("y_axis")
+                                            st.line_chart(chart_data.set_index(x)[y])
+                                        elif chart_type == "bar_chart":
+                                            x = chart.get("x_axis")
+                                            y = chart.get("y_axis")
+                                            st.bar_chart(chart_data.set_index(x)[y])
+                                        elif chart_type == "pie_chart":
+                                            st.bar_chart(chart_data.set_index(chart_data.columns[0])[chart_data.columns[1]])
                     else:
                         st.error(f"Analysis failed: {response.json().get('detail', response.text)}")
                 except Exception as e:
@@ -272,8 +310,8 @@ with tab2:
         st.info("💡 Welcome to Boardroom AI! Please upload one or more CSV datasets in the sidebar to begin.")
 
 with tab3:
-    st.markdown("### 📈 AgentOps & Observability Dashboard")
-    st.write("Real-time telemetry of Boardroom AI sub-agent activity, execution metrics, and workflow state transitions.")
+    st.markdown("### 📈 Agent Telemetry & Observability Dashboard")
+    st.write("Monitor agent execution logs, costs, security audits, and state transitions in real time.")
 
     # Refresh button
     if st.button("🔄 Refresh Telemetry", type="secondary"):
@@ -311,7 +349,7 @@ with tab3:
                 st.metric("Security Alerts Blocked", stats.get("total_security_events", 0))
 
             # Cumulative Token Usage & Costs Row
-            st.markdown("##### 🪙 Token Consumption & Cost Telemetry")
+            st.markdown("##### 🪙 Token Consumption & Cost Metrics")
             col_tok1, col_tok2, col_tok3 = st.columns(3)
             with col_tok1:
                 st.metric("Cumulative Input Tokens", f"{stats.get('total_input_tokens', 0):,}")
@@ -321,7 +359,7 @@ with tab3:
                 st.metric("Cumulative API Cost (USD)", f"${stats.get('total_api_cost_usd', 0.0):.6f}")
 
             # Token Management Configuration
-            st.markdown("##### ⚙️ Active Token Management Configuration")
+            st.markdown("##### ⚙️ Resource & Context Window Limits")
             conf_col1, conf_col2, conf_col3 = st.columns(3)
             with conf_col1:
                 st.markdown(f"- **Primary Model:** `{stats.get('configured_model', 'N/A')}`")
@@ -335,7 +373,7 @@ with tab3:
 
             # Row 2: Workflow State Machine Monitor
             st.markdown("---")
-            st.markdown("#### 🔄 Active Workflow State Machine Monitor")
+            st.markdown("#### 🔄 Live Workflow State Transitions")
             if invs:
                 df_invs = pd.DataFrame(invs)
                 # Apply premium UI: colored state labels
@@ -372,7 +410,7 @@ with tab3:
 
             # Row 3: Agent runs table
             st.markdown("---")
-            st.markdown("#### 💼 Agent Run Execution Logs (AgentOps)")
+            st.markdown("#### 📋 Specialist Execution Telemetry")
             if runs:
                 df_runs = pd.DataFrame(runs)
                 st.dataframe(
@@ -391,7 +429,7 @@ with tab3:
 
             # Row 4: Security Events
             st.markdown("---")
-            st.markdown("#### 🛡️ Security Audit Logs")
+            st.markdown("#### 🛡️ Security Audit Trail & Event Logs")
             if secs:
                 df_secs = pd.DataFrame(secs)
                 st.dataframe(

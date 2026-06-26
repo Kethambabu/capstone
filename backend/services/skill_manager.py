@@ -1,4 +1,6 @@
 import os
+import sys
+import subprocess
 from pathlib import Path
 from backend.database import supabase
 
@@ -45,6 +47,29 @@ def find_required_skill(question: str) -> str:
     else:
         return "executive_reporting"
 
+def verify_skill(name: str) -> bool:
+    """
+    Looks for a verify.py script inside the skill's local directory and runs it.
+    Returns True if verification passes or if no script is found.
+    Raises ValueError on verification failure.
+    """
+    project_root = Path(__file__).resolve().parent.parent.parent
+    verify_script = project_root / "skills" / name / "verify.py"
+    
+    if verify_script.exists():
+        print(f"[SKILL MANAGER] Executing skill verification script: {verify_script.name}")
+        res = subprocess.run(
+            [sys.executable, str(verify_script)],
+            capture_output=True,
+            text=True,
+            timeout=5.0
+        )
+        if res.returncode != 0:
+            print(f"[SKILL MANAGER] Skill verification failed: {res.stderr.strip()}")
+            raise ValueError(f"Skill verification failed: {res.stderr.strip()}")
+        print(f"[SKILL MANAGER] Skill verification succeeded.")
+    return True
+
 def load_skill(name: str) -> str:
     """Retrieves skill instructions from the database, reloading if necessary."""
     skill_content = supabase.db_get_skill(name)
@@ -54,10 +79,16 @@ def load_skill(name: str) -> str:
     return skill_content or f"Skill instruction for '{name}'"
 
 def attach_skill_to_context(question: str, base_context: str = "") -> tuple[str, str]:
-    """Finds the appropriate skill for a question, loads it, and prepends it to the context."""
+    """Finds the appropriate skill for a question, loads it, runs its verification script, and prepends it to context."""
     skill_name = find_required_skill(question)
-    instructions = load_skill(skill_name)
     
+    # Run verify script if exists
+    try:
+        verify_skill(skill_name)
+    except Exception as e:
+        print(f"[SKILL MANAGER] Warning - verification check encountered error: {e}")
+        
+    instructions = load_skill(skill_name)
     print(f"[ADK TRACE] Skill Loaded: '{skill_name}' for question '{question}'")
     
     context = f"""=== ACTIVE AGENT SKILL: {skill_name.upper()} ===

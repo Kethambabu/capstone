@@ -12,7 +12,7 @@ class GeminiKeyPoolManager:
             cls._instance = super(GeminiKeyPoolManager, cls).__new__(cls)
             cls._instance.keys = cls._instance._load_keys()
             cls._instance.current_index = 0
-            cls._instance.cooldown_until = 0.0
+            cls._instance.cooldowns = {}  # key_str -> float (timestamp when cooldown ends)
             if cls._instance.keys:
                 os.environ["GEMINI_API_KEY"] = cls._instance.keys[0]
                 print(f"[KeyPool] Loaded {len(cls._instance.keys)} API keys from .env. Active key index: 0.")
@@ -20,11 +20,12 @@ class GeminiKeyPoolManager:
                 print("[KeyPool] No API keys found in pool. Using environment default.")
         return cls._instance
 
-    def set_cooldown(self, duration_seconds):
-        self.cooldown_until = time.time() + duration_seconds
+    def set_key_cooldown(self, key, duration_seconds):
+        self.cooldowns[key] = time.time() + duration_seconds
+        print(f"[KeyPool] Cooldown set for key ...{key[-8:]} for {duration_seconds:.1f}s.")
         
-    def get_remaining_cooldown(self):
-        rem = self.cooldown_until - time.time()
+    def get_key_remaining_cooldown(self, key):
+        rem = self.cooldowns.get(key, 0.0) - time.time()
         return max(0.0, rem)
         
     def _load_keys(self):
@@ -59,7 +60,20 @@ class GeminiKeyPoolManager:
     def get_active_key(self):
         if not self.keys:
             return os.environ.get("GEMINI_API_KEY")
-        return self.keys[self.current_index]
+            
+        now = time.time()
+        # Find a key that is not on cooldown, starting from the current_index
+        for i in range(len(self.keys)):
+            idx = (self.current_index + i) % len(self.keys)
+            key = self.keys[idx]
+            if self.cooldowns.get(key, 0.0) <= now:
+                self.current_index = idx
+                return key
+                
+        # If all keys are on cooldown, return the one that will be ready first
+        min_key = min(self.keys, key=lambda k: self.cooldowns.get(k, 0.0))
+        self.current_index = self.keys.index(min_key)
+        return min_key
         
     def rotate_key(self):
         if not self.keys or len(self.keys) <= 1:
@@ -68,7 +82,7 @@ class GeminiKeyPoolManager:
         self.current_index = (self.current_index + 1) % len(self.keys)
         new_key = self.keys[self.current_index]
         os.environ["GEMINI_API_KEY"] = new_key
-        print(f"[KeyPool] 🔄 Rotated API key to index {self.current_index}: ...{new_key[-8:]}")
+        print(f"[KeyPool] -> Rotated active key index to {self.current_index}: ...{new_key[-8:]}")
         
         # Clear ADK agent client caches to force re-initialization with new key
         try:
@@ -124,36 +138,32 @@ def update_client_api_key(client, api_key):
 
 async def execute_with_retry(func, *args, **kwargs):
     """
-    Executes an async Gemini API function with automatic API key rotation and exponential backoff.
+    Executes an async Gemini API function with automatic API key rotation and per-key cooldowns.
     """
     import re
-    max_attempts = len(key_pool.keys) * 2 if key_pool.keys else 3
+    max_attempts = len(key_pool.keys) * 5 if key_pool.keys else 5
     delay = 2.0
     
     for attempt in range(max_attempts):
-        # Wait for global cooldown if any
-        cooldown = key_pool.get_remaining_cooldown()
+        active_key = key_pool.get_active_key()
+        cooldown = key_pool.get_key_remaining_cooldown(active_key)
         if cooldown > 0:
-            print(f"[KeyPool] Waiting for global cooldown of {cooldown:.1f}s before request...")
+            if cooldown > 120.0:
+                raise RuntimeError(f"All Gemini API keys in the pool are exhausted/on cooldown > 120s. Minimum cooldown: {cooldown:.1f}s. Failing immediately to trigger fallback.")
+            print(f"[KeyPool] All keys on cooldown. Sleeping for {cooldown:.1f}s until ...{active_key[-8:]} is ready...")
             await asyncio.sleep(cooldown)
 
         try:
             if 'client' in kwargs:
                 client = kwargs['client']
-                active_key = key_pool.get_active_key()
                 update_client_api_key(client, active_key)
             call_kwargs = {k: v for k, v in kwargs.items() if k != 'client'}
             return await func(*args, **call_kwargs)
         except Exception as e:
             err_msg = str(e)
             is_rate_limit = "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "503" in err_msg or "UNAVAILABLE" in err_msg
-            is_daily_exhausted = "limit: 0" in err_msg or '"limit": 0' in err_msg or '"quotaValue": "0"' in err_msg or '"quotaValue": 0' in err_msg
             
-            if is_daily_exhausted:
-                print(f"[KeyPool] Daily quota exhausted for this model/key (limit: 0). Failing immediately to trigger fallback...")
-                raise e
-
-            if is_rate_limit and attempt < max_attempts - 1:
+            if is_rate_limit:
                 # Parse retry delay
                 sleep_seconds = delay
                 match = re.search(r"Please retry in ([0-9.]+)\s*s", err_msg)
@@ -163,49 +173,54 @@ async def execute_with_retry(func, *args, **kwargs):
                     match_sec = re.search(r"'retryDelay':\s*'(\d+)\s*s'", err_msg)
                     if match_sec:
                         sleep_seconds = float(match_sec.group(1)) + 1.0
+                
+                is_daily_exhausted = (
+                    "limit: 0" in err_msg or '"limit": 0' in err_msg or '"quotaValue": "0"' in err_msg or '"quotaValue": 0' in err_msg or "GenerateRequestsPerDay" in err_msg
+                )
+                
+                if is_daily_exhausted:
+                    print(f"[KeyPool] Daily quota exhausted for key ...{active_key[-8:]}. Setting 24h cooldown.")
+                    key_pool.set_key_cooldown(active_key, 86400.0)
+                else:
+                    key_pool.set_key_cooldown(active_key, sleep_seconds)
 
-                print(f"[KeyPool] Rate limit hit: {err_msg}. Rotating key and retrying (attempt {attempt + 1}/{max_attempts})...")
-                key_pool.rotate_key()
-                if key_pool.keys and (attempt + 1) % len(key_pool.keys) == 0:
-                    print(f"[KeyPool] All keys rate-limited. Setting global cooldown and sleeping for {sleep_seconds:.1f}s...")
-                    key_pool.set_cooldown(sleep_seconds)
-                    await asyncio.sleep(sleep_seconds)
-                    delay *= 2
+                if attempt < max_attempts - 1:
+                    print(f"[KeyPool] Key ...{active_key[-8:]} rate-limited. Rotating key (attempt {attempt + 1}/{max_attempts})...")
+                    key_pool.rotate_key()
+                    delay *= 1.5
+                else:
+                    raise e
             else:
                 raise e
 
 def execute_with_retry_sync(func, *args, **kwargs):
     """
-    Executes a synchronous Gemini API function with automatic API key rotation and exponential backoff.
+    Executes a synchronous Gemini API function with automatic API key rotation and per-key cooldowns.
     """
     import re
-    max_attempts = len(key_pool.keys) * 2 if key_pool.keys else 3
+    max_attempts = len(key_pool.keys) * 5 if key_pool.keys else 5
     delay = 2.0
     
     for attempt in range(max_attempts):
-        # Wait for global cooldown if any
-        cooldown = key_pool.get_remaining_cooldown()
+        active_key = key_pool.get_active_key()
+        cooldown = key_pool.get_key_remaining_cooldown(active_key)
         if cooldown > 0:
-            print(f"[KeyPool] Waiting for global cooldown of {cooldown:.1f}s before sync request...")
+            if cooldown > 120.0:
+                raise RuntimeError(f"All Gemini API keys in the pool are exhausted/on cooldown > 120s. Minimum cooldown: {cooldown:.1f}s. Failing immediately to trigger fallback.")
+            print(f"[KeyPool] All keys on cooldown (sync). Sleeping for {cooldown:.1f}s until ...{active_key[-8:]} is ready...")
             time.sleep(cooldown)
 
         try:
             if 'client' in kwargs:
                 client = kwargs['client']
-                active_key = key_pool.get_active_key()
                 update_client_api_key(client, active_key)
             call_kwargs = {k: v for k, v in kwargs.items() if k != 'client'}
             return func(*args, **call_kwargs)
         except Exception as e:
             err_msg = str(e)
             is_rate_limit = "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "503" in err_msg or "UNAVAILABLE" in err_msg
-            is_daily_exhausted = "limit: 0" in err_msg or '"limit": 0' in err_msg or '"quotaValue": "0"' in err_msg or '"quotaValue": 0' in err_msg
             
-            if is_daily_exhausted:
-                print(f"[KeyPool] Daily quota exhausted for this model/key (limit: 0) (sync). Failing immediately to trigger fallback...")
-                raise e
-
-            if is_rate_limit and attempt < max_attempts - 1:
+            if is_rate_limit:
                 # Parse retry delay
                 sleep_seconds = delay
                 match = re.search(r"Please retry in ([0-9.]+)\s*s", err_msg)
@@ -215,14 +230,23 @@ def execute_with_retry_sync(func, *args, **kwargs):
                     match_sec = re.search(r"'retryDelay':\s*'(\d+)\s*s'", err_msg)
                     if match_sec:
                         sleep_seconds = float(match_sec.group(1)) + 1.0
+                
+                is_daily_exhausted = (
+                    "limit: 0" in err_msg or '"limit": 0' in err_msg or '"quotaValue": "0"' in err_msg or '"quotaValue": 0' in err_msg or "GenerateRequestsPerDay" in err_msg
+                )
+                
+                if is_daily_exhausted:
+                    print(f"[KeyPool] Daily quota exhausted for key ...{active_key[-8:]} (sync). Setting 24h cooldown.")
+                    key_pool.set_key_cooldown(active_key, 86400.0)
+                else:
+                    key_pool.set_key_cooldown(active_key, sleep_seconds)
 
-                print(f"[KeyPool] Rate limit hit (sync): {err_msg}. Rotating key and retrying (attempt {attempt + 1}/{max_attempts})...")
-                key_pool.rotate_key()
-                if key_pool.keys and (attempt + 1) % len(key_pool.keys) == 0:
-                    print(f"[KeyPool] All keys rate-limited (sync). Setting global cooldown and sleeping for {sleep_seconds:.1f}s...")
-                    key_pool.set_cooldown(sleep_seconds)
-                    time.sleep(sleep_seconds)
-                    delay *= 2
+                if attempt < max_attempts - 1:
+                    print(f"[KeyPool] Key ...{active_key[-8:]} rate-limited (sync). Rotating key (attempt {attempt + 1}/{max_attempts})...")
+                    key_pool.rotate_key()
+                    delay *= 1.5
+                else:
+                    raise e
             else:
                 raise e
 
@@ -235,18 +259,19 @@ try:
     original_generate_content_async = Gemini.generate_content_async
 
     async def patched_generate_content_async(self, llm_request, stream=False):
-        max_attempts = len(key_pool.keys) * 2 if key_pool.keys else 3
+        max_attempts = len(key_pool.keys) * 5 if key_pool.keys else 5
         delay = 2.0
         
         for attempt in range(max_attempts):
-            # Wait for global cooldown if any
-            cooldown = key_pool.get_remaining_cooldown()
+            active_key = key_pool.get_active_key()
+            cooldown = key_pool.get_key_remaining_cooldown(active_key)
             if cooldown > 0:
-                print(f"[KeyPoolPatch] Waiting for global cooldown of {cooldown:.1f}s before agent request...")
+                if cooldown > 120.0:
+                    raise RuntimeError(f"All Gemini API keys in the pool are exhausted/on cooldown > 120s. Minimum cooldown: {cooldown:.1f}s. Failing immediately to trigger fallback.")
+                print(f"[KeyPoolPatch] All keys on cooldown. Sleeping for {cooldown:.1f}s until ...{active_key[-8:]} is ready...")
                 await asyncio.sleep(cooldown)
 
             try:
-                active_key = key_pool.get_active_key()
                 update_client_api_key(self.api_client, active_key)
                 
                 yielded_any = False
@@ -264,13 +289,8 @@ try:
                     isinstance(e, _ResourceExhaustedError) or
                     (isinstance(e, ClientError) and e.code in (429, 503))
                 )
-                is_daily_exhausted = "limit: 0" in err_msg or '"limit": 0' in err_msg or '"quotaValue": "0"' in err_msg or '"quotaValue": 0' in err_msg
                 
-                if is_daily_exhausted:
-                    print(f"[KeyPoolPatch] Daily quota exhausted for this model/key (limit: 0). Failing step immediately to trigger fallback...")
-                    raise e
-
-                if is_rate_limit and not yielded_any and attempt < max_attempts - 1:
+                if is_rate_limit and not yielded_any:
                     # Parse retry delay
                     sleep_seconds = delay
                     match = re.search(r"Please retry in ([0-9.]+)\s*s", err_msg)
@@ -281,13 +301,22 @@ try:
                         if match_sec:
                             sleep_seconds = float(match_sec.group(1)) + 1.0
 
-                    print(f"[KeyPoolPatch] Rate limit hit during Agent LLM call: {err_msg}. Rotating key and retrying step (attempt {attempt + 1}/{max_attempts})...")
-                    key_pool.rotate_key()
-                    if key_pool.keys and (attempt + 1) % len(key_pool.keys) == 0:
-                        print(f"[KeyPoolPatch] All keys rate-limited. Setting global cooldown and sleeping for {sleep_seconds:.1f}s...")
-                        key_pool.set_cooldown(sleep_seconds)
-                        await asyncio.sleep(sleep_seconds)
-                        delay *= 2
+                    is_daily_exhausted = (
+                        "limit: 0" in err_msg or '"limit": 0' in err_msg or '"quotaValue": "0"' in err_msg or '"quotaValue": 0' in err_msg or "GenerateRequestsPerDay" in err_msg
+                    )
+
+                    if is_daily_exhausted:
+                        print(f"[KeyPoolPatch] Daily quota exhausted for key ...{active_key[-8:]}. Setting 24h cooldown.")
+                        key_pool.set_key_cooldown(active_key, 86400.0)
+                    else:
+                        key_pool.set_key_cooldown(active_key, sleep_seconds)
+
+                    if attempt < max_attempts - 1:
+                        print(f"[KeyPoolPatch] Key ...{active_key[-8:]} rate-limited. Rotating key (attempt {attempt + 1}/{max_attempts})...")
+                        key_pool.rotate_key()
+                        delay *= 1.5
+                    else:
+                        raise e
                 else:
                     raise e
 
@@ -295,4 +324,5 @@ try:
     print("[KeyPoolPatch] Successfully monkeypatched Gemini.generate_content_async for on-the-fly ADK key rotation.")
 except Exception as patch_err:
     print(f"[KeyPoolPatch] Failed to patch Gemini.generate_content_async: {patch_err}")
+
 

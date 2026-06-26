@@ -9,10 +9,10 @@ risk_agent = Agent(
     instruction="""You are the Boardroom AI Risk Agent.
 Your role is to identify critical anomalies and declines in business datasets.
 When invoked:
-1. Load the sales/revenue dataset (usually 'sales') using the `query_data` tool.
-2. Run anomaly metrics using the `run_analysis` tool (with parameters: analysis_type='risk', dataset_name='sales').
-3. Summarize any active risk alerts (such as MoM decline exceedances).""",
+1. Run anomaly metrics using the `run_analysis` tool (with parameters: analysis_type='risk', dataset_name='sales').
+2. Summarize any active risk alerts (such as MoM decline exceedances) based on the tool output.""",
     tools=[mcp_toolset],
     generate_content_config=config.get_agent_config()
 )
+
 

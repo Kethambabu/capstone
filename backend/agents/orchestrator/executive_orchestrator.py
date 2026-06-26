@@ -237,20 +237,108 @@ retry_config = types.GenerateContentConfig(
 
 from backend import config
 
-executive_orchestrator = Agent(
+from google.adk import Workflow, Event
+
+def security_checkpoint(node_input: str):
+    from backend.agents.security.security_agent import scan_safety_heuristics
+    
+    # Simple check for Viewer role
+    is_viewer = "role: viewer" in node_input.lower() or "viewer role" in node_input.lower()
+    heur_res = scan_safety_heuristics(node_input)
+    
+    if is_viewer or heur_res:
+        reason = "unauthorized_access" if is_viewer else (heur_res.get("reason", "prompt_injection") if heur_res else "safety_violation")
+        # Store security event in DB
+        try:
+            from backend.database.supabase import db_store_security_event
+            db_store_security_event(reason, "HIGH", f"Safety block in workflow: {node_input[:200]}")
+        except Exception:
+            pass
+        return Event(route="SECURITY_EVENT", output=f"⚠️ SECURITY BLOCK: Access Denied. Reason: {reason}.")
+        
+    return Event(route="CLEAN", output=node_input)
+
+def security_error_handler(node_input: str):
+    return Event(output=node_input)
+
+# Import forecast and risk agents, and rename them to match the diagram
+from backend.agents.forecast.forecast_agent import forecast_agent
+from backend.agents.risk.risk_agent import risk_agent
+
+# Create forecasting_agent and risk_analysis_agent with correct names
+forecasting_agent = Agent(
     model=config.GEMINI_MODEL,
-    name="executive_orchestrator",
-    description="The parent orchestrator agent that delegates business analysis tasks and compiles reports.",
-    instruction="""You are the Boardroom AI Executive Orchestrator.
-Your goal is to coordinate a fleet of sub-agents to compile a complete strategic business analysis report.
+    name="forecasting_agent",
+    description="Estimates future growth trends and calculates forecasting metrics via MCP.",
+    instruction=forecast_agent.instruction,
+    tools=forecast_agent.tools,
+    generate_content_config=forecast_agent.generate_content_config
+)
+
+risk_analysis_agent = Agent(
+    model=config.GEMINI_MODEL,
+    name="risk_analysis_agent",
+    description="Detects anomalous patterns, drops, and business risks via MCP.",
+    instruction=risk_agent.instruction,
+    tools=risk_agent.tools,
+    generate_content_config=risk_agent.generate_content_config
+)
+
+strategic_advisor_agent = Agent(
+    model=config.GEMINI_MODEL,
+    name="strategic_advisor_agent",
+    description="Strategic Advisor Agent that coordinates specialized sub-agents.",
+    instruction="""You are the Boardroom AI Strategic Advisor Agent.
+Your goal is to coordinate a team of specialized sub-agents to compile a complete strategic business analysis report.
+You have the following specialized sub-agents:
+1. 'forecasting_agent': For revenue and growth projections.
+2. 'risk_analysis_agent': For anomaly and risk diagnostics.
+
+The available datasets are:
+- 'sales' (contains monthly revenue, region, product category, and date)
+
 When a user asks a business question:
-1. Delegate the analysis gathering to the sub-agents by calling `ask_agents_in_parallel` with the user's question. This runs Revenue, Customer, and Risk analysis concurrently.
-2. Compile these findings into the final report by calling `ask_report_agent` with the collected findings text.
-3. Save the final report using the `memory` tool if needed, or simply return the report.
-4. Return the final compiled report to the user.""",
-    tools=[ask_agents_in_parallel, ask_report_agent, mcp_toolset],
-    sub_agents=[revenue_agent, customer_agent, risk_agent, report_agent],
+1. Route the inquiry to 'risk_analysis_agent' to detect anomalies and regional risks in the 'sales' dataset.
+2. Route the inquiry to 'forecasting_agent' to perform growth forecasting using the 'sales' dataset.
+3. Formulate a combined summary of the findings and output it. Do not include headers like 'Status:' or 'BOARDROOM AI - EXECUTIVE ADVISORY REPORT' since the next node will format them.""",
+    tools=[mcp_toolset],
+    sub_agents=[forecasting_agent, risk_analysis_agent],
     generate_content_config=config.get_agent_config()
+)
+
+def router_node(node_input: str):
+    text = str(node_input).lower()
+    if "drop" in text or "decline" in text or "risk" in text or "anomaly" in text:
+        return Event(route="review", output=node_input)
+    return Event(route="approve", output=node_input)
+
+def executive_approval(node_input: str):
+    prefix = "# BOARDROOM AI - EXECUTIVE ADVISORY REPORT\n**Status: ⚠️ PENDING EXECUTIVE REVIEW (High Priority Variance Detected)**\n\n"
+    return Event(output=prefix + node_input)
+
+def auto_approve(node_input: str):
+    prefix = "# BOARDROOM AI - EXECUTIVE ADVISORY REPORT\n**Status: ✅ AUTO-APPROVED BY POLICY (Standard Variance)**\n\n"
+    return Event(output=prefix + node_input)
+
+def final_report(node_input: str):
+    return Event(output=node_input)
+
+executive_orchestrator = Workflow(
+    name="executive_orchestrator",
+    edges=[
+        ("START", security_checkpoint),
+        (security_checkpoint, {
+            "SECURITY_EVENT": security_error_handler,
+            "CLEAN": strategic_advisor_agent
+        }),
+        (strategic_advisor_agent, router_node),
+        (router_node, {
+            "review": executive_approval,
+            "approve": auto_approve
+        }),
+        (executive_approval, final_report),
+        (auto_approve, final_report)
+    ]
 )
 
 executive_orchestrator_fallback = Agent(
@@ -269,5 +357,6 @@ When a user asks a business question:
 )
 
 root_agent = executive_orchestrator
+
 
 

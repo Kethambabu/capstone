@@ -26,6 +26,59 @@ Format your output strictly as a single JSON object. Do not include markdown cod
 )
 
 
+def is_role_allowed_for_dataset(role: str, dataset_name: str) -> bool:
+    """
+    Validates if a given role is allowed to access/analyze a specific dataset.
+    """
+    role = role.strip().title()
+    dataset_name = dataset_name.lower()
+    
+    # Viewer is blocked from all investigations/analytics
+    if role == "Viewer":
+        return False
+        
+    # Admin, CEO, Executive, and Analyst have full access
+    if role in ("Admin", "Ceo", "Executive", "Analyst"):
+        return True
+        
+    # Classify the dataset resource type
+    if "customer" in dataset_name:
+        resource = "Customer"
+    elif "sales" in dataset_name or "revenue" in dataset_name:
+        resource = "Revenue"
+    elif "forecast" in dataset_name:
+        resource = "Forecast"
+    elif "expense" in dataset_name:
+        resource = "Expenses"
+    elif "hr" in dataset_name or "employee" in dataset_name:
+        resource = "HR"
+    elif "inventory" in dataset_name:
+        resource = "Inventory"
+    elif "marketing" in dataset_name:
+        resource = "Marketing"
+    else:
+        resource = "Other"
+        
+    # Finance Manager:
+    # Allowed: Revenue, Forecast, Expenses, Inventory, Other
+    # Blocked: Customer, HR, Marketing
+    if role == "Finance Manager" or role == "Finance":
+        if resource in ("Customer", "HR", "Marketing"):
+            return False
+        return True
+        
+    # Sales Manager:
+    # Allowed: Revenue
+    # Blocked: Customer, Forecast, Expenses, HR, Marketing, Inventory, Other
+    if role == "Sales Manager" or role == "Sales":
+        if resource == "Revenue":
+            return True
+        return False
+        
+    # Default to allowed for any other unrecognized role to preserve general functionality
+    return True
+
+
 def scan_safety_heuristics(question: str) -> dict:
     """Heuristic scanner for prompt injections and malicious bypass attempts."""
     q = question.lower()
@@ -48,22 +101,35 @@ def scan_safety_heuristics(question: str) -> dict:
             }
     return None
 
-async def run_security_check(question: str, role: str) -> dict:
+async def run_security_check(question: str, role: str, dataset_id: str = None) -> dict:
     """
     Evaluates safety of request based on prompt content and RBAC permissions.
     """
     print("[ADK TRACE] Security Check Started")
     
-    # 1. RBAC Permission Validation (Viewer is blocked from investigations)
+    # 1. RBAC Permission Validation
     role = role.strip().title()
-    if role == "Viewer":
-        print(f"[ADK TRACE] RBAC Block: User with role '{role}' is not allowed to run investigations.")
-        supabase.db_store_security_event("unauthorized_access", "HIGH", f"User with role Viewer blocked from running investigation.")
+    
+    # Get dataset name if dataset_id is provided
+    dataset_name = ""
+    if dataset_id:
+        try:
+            from backend.services import dataset_service
+            dataset_meta = dataset_service.get_dataset_meta(dataset_id)
+            dataset_name = dataset_meta.get("name", "")
+        except Exception as e:
+            print(f"Security check failed to retrieve dataset metadata for {dataset_id}: {e}")
+            
+    if not is_role_allowed_for_dataset(role, dataset_name):
+        print(f"[ADK TRACE] RBAC Block: User with role '{role}' is not allowed to run investigations on dataset '{dataset_name}'.")
+        supabase.db_store_security_event("unauthorized_access", "HIGH", f"User with role {role} blocked from running investigation on dataset {dataset_name}.")
+        
+        msg = "Access Denied: Viewers do not have permissions to run investigations." if role == "Viewer" else f"Access Denied: User with role '{role}' does not have permissions to access dataset '{dataset_name}'."
         return {
             "allowed": False,
             "injection_score": 0.0,
             "reason": "unauthorized_access",
-            "message": "Access Denied: Viewers do not have permissions to run investigations."
+            "message": msg
         }
         
     # 2. Safety Heuristics Check (First line of defense)

@@ -13,26 +13,27 @@ def _handle_supabase_error(e):
         print(f"[Supabase Offline Check] Connection lost or host unreachable: {e}. Disabling Supabase client to prevent future timeouts.")
         supabase_client = None
 
-if config.SUPABASE_URL and config.SUPABASE_KEY:
+if config.USE_SUPABASE and config.SUPABASE_URL and config.SUPABASE_KEY:
     try:
-        import socket
-        from urllib.parse import urlparse
-        parsed_url = urlparse(config.SUPABASE_URL)
-        host = parsed_url.netloc
-        if ":" in host:
-            host = host.split(":")[0]
-        port = parsed_url.port or 443
-        
-        # Verify network reachability with a 3.0s timeout before loading client
-        with socket.create_connection((host, port), timeout=3.0):
-            pass
-            
         from supabase import create_client
-        supabase_client = create_client(config.SUPABASE_URL, config.SUPABASE_KEY)
+        from supabase.client import ClientOptions
+        
+        # Configure a 5.0-second timeout for quick failover when offline/unreachable
+        options = ClientOptions(
+            postgrest_client_timeout=5.0,
+            storage_client_timeout=5.0
+        )
+        supabase_client = create_client(config.SUPABASE_URL, config.SUPABASE_KEY, options=options)
         print("Supabase client initialized successfully.")
     except Exception as e:
-        print(f"Supabase host is unreachable ({e}). Falling back to SQLite database mode.")
+        print(f"Failed to initialize Supabase client ({e}). Falling back to SQLite database mode.")
         supabase_client = None
+else:
+    if not config.USE_SUPABASE:
+        print("Supabase is disabled by configuration. Using SQLite database mode.")
+    else:
+        print("Supabase credentials missing. Using SQLite database mode.")
+    supabase_client = None
 
 def db_init():
     """Initializes the database. For local fallback, creates SQLite tables."""
@@ -129,6 +130,86 @@ def db_init():
     conn.close()
     print("Local database initialized/verified with Memory, Skills, Security, Evaluation, and Observability tables.")
 
+    # --- Self-Healing & Seeding Logic ---
+    try:
+        import os
+        import uuid
+        import shutil
+        
+        # 1. Clean up stale local dataset records whose files don't exist on disk
+        conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, name, file_path FROM datasets")
+        rows = cursor.fetchall()
+        stale_ids = []
+        for r_id, r_name, r_path in rows:
+            if not r_path.startswith("supabase://") and not os.path.exists(r_path):
+                stale_ids.append(r_id)
+        if stale_ids:
+            print(f"[Self-Healing] Found {len(stale_ids)} stale local dataset records. Deleting them.")
+            for s_id in stale_ids:
+                cursor.execute("DELETE FROM datasets WHERE id = ?", (s_id,))
+            conn.commit()
+        
+        # 2. Seed files from data/ directory
+        data_dir = config.BASE_DIR.parent / "data"
+        if data_dir.exists() and data_dir.is_dir():
+            csv_files = list(data_dir.glob("*.csv"))
+            for csv_file in csv_files:
+                name = csv_file.name
+                # Check if this name is already in the database and exists on disk
+                cursor.execute("SELECT file_path FROM datasets WHERE name = ?", (name,))
+                db_row = cursor.fetchone()
+                exists_locally = False
+                if db_row:
+                    db_path = db_row[0]
+                    if db_path.startswith("supabase://") or os.path.exists(db_path):
+                        exists_locally = True
+                
+                if not exists_locally:
+                    print(f"[Seeder] Seeding dataset {name} into database...")
+                    dataset_id = str(uuid.uuid4())
+                    dest_path = config.UPLOAD_DIR / f"{dataset_id}_{name}"
+                    shutil.copy(str(csv_file), str(dest_path))
+                    
+                    uploaded_at = datetime.datetime.utcnow().isoformat()
+                    cursor.execute(
+                        "INSERT INTO datasets (id, name, uploaded_at, file_path) VALUES (?, ?, ?, ?)",
+                        (dataset_id, name, uploaded_at, str(dest_path))
+                    )
+                    conn.commit()
+                    print(f"[Seeder] Successfully seeded {name} as {dataset_id}")
+                    
+                    # Alias matching: seed copy as sales.csv and customers.csv if matching name
+                    if name == "sales_large.csv":
+                        cursor.execute("SELECT id FROM datasets WHERE name = 'sales.csv'")
+                        if not cursor.fetchone():
+                            alias_id = str(uuid.uuid4())
+                            alias_dest = config.UPLOAD_DIR / f"{alias_id}_sales.csv"
+                            shutil.copy(str(csv_file), str(alias_dest))
+                            cursor.execute(
+                                "INSERT INTO datasets (id, name, uploaded_at, file_path) VALUES (?, ?, ?, ?)",
+                                (alias_id, "sales.csv", uploaded_at, str(alias_dest))
+                            )
+                            conn.commit()
+                            print(f"[Seeder] Seeded alias 'sales.csv' for 'sales_large.csv'")
+                            
+                    if name == "customers_large.csv":
+                        cursor.execute("SELECT id FROM datasets WHERE name = 'customers.csv'")
+                        if not cursor.fetchone():
+                            alias_id = str(uuid.uuid4())
+                            alias_dest = config.UPLOAD_DIR / f"{alias_id}_customers.csv"
+                            shutil.copy(str(csv_file), str(alias_dest))
+                            cursor.execute(
+                                "INSERT INTO datasets (id, name, uploaded_at, file_path) VALUES (?, ?, ?, ?)",
+                                (alias_id, "customers.csv", uploaded_at, str(alias_dest))
+                            )
+                            conn.commit()
+                            print(f"[Seeder] Seeded alias 'customers.csv' for 'customers_large.csv'")
+        conn.close()
+    except Exception as ex:
+        print(f"[Seeder/Self-Healing] Error seeding database: {ex}")
+
 
 def insert_investigation(investigation_id: str, question: str, status: str):
     """Inserts a new investigation record."""
@@ -145,6 +226,7 @@ def insert_investigation(investigation_id: str, question: str, status: str):
             print("Successfully inserted investigation into Supabase.")
             return True
         except Exception as e:
+            _handle_supabase_error(e)
             print(f"Failed to insert investigation into Supabase: {e}. Writing locally.")
             
     conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
@@ -168,6 +250,7 @@ def update_investigation_status(investigation_id: str, status: str):
             print("Successfully updated investigation status in Supabase.")
             return True
         except Exception as e:
+            _handle_supabase_error(e)
             print(f"Failed to update investigation status in Supabase: {e}. Updating locally.")
             
     conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
@@ -197,6 +280,7 @@ def insert_dataset(dataset_id: str, name: str, file_path: str):
             print("Successfully inserted dataset metadata into Supabase.")
             return True
         except Exception as e:
+            _handle_supabase_error(e)
             print(f"Failed to insert into Supabase: {e}. Writing to local database.")
             
     # Local fallback

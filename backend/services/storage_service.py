@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from backend import config
-from backend.database.supabase import supabase_client
+from backend.database import supabase
 
 def upload_file(dataset_id: str, file_name: str, file_content: bytes) -> str:
     """
@@ -10,14 +10,14 @@ def upload_file(dataset_id: str, file_name: str, file_content: bytes) -> str:
     Returns the resolved file path (local or remote path).
     """
     # 1. Try uploading to Supabase Storage
-    if supabase_client:
+    if supabase.supabase_client:
         try:
             # Check if bucket exists, or just try to upload
             # File path inside bucket: "dataset_id/filename.csv"
             storage_path = f"{dataset_id}/{file_name}"
             # Supabase Python SDK upload signature:
             # supabase.storage.from_('bucket').upload(path, file_bytes, file_options)
-            response = supabase_client.storage.from_("datasets").upload(
+            response = supabase.supabase_client.storage.from_("datasets").upload(
                 path=storage_path,
                 file=file_content,
                 file_options={"content-type": "text/csv"}
@@ -25,6 +25,7 @@ def upload_file(dataset_id: str, file_name: str, file_content: bytes) -> str:
             print(f"Uploaded to Supabase storage datasets bucket: {storage_path}")
             return f"supabase://datasets/{storage_path}"
         except Exception as e:
+            supabase._handle_supabase_error(e)
             print(f"Supabase storage upload failed: {e}. Falling back to local storage.")
 
     # 2. Local fallback
@@ -40,16 +41,17 @@ def download_file(file_path: str) -> bytes:
     Returns file content as bytes.
     """
     if file_path.startswith("supabase://"):
-        if supabase_client:
+        if supabase.supabase_client:
             try:
                 # Format: supabase://datasets/dataset_id/filename.csv
                 parts = file_path.replace("supabase://", "").split("/", 1)
                 bucket_name = parts[0]
                 storage_path = parts[1]
                 
-                response = supabase_client.storage.from_(bucket_name).download(storage_path)
+                response = supabase.supabase_client.storage.from_(bucket_name).download(storage_path)
                 return response
             except Exception as e:
+                supabase._handle_supabase_error(e)
                 print(f"Failed to download from Supabase storage: {e}. Checking local disk.")
         
         # If we have a supabase link but supabase client failed, try finding a local version

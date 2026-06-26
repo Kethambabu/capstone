@@ -57,9 +57,15 @@ def test_all_reliability():
     assert res_empty.status_code == 200
     empty_id = res_empty.json()["dataset_id"]
     
+    # Upload customers dataset
+    res_cust = client.post("/upload", files={"file": ("customers.csv", b"CustomerID,Segment,Churn\n1,Premium,No\n", "text/csv")})
+    assert res_cust.status_code == 200
+    cust_id = res_cust.json()["dataset_id"]
+    
     print("Clean ID:", clean_id)
     print("Missing ID:", missing_id)
     print("Empty ID:", empty_id)
+    print("Cust ID:", cust_id)
     
     # Test 1: Revenue decline (correct root cause and A2A embedding)
     print("\n--- TEST 1: REVENUE DECLINE ROOT CAUSE & A2A ---")
@@ -132,6 +138,48 @@ def test_all_reliability():
     print("Block Reason (RBAC):", data5.get("reason"))
     assert data5.get("status") == "blocked"
     assert data5.get("reason") == "unauthorized_access"
+    
+    # Test 5.1: Finance Manager RBAC checks
+    print("\n--- TEST 5.1: FINANCE MANAGER RBAC ---")
+    payload_fin_ok = {
+        "dataset_id": clean_id,
+        "question": "Why did revenue drop in May?",
+        "role": "Finance Manager"
+    }
+    response_fin_ok = client.post("/analyze", json=payload_fin_ok)
+    assert response_fin_ok.status_code == 200
+    assert response_fin_ok.json().get("status") != "blocked"
+
+    payload_fin_block = {
+        "dataset_id": cust_id,
+        "question": "Analyze customer segments",
+        "role": "Finance Manager"
+    }
+    response_fin_block = client.post("/analyze", json=payload_fin_block)
+    assert response_fin_block.status_code == 200
+    assert response_fin_block.json().get("status") == "blocked"
+    assert response_fin_block.json().get("reason") == "unauthorized_access"
+
+    # Test 5.2: Sales Manager RBAC checks
+    print("\n--- TEST 5.2: SALES MANAGER RBAC ---")
+    payload_sales_ok = {
+        "dataset_id": clean_id,
+        "question": "Why did revenue drop in May?",
+        "role": "Sales Manager"
+    }
+    response_sales_ok = client.post("/analyze", json=payload_sales_ok)
+    assert response_sales_ok.status_code == 200
+    assert response_sales_ok.json().get("status") != "blocked"
+
+    payload_sales_block = {
+        "dataset_id": cust_id,
+        "question": "Analyze customer segments",
+        "role": "Sales Manager"
+    }
+    response_sales_block = client.post("/analyze", json=payload_sales_block)
+    assert response_sales_block.status_code == 200
+    assert response_sales_block.json().get("status") == "blocked"
+    assert response_sales_block.json().get("reason") == "unauthorized_access"
     
     # Test 6: Database Run Tracking and Observability Metrics (Day 5)
     print("\n--- TEST 6: AGENTOPS & OBSERVABILITY DB CHECKS ---")

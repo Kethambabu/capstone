@@ -12,13 +12,14 @@ for parent in [current_dir, current_dir.parent, current_dir.parent.parent]:
         break
 
 if env_path:
-    load_dotenv(dotenv_path=env_path)
+    load_dotenv(dotenv_path=env_path, override=True)
 else:
-    load_dotenv()
+    load_dotenv(override=True)
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+USE_SUPABASE = os.environ.get("USE_SUPABASE", "True").lower() in ("true", "1", "yes")
 
 # Set Gemini API Key in the environment for google-genai / google-adk
 if GEMINI_API_KEY:
@@ -37,11 +38,11 @@ MOCK_MODE = not bool(GEMINI_API_KEY)
 
 # --- Token Management Settings ---
 # Primary and fallback model configuration
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
 GEMINI_FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-2.0-flash")
 
 # Output Token Limits (to control generation verbosity and save cost)
-MAX_OUTPUT_TOKENS = int(os.environ.get("MAX_OUTPUT_TOKENS", "1000"))
+MAX_OUTPUT_TOKENS = int(os.environ.get("MAX_OUTPUT_TOKENS", "2000"))
 
 # Maximum length of characters allowed for context elements before truncation
 MAX_SKILL_INSTRUCTION_CHARS = int(os.environ.get("MAX_SKILL_INSTRUCTION_CHARS", "2000"))
@@ -59,4 +60,8 @@ def get_agent_config():
             retry_options=None
         )
     )
+
+# Apply Gemini Key Pool rotation monkeypatch globally on startup
+import backend.services.gemini_client_service
+
 

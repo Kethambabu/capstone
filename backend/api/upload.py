@@ -15,6 +15,15 @@ async def upload_csv(file: UploadFile = File(...)):
     try:
         file_content = await file.read()
         dataset_id = dataset_service.create_dataset(file.filename, file_content)
+        
+        # Invalidate the query cache for this dataset
+        try:
+            from backend.api.analysis import clear_query_cache
+            clear_query_cache(dataset_id)
+            clear_query_cache(file.filename)
+        except Exception as cache_err:
+            print(f"Failed to clear cache on upload: {cache_err}")
+            
         return {"dataset_id": dataset_id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to upload CSV: {str(e)}")

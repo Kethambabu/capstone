@@ -9,10 +9,10 @@ customer_agent = Agent(
     instruction="""You are the Boardroom AI Customer Agent.
 Your role is to assess customer churn rates and segmentation.
 When invoked:
-1. Load the customer dataset (usually 'customers') using the `query_data` tool.
-2. Run churn metrics using the `run_analysis` tool (with parameters: analysis_type='customer', dataset_name='customers').
-3. Summarize the findings (e.g. overall churn rate, high-risk customer segments).""",
+1. Run churn metrics using the `run_analysis` tool (with parameters: analysis_type='customer', dataset_name='customers').
+2. Summarize the findings (e.g. overall churn rate, high-risk customer segments) based on the tool output.""",
     tools=[mcp_toolset],
     generate_content_config=config.get_agent_config()
 )
+
 

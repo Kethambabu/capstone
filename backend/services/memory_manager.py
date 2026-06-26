@@ -1,5 +1,62 @@
 import uuid
+import re
 from backend.database import supabase
+
+def retrieve_similar_episodic_memory(question: str, current_investigation_id: str) -> dict:
+    """
+    Finds the most semantically similar past investigation and returns its findings.
+    Uses word overlap (Jaccard similarity) on lowercase tokens.
+    """
+    try:
+        investigations = supabase.db_get_investigations()
+    except Exception as e:
+        print(f"Failed to get investigations for semantic memory: {e}")
+        return {"past_finding": "None found. This is a new investigation."}
+        
+    if not investigations:
+        return {"past_finding": "None found. This is a new investigation."}
+        
+    def calculate_similarity(q1: str, q2: str) -> float:
+        s1 = set(re.findall(r"\w+", q1.lower()))
+        s2 = set(re.findall(r"\w+", q2.lower()))
+        if not s1 or not s2:
+            return 0.0
+        return len(s1.intersection(s2)) / len(s1.union(s2))
+
+    best_match_id = None
+    best_match_question = None
+    best_score = 0.0
+    
+    for inv in investigations:
+        inv_id = inv.get("id")
+        if inv_id == current_investigation_id:
+            continue
+            
+        inv_question = inv.get("question", "")
+        # Only check completed investigations
+        if inv.get("state") != "COMPLETED":
+            continue
+            
+        score = calculate_similarity(question, inv_question)
+        if score > best_score:
+            best_score = score
+            best_match_id = inv_id
+            best_match_question = inv_question
+            
+    if best_match_id and best_score > 0.15:
+        print(f"[SEMANTIC MEMORY] Found similar past investigation '{best_match_id}' with similarity {best_score:.2f}")
+        past_memory = supabase.db_retrieve_memory("episodic", best_match_id)
+        if past_memory:
+            findings = past_memory.get("findings", "")
+            if isinstance(findings, dict):
+                findings = findings.get("findings", "")
+            # Return findings snippet
+            return {
+                "past_finding": f"Relevant historical context (from similar query '{best_match_question}'): {findings}"
+            }
+            
+    return {"past_finding": "None found. This is a new investigation."}
+
 
 def seed_semantic_memory():
     """Seeds business rules and formulas into Semantic Memory if not already seeded."""
@@ -68,12 +125,8 @@ def assemble_context_pipeline(question: str, session_id: str, investigation_id: 
     working_str_truncated = truncate_str(working_str, config.MAX_WORKING_MEMORY_CHARS)
     print(f"[ADK TRACE] Working Memory Retrieved for session '{session_id}'")
     
-    # 4. Retrieve / Initialize Episodic Memory (past findings for this investigation)
-    episodic_data = supabase.db_retrieve_memory("episodic", investigation_id)
-    if not episodic_data:
-        # Check if there was any historical run to pull from
-        episodic_data = {"past_finding": "None found. This is a new investigation."}
-        supabase.db_store_memory("episodic", investigation_id, episodic_data)
+    # 4. Retrieve / Initialize Episodic Memory (past findings for this investigation using semantic lookup)
+    episodic_data = retrieve_similar_episodic_memory(question, investigation_id)
     episodic_str = str(episodic_data)
     episodic_str_truncated = truncate_str(episodic_str, config.MAX_EPISODIC_MEMORY_CHARS)
     print(f"[ADK TRACE] Episodic Memory Retrieved for investigation '{investigation_id}'")
