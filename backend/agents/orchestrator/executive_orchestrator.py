@@ -292,10 +292,15 @@ def security_checkpoint(node_input: str):
         except Exception:
             pass
 
+    # Extract the user's actual question to prevent false positive length/injection blocks on assembled_context
+    question_text = node_input
+    if "Question:" in node_input:
+        question_text = node_input.split("Question:", 1)[1].strip()
+
     # Simple check for Viewer role
-    is_viewer = role == "Viewer" or "role: viewer" in node_input.lower() or "viewer role" in node_input.lower()
+    is_viewer = role == "Viewer" or "role: viewer" in question_text.lower() or "viewer role" in question_text.lower()
     role_allowed = is_role_allowed_for_dataset(role, dataset_name)
-    heur_res = scan_safety_heuristics(node_input)
+    heur_res = scan_safety_heuristics(question_text)
     
     if is_viewer or not role_allowed or heur_res:
         reason = "unauthorized_access" if (is_viewer or not role_allowed) else (heur_res.get("reason", "prompt_injection") if heur_res else "safety_violation")

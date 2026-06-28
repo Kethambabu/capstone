@@ -1,1001 +1,1001 @@
-sku,product,stock,reorder_level,warehouse
-SKU00001,Product_1,1878,120,Central
-SKU00002,Product_2,4105,130,South
-SKU00003,Product_3,3630,498,North
-SKU00004,Product_4,3809,447,Central
-SKU00005,Product_5,2819,416,Central
-SKU00006,Product_6,2907,349,South
-SKU00007,Product_7,3077,157,West
-SKU00008,Product_8,3830,151,North
-SKU00009,Product_9,1058,459,Central
-SKU00010,Product_10,2489,140,East
-SKU00011,Product_11,3648,414,South
-SKU00012,Product_12,3264,65,West
-SKU00013,Product_1,3601,159,West
-SKU00014,Product_2,2293,312,South
-SKU00015,Product_3,674,209,West
-SKU00016,Product_4,1878,302,Central
-SKU00017,Product_5,1011,138,West
-SKU00018,Product_6,793,144,North
-SKU00019,Product_7,232,321,East
-SKU00020,Product_8,3027,296,Central
-SKU00021,Product_9,3609,410,South
-SKU00022,Product_10,2173,427,East
-SKU00023,Product_11,3384,255,Central
-SKU00024,Product_12,4606,394,East
-SKU00025,Product_1,2328,367,West
-SKU00026,Product_2,797,335,South
-SKU00027,Product_3,3684,297,South
-SKU00028,Product_4,4487,445,North
-SKU00029,Product_5,4477,116,West
-SKU00030,Product_6,2589,95,North
-SKU00031,Product_7,4701,92,North
-SKU00032,Product_8,4211,278,West
-SKU00033,Product_9,508,488,Central
-SKU00034,Product_10,1463,350,North
-SKU00035,Product_11,3362,493,East
-SKU00036,Product_12,3110,283,Central
-SKU00037,Product_1,1047,248,West
-SKU00038,Product_2,4871,385,South
-SKU00039,Product_3,4435,81,Central
-SKU00040,Product_4,168,313,North
-SKU00041,Product_5,1561,162,East
-SKU00042,Product_6,3172,367,West
-SKU00043,Product_7,574,325,South
-SKU00044,Product_8,1742,195,East
-SKU00045,Product_9,4570,406,South
-SKU00046,Product_10,4016,55,West
-SKU00047,Product_11,2358,389,Central
-SKU00048,Product_12,4024,157,North
-SKU00049,Product_1,530,462,West
-SKU00050,Product_2,990,309,East
-SKU00051,Product_3,2120,120,Central
-SKU00052,Product_4,4964,476,South
-SKU00053,Product_5,2441,389,Central
-SKU00054,Product_6,2528,211,Central
-SKU00055,Product_7,2520,149,East
-SKU00056,Product_8,4408,376,North
-SKU00057,Product_9,1461,82,Central
-SKU00058,Product_10,951,192,Central
-SKU00059,Product_11,964,293,North
-SKU00060,Product_12,2134,273,North
-SKU00061,Product_1,4454,263,South
-SKU00062,Product_2,694,169,South
-SKU00063,Product_3,2244,217,North
-SKU00064,Product_4,2803,398,West
-SKU00065,Product_5,3911,266,North
-SKU00066,Product_6,3024,438,South
-SKU00067,Product_7,1408,483,East
-SKU00068,Product_8,4593,404,East
-SKU00069,Product_9,2978,371,Central
-SKU00070,Product_10,461,266,East
-SKU00071,Product_11,1617,103,South
-SKU00072,Product_12,416,257,East
-SKU00073,Product_1,1388,479,West
-SKU00074,Product_2,4367,129,North
-SKU00075,Product_3,4487,444,North
-SKU00076,Product_4,2594,429,South
-SKU00077,Product_5,4820,482,Central
-SKU00078,Product_6,1746,200,North
-SKU00079,Product_7,3501,104,East
-SKU00080,Product_8,2859,54,West
-SKU00081,Product_9,3978,497,Central
-SKU00082,Product_10,4490,84,Central
-SKU00083,Product_11,4757,398,Central
-SKU00084,Product_12,852,168,North
-SKU00085,Product_1,3290,246,Central
-SKU00086,Product_2,1711,103,South
-SKU00087,Product_3,2525,308,East
-SKU00088,Product_4,3646,311,West
-SKU00089,Product_5,2030,392,East
-SKU00090,Product_6,236,415,South
-SKU00091,Product_7,1056,361,South
-SKU00092,Product_8,2260,51,East
-SKU00093,Product_9,2426,131,North
-SKU00094,Product_10,1025,399,South
-SKU00095,Product_11,908,471,Central
-SKU00096,Product_12,449,489,West
-SKU00097,Product_1,568,54,West
-SKU00098,Product_2,3498,223,South
-SKU00099,Product_3,2860,188,Central
-SKU00100,Product_4,2326,242,East
-SKU00101,Product_5,4309,187,West
-SKU00102,Product_6,1308,346,Central
-SKU00103,Product_7,717,165,Central
-SKU00104,Product_8,969,93,North
-SKU00105,Product_9,3345,395,South
-SKU00106,Product_10,2485,338,Central
-SKU00107,Product_11,3655,268,East
-SKU00108,Product_12,2718,105,West
-SKU00109,Product_1,903,291,North
-SKU00110,Product_2,1450,445,East
-SKU00111,Product_3,1455,307,West
-SKU00112,Product_4,4230,50,South
-SKU00113,Product_5,531,498,East
-SKU00114,Product_6,2267,426,West
-SKU00115,Product_7,332,430,North
-SKU00116,Product_8,1321,338,West
-SKU00117,Product_9,4052,152,Central
-SKU00118,Product_10,1708,341,North
-SKU00119,Product_11,3526,198,East
-SKU00120,Product_12,400,133,South
-SKU00121,Product_1,3630,469,North
-SKU00122,Product_2,3037,75,North
-SKU00123,Product_3,3991,224,North
-SKU00124,Product_4,1478,272,West
-SKU00125,Product_5,1914,178,Central
-SKU00126,Product_6,1057,471,South
-SKU00127,Product_7,2993,191,South
-SKU00128,Product_8,41,395,Central
-SKU00129,Product_9,4896,351,West
-SKU00130,Product_10,2170,347,West
-SKU00131,Product_11,26,184,Central
-SKU00132,Product_12,3533,104,Central
-SKU00133,Product_1,2618,105,East
-SKU00134,Product_2,1170,423,West
-SKU00135,Product_3,3698,125,North
-SKU00136,Product_4,710,368,South
-SKU00137,Product_5,3199,457,West
-SKU00138,Product_6,2423,388,Central
-SKU00139,Product_7,2018,404,North
-SKU00140,Product_8,4760,181,East
-SKU00141,Product_9,4878,91,East
-SKU00142,Product_10,2898,401,North
-SKU00143,Product_11,2047,159,North
-SKU00144,Product_12,1558,119,Central
-SKU00145,Product_1,3594,333,Central
-SKU00146,Product_2,1722,175,South
-SKU00147,Product_3,4052,397,South
-SKU00148,Product_4,1651,345,East
-SKU00149,Product_5,1778,228,North
-SKU00150,Product_6,683,462,East
-SKU00151,Product_7,1279,347,Central
-SKU00152,Product_8,2294,423,West
-SKU00153,Product_9,2010,246,Central
-SKU00154,Product_10,1215,310,West
-SKU00155,Product_11,2582,150,North
-SKU00156,Product_12,1893,474,North
-SKU00157,Product_1,313,110,North
-SKU00158,Product_2,3994,232,South
-SKU00159,Product_3,443,461,South
-SKU00160,Product_4,1671,346,West
-SKU00161,Product_5,2916,416,East
-SKU00162,Product_6,3266,58,East
-SKU00163,Product_7,4677,462,West
-SKU00164,Product_8,4643,255,South
-SKU00165,Product_9,3095,471,Central
-SKU00166,Product_10,4560,367,West
-SKU00167,Product_11,1864,103,East
-SKU00168,Product_12,715,229,West
-SKU00169,Product_1,891,153,West
-SKU00170,Product_2,3807,175,North
-SKU00171,Product_3,500,83,South
-SKU00172,Product_4,2782,214,North
-SKU00173,Product_5,2640,482,South
-SKU00174,Product_6,4502,347,West
-SKU00175,Product_7,1353,319,South
-SKU00176,Product_8,702,338,East
-SKU00177,Product_9,2333,167,North
-SKU00178,Product_10,2194,403,West
-SKU00179,Product_11,2009,141,East
-SKU00180,Product_12,383,149,South
-SKU00181,Product_1,2058,136,South
-SKU00182,Product_2,2323,283,East
-SKU00183,Product_3,885,450,South
-SKU00184,Product_4,1591,173,North
-SKU00185,Product_5,4398,252,Central
-SKU00186,Product_6,2251,81,South
-SKU00187,Product_7,4440,406,West
-SKU00188,Product_8,1783,88,South
-SKU00189,Product_9,4921,143,West
-SKU00190,Product_10,4117,59,South
-SKU00191,Product_11,2583,264,South
-SKU00192,Product_12,1729,457,West
-SKU00193,Product_1,262,149,North
-SKU00194,Product_2,2631,293,Central
-SKU00195,Product_3,3826,107,Central
-SKU00196,Product_4,2430,406,North
-SKU00197,Product_5,391,369,South
-SKU00198,Product_6,2936,68,Central
-SKU00199,Product_7,3672,406,North
-SKU00200,Product_8,539,166,North
-SKU00201,Product_9,1115,185,Central
-SKU00202,Product_10,883,376,West
-SKU00203,Product_11,4323,345,East
-SKU00204,Product_12,2419,62,West
-SKU00205,Product_1,1399,150,South
-SKU00206,Product_2,1576,429,West
-SKU00207,Product_3,2084,204,East
-SKU00208,Product_4,4786,131,East
-SKU00209,Product_5,1535,137,North
-SKU00210,Product_6,4753,154,South
-SKU00211,Product_7,89,179,North
-SKU00212,Product_8,4190,321,West
-SKU00213,Product_9,1654,63,West
-SKU00214,Product_10,1901,177,Central
-SKU00215,Product_11,2679,450,North
-SKU00216,Product_12,2170,109,North
-SKU00217,Product_1,365,276,North
-SKU00218,Product_2,3960,66,North
-SKU00219,Product_3,2372,94,East
-SKU00220,Product_4,518,87,Central
-SKU00221,Product_5,4991,173,South
-SKU00222,Product_6,3710,409,South
-SKU00223,Product_7,829,113,South
-SKU00224,Product_8,2633,426,East
-SKU00225,Product_9,270,302,Central
-SKU00226,Product_10,2986,311,Central
-SKU00227,Product_11,3538,493,East
-SKU00228,Product_12,4564,161,North
-SKU00229,Product_1,4814,151,West
-SKU00230,Product_2,1007,98,North
-SKU00231,Product_3,2317,326,South
-SKU00232,Product_4,604,276,North
-SKU00233,Product_5,4473,72,East
-SKU00234,Product_6,176,381,South
-SKU00235,Product_7,2321,234,West
-SKU00236,Product_8,1714,113,South
-SKU00237,Product_9,636,206,North
-SKU00238,Product_10,2623,332,Central
-SKU00239,Product_11,4155,439,Central
-SKU00240,Product_12,2778,198,Central
-SKU00241,Product_1,3752,376,South
-SKU00242,Product_2,660,412,Central
-SKU00243,Product_3,4365,218,East
-SKU00244,Product_4,3187,182,West
-SKU00245,Product_5,4340,448,Central
-SKU00246,Product_6,4755,454,East
-SKU00247,Product_7,84,363,East
-SKU00248,Product_8,3670,181,South
-SKU00249,Product_9,906,246,South
-SKU00250,Product_10,3521,184,West
-SKU00251,Product_11,1875,84,West
-SKU00252,Product_12,3958,469,North
-SKU00253,Product_1,2136,426,West
-SKU00254,Product_2,2596,448,South
-SKU00255,Product_3,853,269,East
-SKU00256,Product_4,506,435,North
-SKU00257,Product_5,407,425,West
-SKU00258,Product_6,523,234,East
-SKU00259,Product_7,3050,54,South
-SKU00260,Product_8,2397,120,Central
-SKU00261,Product_9,2899,391,North
-SKU00262,Product_10,327,290,East
-SKU00263,Product_11,1835,400,South
-SKU00264,Product_12,1309,465,South
-SKU00265,Product_1,4718,346,North
-SKU00266,Product_2,2535,475,North
-SKU00267,Product_3,2041,380,West
-SKU00268,Product_4,2534,242,West
-SKU00269,Product_5,2192,217,North
-SKU00270,Product_6,755,388,North
-SKU00271,Product_7,145,285,East
-SKU00272,Product_8,3822,343,West
-SKU00273,Product_9,3574,347,South
-SKU00274,Product_10,1627,297,West
-SKU00275,Product_11,4923,214,West
-SKU00276,Product_12,1858,361,North
-SKU00277,Product_1,4722,120,North
-SKU00278,Product_2,3598,280,West
-SKU00279,Product_3,629,104,Central
-SKU00280,Product_4,3166,231,Central
-SKU00281,Product_5,3518,71,West
-SKU00282,Product_6,4352,332,Central
-SKU00283,Product_7,3914,154,West
-SKU00284,Product_8,904,224,North
-SKU00285,Product_9,2617,343,North
-SKU00286,Product_10,2789,417,North
-SKU00287,Product_11,107,88,South
-SKU00288,Product_12,1042,448,North
-SKU00289,Product_1,1388,424,North
-SKU00290,Product_2,1676,499,West
-SKU00291,Product_3,4255,494,Central
-SKU00292,Product_4,4195,109,Central
-SKU00293,Product_5,264,441,North
-SKU00294,Product_6,3821,349,North
-SKU00295,Product_7,2797,348,North
-SKU00296,Product_8,3120,439,West
-SKU00297,Product_9,676,261,West
-SKU00298,Product_10,4894,204,West
-SKU00299,Product_11,3486,222,Central
-SKU00300,Product_12,2706,72,South
-SKU00301,Product_1,3969,289,Central
-SKU00302,Product_2,607,258,West
-SKU00303,Product_3,3425,171,East
-SKU00304,Product_4,2394,302,South
-SKU00305,Product_5,2859,190,North
-SKU00306,Product_6,4896,389,Central
-SKU00307,Product_7,1160,411,South
-SKU00308,Product_8,1847,369,East
-SKU00309,Product_9,4057,202,South
-SKU00310,Product_10,1491,430,Central
-SKU00311,Product_11,2021,263,West
-SKU00312,Product_12,4598,357,North
-SKU00313,Product_1,3015,97,West
-SKU00314,Product_2,4566,366,West
-SKU00315,Product_3,2737,66,Central
-SKU00316,Product_4,2048,345,West
-SKU00317,Product_5,4205,380,West
-SKU00318,Product_6,3954,394,Central
-SKU00319,Product_7,893,118,Central
-SKU00320,Product_8,1087,134,East
-SKU00321,Product_9,4851,331,West
-SKU00322,Product_10,4148,257,South
-SKU00323,Product_11,2309,489,North
-SKU00324,Product_12,3600,89,North
-SKU00325,Product_1,2933,145,Central
-SKU00326,Product_2,2281,299,Central
-SKU00327,Product_3,72,422,East
-SKU00328,Product_4,1380,185,West
-SKU00329,Product_5,483,122,Central
-SKU00330,Product_6,1029,350,Central
-SKU00331,Product_7,3781,322,North
-SKU00332,Product_8,4972,218,West
-SKU00333,Product_9,3779,382,East
-SKU00334,Product_10,1831,442,Central
-SKU00335,Product_11,4954,247,Central
-SKU00336,Product_12,2020,396,Central
-SKU00337,Product_1,778,155,North
-SKU00338,Product_2,3475,150,Central
-SKU00339,Product_3,4723,408,Central
-SKU00340,Product_4,3277,284,North
-SKU00341,Product_5,409,329,Central
-SKU00342,Product_6,1059,378,West
-SKU00343,Product_7,2309,426,West
-SKU00344,Product_8,1600,155,North
-SKU00345,Product_9,4987,444,West
-SKU00346,Product_10,4543,84,East
-SKU00347,Product_11,2233,206,Central
-SKU00348,Product_12,1652,441,East
-SKU00349,Product_1,1297,322,West
-SKU00350,Product_2,351,445,North
-SKU00351,Product_3,3222,289,North
-SKU00352,Product_4,2431,256,East
-SKU00353,Product_5,464,294,West
-SKU00354,Product_6,2513,142,Central
-SKU00355,Product_7,3166,158,West
-SKU00356,Product_8,2209,355,West
-SKU00357,Product_9,555,163,North
-SKU00358,Product_10,299,73,South
-SKU00359,Product_11,3866,342,Central
-SKU00360,Product_12,355,301,Central
-SKU00361,Product_1,563,316,North
-SKU00362,Product_2,4009,404,West
-SKU00363,Product_3,4888,258,North
-SKU00364,Product_4,1022,492,West
-SKU00365,Product_5,1190,104,South
-SKU00366,Product_6,3210,76,South
-SKU00367,Product_7,1904,372,East
-SKU00368,Product_8,2036,493,West
-SKU00369,Product_9,1026,51,North
-SKU00370,Product_10,255,117,North
-SKU00371,Product_11,2418,451,North
-SKU00372,Product_12,2563,197,East
-SKU00373,Product_1,2951,368,Central
-SKU00374,Product_2,269,377,North
-SKU00375,Product_3,927,179,South
-SKU00376,Product_4,63,132,North
-SKU00377,Product_5,4555,91,North
-SKU00378,Product_6,1042,205,North
-SKU00379,Product_7,4188,206,Central
-SKU00380,Product_8,4868,156,North
-SKU00381,Product_9,809,333,Central
-SKU00382,Product_10,2041,237,Central
-SKU00383,Product_11,3088,154,East
-SKU00384,Product_12,1646,161,South
-SKU00385,Product_1,4935,182,North
-SKU00386,Product_2,487,320,North
-SKU00387,Product_3,3081,159,North
-SKU00388,Product_4,1747,122,Central
-SKU00389,Product_5,748,465,West
-SKU00390,Product_6,3837,485,South
-SKU00391,Product_7,527,395,North
-SKU00392,Product_8,1167,342,West
-SKU00393,Product_9,4649,192,West
-SKU00394,Product_10,4610,474,West
-SKU00395,Product_11,3541,309,South
-SKU00396,Product_12,4472,294,West
-SKU00397,Product_1,3739,486,North
-SKU00398,Product_2,483,389,North
-SKU00399,Product_3,451,204,East
-SKU00400,Product_4,4069,198,Central
-SKU00401,Product_5,4397,109,West
-SKU00402,Product_6,3133,135,Central
-SKU00403,Product_7,1773,241,Central
-SKU00404,Product_8,998,376,Central
-SKU00405,Product_9,2065,480,Central
-SKU00406,Product_10,397,231,Central
-SKU00407,Product_11,1803,336,North
-SKU00408,Product_12,2151,322,South
-SKU00409,Product_1,1946,304,West
-SKU00410,Product_2,3717,483,West
-SKU00411,Product_3,3415,56,North
-SKU00412,Product_4,1394,175,North
-SKU00413,Product_5,4128,132,Central
-SKU00414,Product_6,2421,77,South
-SKU00415,Product_7,3919,315,West
-SKU00416,Product_8,3083,332,East
-SKU00417,Product_9,2788,446,North
-SKU00418,Product_10,1844,499,East
-SKU00419,Product_11,1804,300,West
-SKU00420,Product_12,889,237,North
-SKU00421,Product_1,2503,432,West
-SKU00422,Product_2,1893,348,North
-SKU00423,Product_3,1666,118,West
-SKU00424,Product_4,4344,368,East
-SKU00425,Product_5,3065,375,South
-SKU00426,Product_6,3641,148,North
-SKU00427,Product_7,3075,242,East
-SKU00428,Product_8,1259,276,West
-SKU00429,Product_9,2220,231,East
-SKU00430,Product_10,2418,469,North
-SKU00431,Product_11,2838,376,East
-SKU00432,Product_12,2796,142,West
-SKU00433,Product_1,786,192,Central
-SKU00434,Product_2,3367,252,South
-SKU00435,Product_3,4935,451,South
-SKU00436,Product_4,2447,181,Central
-SKU00437,Product_5,3129,316,North
-SKU00438,Product_6,1898,183,East
-SKU00439,Product_7,4503,427,East
-SKU00440,Product_8,3584,228,Central
-SKU00441,Product_9,4159,235,Central
-SKU00442,Product_10,3949,493,West
-SKU00443,Product_11,2467,67,West
-SKU00444,Product_12,2193,372,South
-SKU00445,Product_1,16,450,North
-SKU00446,Product_2,3022,146,North
-SKU00447,Product_3,4993,83,Central
-SKU00448,Product_4,1266,463,South
-SKU00449,Product_5,478,452,South
-SKU00450,Product_6,4296,442,West
-SKU00451,Product_7,3977,473,East
-SKU00452,Product_8,3544,349,North
-SKU00453,Product_9,4274,400,South
-SKU00454,Product_10,4548,236,West
-SKU00455,Product_11,485,396,West
-SKU00456,Product_12,4088,160,West
-SKU00457,Product_1,4673,458,East
-SKU00458,Product_2,337,296,South
-SKU00459,Product_3,860,120,Central
-SKU00460,Product_4,2003,358,Central
-SKU00461,Product_5,1471,481,West
-SKU00462,Product_6,2042,376,West
-SKU00463,Product_7,3428,261,East
-SKU00464,Product_8,3120,358,West
-SKU00465,Product_9,1519,157,South
-SKU00466,Product_10,701,226,West
-SKU00467,Product_11,4388,476,West
-SKU00468,Product_12,4035,277,South
-SKU00469,Product_1,3744,68,North
-SKU00470,Product_2,1173,371,Central
-SKU00471,Product_3,1605,467,West
-SKU00472,Product_4,1879,297,South
-SKU00473,Product_5,3393,258,Central
-SKU00474,Product_6,2124,265,East
-SKU00475,Product_7,4991,250,North
-SKU00476,Product_8,4642,487,West
-SKU00477,Product_9,1446,306,North
-SKU00478,Product_10,3306,155,West
-SKU00479,Product_11,3401,360,West
-SKU00480,Product_12,3783,320,West
-SKU00481,Product_1,2372,432,North
-SKU00482,Product_2,150,320,East
-SKU00483,Product_3,1659,170,South
-SKU00484,Product_4,878,456,South
-SKU00485,Product_5,2319,294,East
-SKU00486,Product_6,2883,115,East
-SKU00487,Product_7,3995,479,West
-SKU00488,Product_8,2415,277,West
-SKU00489,Product_9,1515,419,South
-SKU00490,Product_10,3387,186,West
-SKU00491,Product_11,589,243,West
-SKU00492,Product_12,587,243,East
-SKU00493,Product_1,2619,195,North
-SKU00494,Product_2,1195,194,Central
-SKU00495,Product_3,4353,121,Central
-SKU00496,Product_4,2326,403,West
-SKU00497,Product_5,2605,467,West
-SKU00498,Product_6,2538,241,Central
-SKU00499,Product_7,565,93,East
-SKU00500,Product_8,1756,206,Central
-SKU00501,Product_9,4075,495,Central
-SKU00502,Product_10,1360,65,Central
-SKU00503,Product_11,2568,127,West
-SKU00504,Product_12,2373,101,West
-SKU00505,Product_1,1195,51,Central
-SKU00506,Product_2,2131,281,West
-SKU00507,Product_3,2888,110,Central
-SKU00508,Product_4,1567,181,East
-SKU00509,Product_5,3410,431,West
-SKU00510,Product_6,2367,101,North
-SKU00511,Product_7,3343,346,West
-SKU00512,Product_8,3097,229,East
-SKU00513,Product_9,1260,80,East
-SKU00514,Product_10,1333,459,West
-SKU00515,Product_11,4328,204,South
-SKU00516,Product_12,4644,170,Central
-SKU00517,Product_1,3336,100,Central
-SKU00518,Product_2,3084,144,East
-SKU00519,Product_3,3387,225,West
-SKU00520,Product_4,4713,60,South
-SKU00521,Product_5,2431,441,North
-SKU00522,Product_6,1016,61,Central
-SKU00523,Product_7,641,404,South
-SKU00524,Product_8,4062,94,Central
-SKU00525,Product_9,315,339,West
-SKU00526,Product_10,2303,254,Central
-SKU00527,Product_11,440,268,North
-SKU00528,Product_12,1138,377,West
-SKU00529,Product_1,914,480,East
-SKU00530,Product_2,2303,305,South
-SKU00531,Product_3,4142,297,Central
-SKU00532,Product_4,3421,70,West
-SKU00533,Product_5,2078,90,West
-SKU00534,Product_6,4150,327,Central
-SKU00535,Product_7,2200,326,East
-SKU00536,Product_8,4551,461,Central
-SKU00537,Product_9,35,244,East
-SKU00538,Product_10,817,120,Central
-SKU00539,Product_11,1946,319,West
-SKU00540,Product_12,3956,384,North
-SKU00541,Product_1,4351,122,North
-SKU00542,Product_2,2225,357,West
-SKU00543,Product_3,3325,476,North
-SKU00544,Product_4,507,248,East
-SKU00545,Product_5,3745,125,West
-SKU00546,Product_6,4116,324,East
-SKU00547,Product_7,3877,332,West
-SKU00548,Product_8,4814,195,East
-SKU00549,Product_9,459,62,East
-SKU00550,Product_10,1405,412,North
-SKU00551,Product_11,4095,178,West
-SKU00552,Product_12,2036,279,Central
-SKU00553,Product_1,2677,134,North
-SKU00554,Product_2,1744,211,East
-SKU00555,Product_3,2983,446,East
-SKU00556,Product_4,2358,414,Central
-SKU00557,Product_5,1231,420,Central
-SKU00558,Product_6,1177,100,East
-SKU00559,Product_7,761,264,Central
-SKU00560,Product_8,4778,50,South
-SKU00561,Product_9,2354,426,North
-SKU00562,Product_10,4714,461,West
-SKU00563,Product_11,3726,172,Central
-SKU00564,Product_12,1543,337,Central
-SKU00565,Product_1,3677,249,South
-SKU00566,Product_2,1933,232,West
-SKU00567,Product_3,3168,459,South
-SKU00568,Product_4,3561,447,West
-SKU00569,Product_5,4102,265,North
-SKU00570,Product_6,3857,289,Central
-SKU00571,Product_7,4017,398,North
-SKU00572,Product_8,4444,117,West
-SKU00573,Product_9,2964,368,Central
-SKU00574,Product_10,1030,131,South
-SKU00575,Product_11,2547,191,East
-SKU00576,Product_12,2522,460,South
-SKU00577,Product_1,4619,90,East
-SKU00578,Product_2,1875,288,South
-SKU00579,Product_3,589,52,West
-SKU00580,Product_4,2280,143,North
-SKU00581,Product_5,3101,108,East
-SKU00582,Product_6,2414,277,West
-SKU00583,Product_7,3897,456,North
-SKU00584,Product_8,3678,67,North
-SKU00585,Product_9,1843,288,Central
-SKU00586,Product_10,4151,409,Central
-SKU00587,Product_11,1938,123,Central
-SKU00588,Product_12,2194,425,East
-SKU00589,Product_1,4459,381,East
-SKU00590,Product_2,252,218,North
-SKU00591,Product_3,1466,313,East
-SKU00592,Product_4,735,209,North
-SKU00593,Product_5,339,386,West
-SKU00594,Product_6,3587,218,South
-SKU00595,Product_7,1376,478,North
-SKU00596,Product_8,4719,255,North
-SKU00597,Product_9,704,406,West
-SKU00598,Product_10,3724,58,Central
-SKU00599,Product_11,4418,395,Central
-SKU00600,Product_12,2908,353,Central
-SKU00601,Product_1,1974,164,North
-SKU00602,Product_2,1468,201,North
-SKU00603,Product_3,2142,136,East
-SKU00604,Product_4,552,144,East
-SKU00605,Product_5,3491,280,South
-SKU00606,Product_6,789,477,South
-SKU00607,Product_7,1173,235,East
-SKU00608,Product_8,552,499,North
-SKU00609,Product_9,3422,163,West
-SKU00610,Product_10,4211,323,East
-SKU00611,Product_11,631,78,North
-SKU00612,Product_12,269,252,East
-SKU00613,Product_1,860,51,Central
-SKU00614,Product_2,290,127,East
-SKU00615,Product_3,1457,373,Central
-SKU00616,Product_4,629,280,North
-SKU00617,Product_5,474,147,Central
-SKU00618,Product_6,4632,166,East
-SKU00619,Product_7,4080,159,Central
-SKU00620,Product_8,4780,216,West
-SKU00621,Product_9,1760,346,Central
-SKU00622,Product_10,3082,420,Central
-SKU00623,Product_11,4708,386,South
-SKU00624,Product_12,3974,427,West
-SKU00625,Product_1,3398,136,North
-SKU00626,Product_2,2323,71,Central
-SKU00627,Product_3,3561,259,West
-SKU00628,Product_4,2392,354,North
-SKU00629,Product_5,3844,461,West
-SKU00630,Product_6,2415,321,South
-SKU00631,Product_7,3804,373,North
-SKU00632,Product_8,4826,495,North
-SKU00633,Product_9,1624,469,Central
-SKU00634,Product_10,1508,327,East
-SKU00635,Product_11,4110,188,North
-SKU00636,Product_12,4853,390,North
-SKU00637,Product_1,3,426,South
-SKU00638,Product_2,3447,281,South
-SKU00639,Product_3,2580,282,South
-SKU00640,Product_4,3791,129,Central
-SKU00641,Product_5,1160,475,North
-SKU00642,Product_6,833,104,South
-SKU00643,Product_7,1998,340,South
-SKU00644,Product_8,1202,490,West
-SKU00645,Product_9,2175,83,West
-SKU00646,Product_10,1381,378,South
-SKU00647,Product_11,4173,382,Central
-SKU00648,Product_12,2788,437,East
-SKU00649,Product_1,2821,301,West
-SKU00650,Product_2,4177,479,West
-SKU00651,Product_3,341,174,North
-SKU00652,Product_4,1361,60,North
-SKU00653,Product_5,4191,366,South
-SKU00654,Product_6,4616,171,North
-SKU00655,Product_7,995,84,North
-SKU00656,Product_8,356,118,East
-SKU00657,Product_9,185,362,Central
-SKU00658,Product_10,1693,188,South
-SKU00659,Product_11,2590,61,East
-SKU00660,Product_12,1342,174,South
-SKU00661,Product_1,1691,348,Central
-SKU00662,Product_2,1082,196,South
-SKU00663,Product_3,2057,126,North
-SKU00664,Product_4,2904,117,Central
-SKU00665,Product_5,3195,255,East
-SKU00666,Product_6,4451,285,East
-SKU00667,Product_7,3417,108,West
-SKU00668,Product_8,2380,307,East
-SKU00669,Product_9,16,303,West
-SKU00670,Product_10,323,441,North
-SKU00671,Product_11,2070,455,East
-SKU00672,Product_12,930,292,Central
-SKU00673,Product_1,4554,326,West
-SKU00674,Product_2,4652,269,East
-SKU00675,Product_3,1444,274,North
-SKU00676,Product_4,4036,462,Central
-SKU00677,Product_5,402,150,Central
-SKU00678,Product_6,3402,391,North
-SKU00679,Product_7,4552,171,East
-SKU00680,Product_8,1506,267,South
-SKU00681,Product_9,1521,124,East
-SKU00682,Product_10,3098,380,West
-SKU00683,Product_11,2444,286,West
-SKU00684,Product_12,2187,388,East
-SKU00685,Product_1,2568,289,West
-SKU00686,Product_2,2793,214,South
-SKU00687,Product_3,91,383,South
-SKU00688,Product_4,4947,206,Central
-SKU00689,Product_5,4940,260,West
-SKU00690,Product_6,4762,470,East
-SKU00691,Product_7,1753,326,Central
-SKU00692,Product_8,4892,265,South
-SKU00693,Product_9,87,267,Central
-SKU00694,Product_10,1641,282,North
-SKU00695,Product_11,2962,425,West
-SKU00696,Product_12,2142,61,East
-SKU00697,Product_1,550,481,South
-SKU00698,Product_2,2446,132,Central
-SKU00699,Product_3,1951,480,East
-SKU00700,Product_4,2290,162,West
-SKU00701,Product_5,3837,320,East
-SKU00702,Product_6,623,244,West
-SKU00703,Product_7,3757,418,West
-SKU00704,Product_8,4796,190,West
-SKU00705,Product_9,3292,492,Central
-SKU00706,Product_10,3832,173,West
-SKU00707,Product_11,2611,190,East
-SKU00708,Product_12,161,257,North
-SKU00709,Product_1,1992,164,East
-SKU00710,Product_2,2082,255,Central
-SKU00711,Product_3,3013,452,West
-SKU00712,Product_4,36,490,North
-SKU00713,Product_5,845,337,Central
-SKU00714,Product_6,2876,404,South
-SKU00715,Product_7,3346,392,South
-SKU00716,Product_8,4054,198,South
-SKU00717,Product_9,4200,259,North
-SKU00718,Product_10,335,161,East
-SKU00719,Product_11,3097,191,North
-SKU00720,Product_12,2343,73,North
-SKU00721,Product_1,1560,98,North
-SKU00722,Product_2,4981,337,South
-SKU00723,Product_3,4164,380,East
-SKU00724,Product_4,4246,414,North
-SKU00725,Product_5,661,60,East
-SKU00726,Product_6,4852,237,West
-SKU00727,Product_7,3739,117,North
-SKU00728,Product_8,3183,494,North
-SKU00729,Product_9,1485,139,North
-SKU00730,Product_10,2409,159,West
-SKU00731,Product_11,4298,438,West
-SKU00732,Product_12,2534,213,South
-SKU00733,Product_1,3,497,Central
-SKU00734,Product_2,3097,255,East
-SKU00735,Product_3,2848,81,Central
-SKU00736,Product_4,26,376,North
-SKU00737,Product_5,964,123,North
-SKU00738,Product_6,3096,300,South
-SKU00739,Product_7,71,499,Central
-SKU00740,Product_8,2947,443,North
-SKU00741,Product_9,2315,404,Central
-SKU00742,Product_10,3897,70,South
-SKU00743,Product_11,4490,345,Central
-SKU00744,Product_12,4964,347,East
-SKU00745,Product_1,2411,377,South
-SKU00746,Product_2,116,351,Central
-SKU00747,Product_3,2211,387,North
-SKU00748,Product_4,2924,122,West
-SKU00749,Product_5,2837,423,West
-SKU00750,Product_6,576,90,South
-SKU00751,Product_7,771,143,West
-SKU00752,Product_8,199,181,East
-SKU00753,Product_9,1755,148,South
-SKU00754,Product_10,179,447,North
-SKU00755,Product_11,2405,447,North
-SKU00756,Product_12,3323,102,South
-SKU00757,Product_1,4748,278,West
-SKU00758,Product_2,4773,177,West
-SKU00759,Product_3,2301,261,North
-SKU00760,Product_4,2988,334,East
-SKU00761,Product_5,1602,328,West
-SKU00762,Product_6,1119,390,East
-SKU00763,Product_7,2214,208,West
-SKU00764,Product_8,1911,401,South
-SKU00765,Product_9,2901,282,Central
-SKU00766,Product_10,1085,120,North
-SKU00767,Product_11,173,254,South
-SKU00768,Product_12,3532,238,West
-SKU00769,Product_1,4719,200,North
-SKU00770,Product_2,1238,57,Central
-SKU00771,Product_3,3310,381,Central
-SKU00772,Product_4,4834,149,West
-SKU00773,Product_5,3813,65,North
-SKU00774,Product_6,3816,203,West
-SKU00775,Product_7,4770,206,Central
-SKU00776,Product_8,1973,142,South
-SKU00777,Product_9,3782,311,South
-SKU00778,Product_10,2244,86,East
-SKU00779,Product_11,1657,210,Central
-SKU00780,Product_12,412,400,Central
-SKU00781,Product_1,3410,223,West
-SKU00782,Product_2,4092,366,East
-SKU00783,Product_3,1382,474,East
-SKU00784,Product_4,1123,67,North
-SKU00785,Product_5,4329,416,West
-SKU00786,Product_6,4012,400,South
-SKU00787,Product_7,2243,65,North
-SKU00788,Product_8,2589,409,East
-SKU00789,Product_9,1778,484,South
-SKU00790,Product_10,1129,470,Central
-SKU00791,Product_11,644,319,West
-SKU00792,Product_12,3522,408,East
-SKU00793,Product_1,1557,117,Central
-SKU00794,Product_2,4501,79,East
-SKU00795,Product_3,2773,365,South
-SKU00796,Product_4,2785,358,North
-SKU00797,Product_5,1706,274,South
-SKU00798,Product_6,2601,213,West
-SKU00799,Product_7,3643,463,West
-SKU00800,Product_8,374,369,East
-SKU00801,Product_9,1612,63,South
-SKU00802,Product_10,454,328,North
-SKU00803,Product_11,4297,481,West
-SKU00804,Product_12,1475,205,North
-SKU00805,Product_1,853,171,Central
-SKU00806,Product_2,723,312,East
-SKU00807,Product_3,1391,219,North
-SKU00808,Product_4,2387,59,East
-SKU00809,Product_5,261,221,Central
-SKU00810,Product_6,542,407,North
-SKU00811,Product_7,550,62,North
-SKU00812,Product_8,3797,262,Central
-SKU00813,Product_9,637,210,South
-SKU00814,Product_10,164,281,North
-SKU00815,Product_11,2805,209,North
-SKU00816,Product_12,620,176,West
-SKU00817,Product_1,1223,97,South
-SKU00818,Product_2,3342,310,North
-SKU00819,Product_3,50,110,Central
-SKU00820,Product_4,488,171,East
-SKU00821,Product_5,664,139,Central
-SKU00822,Product_6,1246,408,South
-SKU00823,Product_7,2710,304,West
-SKU00824,Product_8,4361,139,West
-SKU00825,Product_9,4168,52,West
-SKU00826,Product_10,3952,329,Central
-SKU00827,Product_11,2591,166,East
-SKU00828,Product_12,880,147,East
-SKU00829,Product_1,434,211,North
-SKU00830,Product_2,1984,389,East
-SKU00831,Product_3,4452,424,East
-SKU00832,Product_4,4113,347,North
-SKU00833,Product_5,3870,453,Central
-SKU00834,Product_6,2622,346,Central
-SKU00835,Product_7,1792,131,South
-SKU00836,Product_8,2798,407,Central
-SKU00837,Product_9,3512,197,West
-SKU00838,Product_10,1493,55,West
-SKU00839,Product_11,2679,427,South
-SKU00840,Product_12,1625,234,East
-SKU00841,Product_1,2419,475,South
-SKU00842,Product_2,3017,301,North
-SKU00843,Product_3,1847,74,South
-SKU00844,Product_4,3246,90,South
-SKU00845,Product_5,1538,218,West
-SKU00846,Product_6,1316,52,North
-SKU00847,Product_7,1719,413,North
-SKU00848,Product_8,1950,220,South
-SKU00849,Product_9,223,479,North
-SKU00850,Product_10,2026,106,North
-SKU00851,Product_11,1547,132,Central
-SKU00852,Product_12,3778,379,North
-SKU00853,Product_1,3723,228,East
-SKU00854,Product_2,1523,182,North
-SKU00855,Product_3,2703,135,West
-SKU00856,Product_4,1972,402,Central
-SKU00857,Product_5,4528,320,West
-SKU00858,Product_6,4604,393,West
-SKU00859,Product_7,4603,143,East
-SKU00860,Product_8,616,431,Central
-SKU00861,Product_9,4515,405,South
-SKU00862,Product_10,4169,299,North
-SKU00863,Product_11,2621,344,East
-SKU00864,Product_12,4241,247,East
-SKU00865,Product_1,2093,128,South
-SKU00866,Product_2,1764,215,East
-SKU00867,Product_3,3176,88,South
-SKU00868,Product_4,1132,357,South
-SKU00869,Product_5,4216,263,South
-SKU00870,Product_6,3570,180,East
-SKU00871,Product_7,1066,206,South
-SKU00872,Product_8,2146,431,East
-SKU00873,Product_9,705,208,Central
-SKU00874,Product_10,2358,371,South
-SKU00875,Product_11,3534,276,East
-SKU00876,Product_12,3812,94,East
-SKU00877,Product_1,2470,250,East
-SKU00878,Product_2,4067,71,North
-SKU00879,Product_3,3460,388,North
-SKU00880,Product_4,3768,291,South
-SKU00881,Product_5,1934,278,Central
-SKU00882,Product_6,2319,443,South
-SKU00883,Product_7,2872,287,West
-SKU00884,Product_8,209,198,West
-SKU00885,Product_9,4834,322,Central
-SKU00886,Product_10,2807,116,Central
-SKU00887,Product_11,4254,56,Central
-SKU00888,Product_12,3962,282,North
-SKU00889,Product_1,4836,406,North
-SKU00890,Product_2,1953,341,West
-SKU00891,Product_3,2390,305,Central
-SKU00892,Product_4,3525,116,East
-SKU00893,Product_5,4794,299,West
-SKU00894,Product_6,3214,126,Central
-SKU00895,Product_7,2444,463,East
-SKU00896,Product_8,2583,136,Central
-SKU00897,Product_9,140,301,South
-SKU00898,Product_10,4335,271,East
-SKU00899,Product_11,291,462,South
-SKU00900,Product_12,2864,121,North
-SKU00901,Product_1,4177,251,West
-SKU00902,Product_2,2607,466,Central
-SKU00903,Product_3,3936,108,West
-SKU00904,Product_4,2917,325,Central
-SKU00905,Product_5,2218,270,South
-SKU00906,Product_6,1797,206,East
-SKU00907,Product_7,976,230,East
-SKU00908,Product_8,579,262,Central
-SKU00909,Product_9,2573,178,South
-SKU00910,Product_10,2589,292,Central
-SKU00911,Product_11,3283,467,Central
-SKU00912,Product_12,1799,221,Central
-SKU00913,Product_1,1461,414,East
-SKU00914,Product_2,4417,319,Central
-SKU00915,Product_3,4068,470,East
-SKU00916,Product_4,2947,212,North
-SKU00917,Product_5,713,492,South
-SKU00918,Product_6,2423,73,North
-SKU00919,Product_7,1890,242,Central
-SKU00920,Product_8,3567,415,East
-SKU00921,Product_9,1678,439,South
-SKU00922,Product_10,2147,343,West
-SKU00923,Product_11,917,178,South
-SKU00924,Product_12,2266,90,South
-SKU00925,Product_1,2524,80,Central
-SKU00926,Product_2,1806,85,North
-SKU00927,Product_3,4051,410,North
-SKU00928,Product_4,559,302,West
-SKU00929,Product_5,628,487,Central
-SKU00930,Product_6,3066,414,South
-SKU00931,Product_7,1911,264,North
-SKU00932,Product_8,3762,336,North
-SKU00933,Product_9,3551,305,East
-SKU00934,Product_10,1808,462,South
-SKU00935,Product_11,2386,418,Central
-SKU00936,Product_12,1895,436,North
-SKU00937,Product_1,3930,235,Central
-SKU00938,Product_2,1006,110,South
-SKU00939,Product_3,48,311,South
-SKU00940,Product_4,1850,325,North
-SKU00941,Product_5,1929,160,West
-SKU00942,Product_6,2132,366,Central
-SKU00943,Product_7,1525,479,Central
-SKU00944,Product_8,328,190,East
-SKU00945,Product_9,2657,282,South
-SKU00946,Product_10,4529,72,South
-SKU00947,Product_11,587,128,North
-SKU00948,Product_12,3205,80,North
-SKU00949,Product_1,1598,53,North
-SKU00950,Product_2,3851,167,East
-SKU00951,Product_3,2472,115,West
-SKU00952,Product_4,2817,449,North
-SKU00953,Product_5,4607,420,North
-SKU00954,Product_6,1408,336,North
-SKU00955,Product_7,1011,225,East
-SKU00956,Product_8,4659,172,Central
-SKU00957,Product_9,4398,280,West
-SKU00958,Product_10,4044,92,Central
-SKU00959,Product_11,1329,53,South
-SKU00960,Product_12,2604,239,South
-SKU00961,Product_1,2023,353,North
-SKU00962,Product_2,4507,461,Central
-SKU00963,Product_3,3185,299,East
-SKU00964,Product_4,4603,193,West
-SKU00965,Product_5,4151,394,Central
-SKU00966,Product_6,2593,431,Central
-SKU00967,Product_7,3341,382,West
-SKU00968,Product_8,195,207,Central
-SKU00969,Product_9,1790,114,Central
-SKU00970,Product_10,1106,374,West
-SKU00971,Product_11,2789,319,East
-SKU00972,Product_12,2184,124,West
-SKU00973,Product_1,538,467,North
-SKU00974,Product_2,4784,489,North
-SKU00975,Product_3,718,78,North
-SKU00976,Product_4,3995,384,North
-SKU00977,Product_5,305,287,South
-SKU00978,Product_6,387,202,East
-SKU00979,Product_7,724,143,South
-SKU00980,Product_8,2596,286,Central
-SKU00981,Product_9,2435,371,Central
-SKU00982,Product_10,2340,164,West
-SKU00983,Product_11,178,345,North
-SKU00984,Product_12,1903,268,West
-SKU00985,Product_1,1704,295,Central
-SKU00986,Product_2,3383,448,North
-SKU00987,Product_3,4175,81,East
-SKU00988,Product_4,4542,69,Central
-SKU00989,Product_5,4861,102,West
-SKU00990,Product_6,4665,255,West
-SKU00991,Product_7,95,268,Central
-SKU00992,Product_8,1283,244,South
-SKU00993,Product_9,247,354,East
-SKU00994,Product_10,981,244,Central
-SKU00995,Product_11,4363,394,Central
-SKU00996,Product_12,1565,131,West
-SKU00997,Product_1,2141,50,North
-SKU00998,Product_2,735,216,North
-SKU00999,Product_3,3387,366,North
-SKU01000,Product_4,2659,232,West
+sku,product_id,product,warehouse,region,stock,reorder_level,supplier,lead_time_days,stockout,stockout_month,event_note
+SKU00001,P001,CloudSync Pro,North,North,3863,163,SwiftParts Co,10,No,,
+SKU00002,P001,CloudSync Pro,North,North,2671,325,TechSupply Ltd,15,No,,
+SKU00003,P001,CloudSync Pro,North,North,1634,165,EastWest Logistics,21,No,,
+SKU00004,P001,CloudSync Pro,North,North,132,474,GlobalParts Inc,13,No,,
+SKU00005,P001,CloudSync Pro,South,South,802,403,AlphaSupplier,17,No,,
+SKU00006,P001,CloudSync Pro,South,South,696,100,TechSupply Ltd,19,No,,
+SKU00007,P001,CloudSync Pro,South,South,3946,130,DigiStock Hub,14,No,,
+SKU00008,P001,CloudSync Pro,East,East,158,204,EastWest Logistics,9,No,,
+SKU00009,P001,CloudSync Pro,East,East,1950,327,TechSupply Ltd,18,No,,
+SKU00010,P001,CloudSync Pro,East,East,1521,400,EastWest Logistics,8,No,,
+SKU00011,P001,CloudSync Pro,East,East,771,257,NovaBridge Supplies,23,No,,
+SKU00012,P001,CloudSync Pro,East,East,909,293,AlphaSupplier,24,No,,
+SKU00013,P001,CloudSync Pro,West,West,566,469,AlphaSupplier,12,No,,
+SKU00014,P001,CloudSync Pro,West,West,185,160,SwiftParts Co,29,No,,
+SKU00015,P001,CloudSync Pro,West,West,2451,130,TechSupply Ltd,12,No,,
+SKU00016,P001,CloudSync Pro,Central,Central,2227,449,GlobalParts Inc,14,No,,
+SKU00017,P001,CloudSync Pro,Central,Central,807,127,SwiftParts Co,5,No,,
+SKU00018,P001,CloudSync Pro,Central,Central,440,393,GlobalParts Inc,18,No,,
+SKU00019,P001,CloudSync Pro,Central,Central,2411,172,GlobalParts Inc,8,No,,
+SKU00020,P001,CloudSync Pro,Central,Central,1580,366,NovaBridge Supplies,11,No,,
+SKU00021,P002,DataVault Enterprise,North,North,2045,93,DigiStock Hub,24,No,,
+SKU00022,P002,DataVault Enterprise,North,North,288,380,GlobalParts Inc,5,No,,
+SKU00023,P002,DataVault Enterprise,North,North,2952,347,GlobalParts Inc,10,No,,
+SKU00024,P002,DataVault Enterprise,South,South,457,242,SwiftParts Co,18,No,,
+SKU00025,P002,DataVault Enterprise,South,South,3497,224,EastWest Logistics,10,No,,
+SKU00026,P002,DataVault Enterprise,South,South,2990,396,AlphaSupplier,27,No,,
+SKU00027,P002,DataVault Enterprise,South,South,2066,82,CoreComponents,27,No,,
+SKU00028,P002,DataVault Enterprise,South,South,2506,208,SwiftParts Co,16,No,,
+SKU00029,P002,DataVault Enterprise,East,East,14,174,GlobalParts Inc,42,Yes,2026-05,Critical stockout -- no inventory in East WH
+SKU00030,P002,DataVault Enterprise,East,East,4,129,GlobalParts Inc,42,Yes,2026-05,Critical stockout -- no inventory in East WH
+SKU00031,P002,DataVault Enterprise,East,East,0,136,GlobalParts Inc,42,Yes,2026-05,Critical stockout -- no inventory in East WH
+SKU00032,P002,DataVault Enterprise,West,West,3092,169,NovaBridge Supplies,9,No,,
+SKU00033,P002,DataVault Enterprise,West,West,2716,371,TechSupply Ltd,17,No,,
+SKU00034,P002,DataVault Enterprise,West,West,3802,450,DigiStock Hub,19,No,,
+SKU00035,P002,DataVault Enterprise,West,West,1407,242,TechSupply Ltd,14,No,,
+SKU00036,P002,DataVault Enterprise,Central,Central,1229,478,DigiStock Hub,28,No,,
+SKU00037,P002,DataVault Enterprise,Central,Central,102,450,NovaBridge Supplies,19,No,,
+SKU00038,P002,DataVault Enterprise,Central,Central,1261,437,TechSupply Ltd,24,No,,
+SKU00039,P002,DataVault Enterprise,Central,Central,2825,364,SwiftParts Co,11,No,,
+SKU00040,P003,NetShield Plus,North,North,2794,281,TechSupply Ltd,7,No,,
+SKU00041,P003,NetShield Plus,North,North,1773,414,DigiStock Hub,18,No,,
+SKU00042,P003,NetShield Plus,North,North,289,226,AlphaSupplier,15,No,,
+SKU00043,P003,NetShield Plus,North,North,1978,381,EastWest Logistics,26,No,,
+SKU00044,P003,NetShield Plus,North,North,562,63,AlphaSupplier,7,No,,
+SKU00045,P003,NetShield Plus,South,South,404,470,EastWest Logistics,22,No,,
+SKU00046,P003,NetShield Plus,South,South,2292,78,SwiftParts Co,20,No,,
+SKU00047,P003,NetShield Plus,South,South,353,458,AlphaSupplier,26,No,,
+SKU00048,P003,NetShield Plus,South,South,590,175,GlobalParts Inc,9,No,,
+SKU00049,P003,NetShield Plus,South,South,516,250,TechSupply Ltd,26,No,,
+SKU00050,P003,NetShield Plus,East,East,1632,372,DigiStock Hub,5,No,,
+SKU00051,P003,NetShield Plus,East,East,1801,154,DigiStock Hub,25,No,,
+SKU00052,P003,NetShield Plus,East,East,604,127,SwiftParts Co,12,No,,
+SKU00053,P003,NetShield Plus,East,East,2041,113,NovaBridge Supplies,26,No,,
+SKU00054,P003,NetShield Plus,West,West,686,86,SwiftParts Co,23,No,,
+SKU00055,P003,NetShield Plus,West,West,3403,375,EastWest Logistics,17,No,,
+SKU00056,P003,NetShield Plus,West,West,2149,238,CoreComponents,25,No,,
+SKU00057,P003,NetShield Plus,West,West,3783,304,AlphaSupplier,12,No,,
+SKU00058,P003,NetShield Plus,West,West,1221,483,TechSupply Ltd,7,No,,
+SKU00059,P003,NetShield Plus,Central,Central,138,70,CoreComponents,11,No,,
+SKU00060,P003,NetShield Plus,Central,Central,1052,282,GlobalParts Inc,28,No,,
+SKU00061,P003,NetShield Plus,Central,Central,3770,175,SwiftParts Co,29,No,,
+SKU00062,P004,AnalyticsEdge,North,North,2929,407,EastWest Logistics,12,No,,
+SKU00063,P004,AnalyticsEdge,North,North,636,182,TechSupply Ltd,11,No,,
+SKU00064,P004,AnalyticsEdge,North,North,2505,387,AlphaSupplier,16,No,,
+SKU00065,P004,AnalyticsEdge,North,North,2559,156,AlphaSupplier,17,No,,
+SKU00066,P004,AnalyticsEdge,North,North,3142,324,EastWest Logistics,20,No,,
+SKU00067,P004,AnalyticsEdge,South,South,2060,387,CoreComponents,8,No,,
+SKU00068,P004,AnalyticsEdge,South,South,2847,304,NovaBridge Supplies,30,No,,
+SKU00069,P004,AnalyticsEdge,South,South,2385,86,AlphaSupplier,15,No,,
+SKU00070,P004,AnalyticsEdge,South,South,3815,318,SwiftParts Co,11,No,,
+SKU00071,P004,AnalyticsEdge,South,South,436,100,EastWest Logistics,6,No,,
+SKU00072,P004,AnalyticsEdge,East,East,3342,230,GlobalParts Inc,17,No,,
+SKU00073,P004,AnalyticsEdge,East,East,1802,251,EastWest Logistics,27,No,,
+SKU00074,P004,AnalyticsEdge,East,East,1815,277,CoreComponents,10,No,,
+SKU00075,P004,AnalyticsEdge,East,East,310,462,NovaBridge Supplies,16,No,,
+SKU00076,P004,AnalyticsEdge,West,West,1195,211,DigiStock Hub,10,No,,
+SKU00077,P004,AnalyticsEdge,West,West,3991,463,SwiftParts Co,12,No,,
+SKU00078,P004,AnalyticsEdge,West,West,3941,477,NovaBridge Supplies,20,No,,
+SKU00079,P004,AnalyticsEdge,Central,Central,3860,434,AlphaSupplier,15,No,,
+SKU00080,P004,AnalyticsEdge,Central,Central,1972,260,AlphaSupplier,24,No,,
+SKU00081,P004,AnalyticsEdge,Central,Central,1857,311,CoreComponents,21,No,,
+SKU00082,P004,AnalyticsEdge,Central,Central,1794,131,CoreComponents,23,No,,
+SKU00083,P005,ConnectBridge,North,North,2416,197,CoreComponents,30,No,,
+SKU00084,P005,ConnectBridge,North,North,138,207,SwiftParts Co,8,No,,
+SKU00085,P005,ConnectBridge,North,North,615,211,AlphaSupplier,25,No,,
+SKU00086,P005,ConnectBridge,South,South,580,340,AlphaSupplier,23,No,,
+SKU00087,P005,ConnectBridge,South,South,1619,323,AlphaSupplier,15,No,,
+SKU00088,P005,ConnectBridge,South,South,635,469,SwiftParts Co,8,No,,
+SKU00089,P005,ConnectBridge,East,East,3187,114,GlobalParts Inc,18,No,,
+SKU00090,P005,ConnectBridge,East,East,2962,302,DigiStock Hub,18,No,,
+SKU00091,P005,ConnectBridge,East,East,3919,168,EastWest Logistics,24,No,,
+SKU00092,P005,ConnectBridge,East,East,139,364,SwiftParts Co,27,No,,
+SKU00093,P005,ConnectBridge,East,East,3235,160,DigiStock Hub,23,No,,
+SKU00094,P005,ConnectBridge,West,West,348,117,CoreComponents,9,No,,
+SKU00095,P005,ConnectBridge,West,West,1840,494,TechSupply Ltd,14,No,,
+SKU00096,P005,ConnectBridge,West,West,812,125,SwiftParts Co,5,No,,
+SKU00097,P005,ConnectBridge,West,West,3707,302,NovaBridge Supplies,14,No,,
+SKU00098,P005,ConnectBridge,Central,Central,3780,226,GlobalParts Inc,14,No,,
+SKU00099,P005,ConnectBridge,Central,Central,2373,287,DigiStock Hub,28,No,,
+SKU00100,P005,ConnectBridge,Central,Central,526,492,EastWest Logistics,16,No,,
+SKU00101,P005,ConnectBridge,Central,Central,2734,76,CoreComponents,27,No,,
+SKU00102,P006,StorageMax HDD,North,North,992,382,GlobalParts Inc,11,No,,
+SKU00103,P006,StorageMax HDD,North,North,1248,281,EastWest Logistics,7,No,,
+SKU00104,P006,StorageMax HDD,North,North,1045,148,EastWest Logistics,29,No,,
+SKU00105,P006,StorageMax HDD,North,North,3044,500,DigiStock Hub,25,No,,
+SKU00106,P006,StorageMax HDD,South,South,2911,410,GlobalParts Inc,23,No,,
+SKU00107,P006,StorageMax HDD,South,South,312,417,CoreComponents,15,No,,
+SKU00108,P006,StorageMax HDD,South,South,1689,442,AlphaSupplier,20,No,,
+SKU00109,P006,StorageMax HDD,East,East,1669,150,DigiStock Hub,5,No,,
+SKU00110,P006,StorageMax HDD,East,East,949,393,AlphaSupplier,25,No,,
+SKU00111,P006,StorageMax HDD,East,East,3359,316,EastWest Logistics,30,No,,
+SKU00112,P006,StorageMax HDD,East,East,67,107,AlphaSupplier,11,No,,
+SKU00113,P006,StorageMax HDD,East,East,3667,456,TechSupply Ltd,9,No,,
+SKU00114,P006,StorageMax HDD,West,West,3700,418,GlobalParts Inc,6,No,,
+SKU00115,P006,StorageMax HDD,West,West,3810,187,CoreComponents,21,No,,
+SKU00116,P006,StorageMax HDD,West,West,3396,179,EastWest Logistics,17,No,,
+SKU00117,P006,StorageMax HDD,Central,Central,3133,158,NovaBridge Supplies,11,No,,
+SKU00118,P006,StorageMax HDD,Central,Central,2817,345,AlphaSupplier,19,No,,
+SKU00119,P006,StorageMax HDD,Central,Central,3928,454,AlphaSupplier,5,No,,
+SKU00120,P006,StorageMax HDD,Central,Central,2262,359,EastWest Logistics,27,No,,
+SKU00121,P006,StorageMax HDD,Central,Central,3014,428,AlphaSupplier,20,No,,
+SKU00122,P007,ServerLink X1,North,North,897,245,TechSupply Ltd,27,No,,
+SKU00123,P007,ServerLink X1,North,North,2671,396,GlobalParts Inc,15,No,,
+SKU00124,P007,ServerLink X1,North,North,3807,196,CoreComponents,24,No,,
+SKU00125,P007,ServerLink X1,North,North,595,62,AlphaSupplier,24,No,,
+SKU00126,P007,ServerLink X1,North,North,1196,340,SwiftParts Co,18,No,,
+SKU00127,P007,ServerLink X1,South,South,3601,146,GlobalParts Inc,8,No,,
+SKU00128,P007,ServerLink X1,South,South,2596,239,EastWest Logistics,13,No,,
+SKU00129,P007,ServerLink X1,South,South,3861,160,TechSupply Ltd,23,No,,
+SKU00130,P007,ServerLink X1,South,South,3428,384,SwiftParts Co,6,No,,
+SKU00131,P007,ServerLink X1,South,South,493,219,GlobalParts Inc,7,No,,
+SKU00132,P007,ServerLink X1,East,East,1996,226,AlphaSupplier,8,No,,
+SKU00133,P007,ServerLink X1,East,East,3645,74,GlobalParts Inc,22,No,,
+SKU00134,P007,ServerLink X1,East,East,3055,310,NovaBridge Supplies,21,No,,
+SKU00135,P007,ServerLink X1,East,East,1095,376,GlobalParts Inc,14,No,,
+SKU00136,P007,ServerLink X1,West,West,301,189,GlobalParts Inc,14,No,,
+SKU00137,P007,ServerLink X1,West,West,1477,257,NovaBridge Supplies,7,No,,
+SKU00138,P007,ServerLink X1,West,West,1442,88,AlphaSupplier,21,No,,
+SKU00139,P007,ServerLink X1,Central,Central,832,317,NovaBridge Supplies,15,No,,
+SKU00140,P007,ServerLink X1,Central,Central,2159,380,TechSupply Ltd,13,No,,
+SKU00141,P007,ServerLink X1,Central,Central,1320,284,NovaBridge Supplies,20,No,,
+SKU00142,P007,ServerLink X1,Central,Central,2121,75,SwiftParts Co,16,No,,
+SKU00143,P007,ServerLink X1,Central,Central,2607,377,NovaBridge Supplies,6,No,,
+SKU00144,P008,CyberAudit Suite,North,North,2164,212,TechSupply Ltd,17,No,,
+SKU00145,P008,CyberAudit Suite,North,North,1882,106,AlphaSupplier,14,No,,
+SKU00146,P008,CyberAudit Suite,North,North,2298,184,DigiStock Hub,19,No,,
+SKU00147,P008,CyberAudit Suite,South,South,202,129,TechSupply Ltd,24,No,,
+SKU00148,P008,CyberAudit Suite,South,South,3785,386,DigiStock Hub,30,No,,
+SKU00149,P008,CyberAudit Suite,South,South,3725,360,TechSupply Ltd,17,No,,
+SKU00150,P008,CyberAudit Suite,East,East,2924,102,NovaBridge Supplies,20,No,,
+SKU00151,P008,CyberAudit Suite,East,East,487,237,AlphaSupplier,7,No,,
+SKU00152,P008,CyberAudit Suite,East,East,3322,314,AlphaSupplier,18,No,,
+SKU00153,P008,CyberAudit Suite,East,East,398,341,AlphaSupplier,8,No,,
+SKU00154,P008,CyberAudit Suite,East,East,1846,232,DigiStock Hub,17,No,,
+SKU00155,P008,CyberAudit Suite,West,West,865,131,NovaBridge Supplies,26,No,,
+SKU00156,P008,CyberAudit Suite,West,West,2001,495,AlphaSupplier,7,No,,
+SKU00157,P008,CyberAudit Suite,West,West,1364,492,GlobalParts Inc,28,No,,
+SKU00158,P008,CyberAudit Suite,West,West,2246,156,GlobalParts Inc,15,No,,
+SKU00159,P008,CyberAudit Suite,West,West,1096,232,SwiftParts Co,11,No,,
+SKU00160,P008,CyberAudit Suite,Central,Central,1474,266,TechSupply Ltd,23,No,,
+SKU00161,P008,CyberAudit Suite,Central,Central,2940,126,SwiftParts Co,19,No,,
+SKU00162,P008,CyberAudit Suite,Central,Central,1543,172,SwiftParts Co,12,No,,
+SKU00163,P008,CyberAudit Suite,Central,Central,2737,353,NovaBridge Supplies,23,No,,
+SKU00164,P008,CyberAudit Suite,Central,Central,702,248,EastWest Logistics,14,No,,
+SKU00165,P009,WorkflowPro,North,North,1967,447,EastWest Logistics,8,No,,
+SKU00166,P009,WorkflowPro,North,North,2341,72,DigiStock Hub,15,No,,
+SKU00167,P009,WorkflowPro,North,North,1402,326,TechSupply Ltd,26,No,,
+SKU00168,P009,WorkflowPro,North,North,1802,330,CoreComponents,18,No,,
+SKU00169,P009,WorkflowPro,South,South,3387,497,NovaBridge Supplies,5,No,,
+SKU00170,P009,WorkflowPro,South,South,671,453,NovaBridge Supplies,5,No,,
+SKU00171,P009,WorkflowPro,South,South,695,472,SwiftParts Co,11,No,,
+SKU00172,P009,WorkflowPro,South,South,2011,436,DigiStock Hub,10,No,,
+SKU00173,P009,WorkflowPro,East,East,2344,465,AlphaSupplier,23,No,,
+SKU00174,P009,WorkflowPro,East,East,1347,85,NovaBridge Supplies,13,No,,
+SKU00175,P009,WorkflowPro,East,East,3075,413,SwiftParts Co,30,No,,
+SKU00176,P009,WorkflowPro,East,East,1360,114,GlobalParts Inc,10,No,,
+SKU00177,P009,WorkflowPro,West,West,1796,104,SwiftParts Co,14,No,,
+SKU00178,P009,WorkflowPro,West,West,3342,328,NovaBridge Supplies,5,No,,
+SKU00179,P009,WorkflowPro,West,West,3905,53,DigiStock Hub,11,No,,
+SKU00180,P009,WorkflowPro,West,West,3679,419,DigiStock Hub,9,No,,
+SKU00181,P009,WorkflowPro,West,West,1920,441,GlobalParts Inc,25,No,,
+SKU00182,P009,WorkflowPro,Central,Central,3299,293,EastWest Logistics,20,No,,
+SKU00183,P009,WorkflowPro,Central,Central,3817,432,DigiStock Hub,19,No,,
+SKU00184,P009,WorkflowPro,Central,Central,3649,439,TechSupply Ltd,8,No,,
+SKU00185,P010,InsightDash,North,North,1356,115,CoreComponents,9,No,,
+SKU00186,P010,InsightDash,North,North,2114,249,DigiStock Hub,25,No,,
+SKU00187,P010,InsightDash,North,North,3245,358,NovaBridge Supplies,5,No,,
+SKU00188,P010,InsightDash,North,North,1862,92,GlobalParts Inc,5,No,,
+SKU00189,P010,InsightDash,North,North,246,473,EastWest Logistics,7,No,,
+SKU00190,P010,InsightDash,South,South,842,201,CoreComponents,9,No,,
+SKU00191,P010,InsightDash,South,South,937,397,CoreComponents,20,No,,
+SKU00192,P010,InsightDash,South,South,3076,387,GlobalParts Inc,16,No,,
+SKU00193,P010,InsightDash,East,East,434,437,DigiStock Hub,20,No,,
+SKU00194,P010,InsightDash,East,East,2826,346,AlphaSupplier,8,No,,
+SKU00195,P010,InsightDash,East,East,1590,236,DigiStock Hub,8,No,,
+SKU00196,P010,InsightDash,East,East,3211,254,AlphaSupplier,16,No,,
+SKU00197,P010,InsightDash,West,West,1262,70,DigiStock Hub,18,No,,
+SKU00198,P010,InsightDash,West,West,3550,170,AlphaSupplier,21,No,,
+SKU00199,P010,InsightDash,West,West,3240,186,NovaBridge Supplies,14,No,,
+SKU00200,P010,InsightDash,West,West,2569,415,GlobalParts Inc,5,No,,
+SKU00201,P010,InsightDash,Central,Central,3884,471,EastWest Logistics,10,No,,
+SKU00202,P010,InsightDash,Central,Central,2812,244,CoreComponents,9,No,,
+SKU00203,P010,InsightDash,Central,Central,3246,284,SwiftParts Co,11,No,,
+SKU00204,P010,InsightDash,Central,Central,796,115,NovaBridge Supplies,27,No,,
+SKU00205,P011,APIGateway Pro,North,North,1108,174,TechSupply Ltd,29,No,,
+SKU00206,P011,APIGateway Pro,North,North,137,235,GlobalParts Inc,19,No,,
+SKU00207,P011,APIGateway Pro,North,North,2801,174,CoreComponents,20,No,,
+SKU00208,P011,APIGateway Pro,South,South,517,221,GlobalParts Inc,29,No,,
+SKU00209,P011,APIGateway Pro,South,South,2673,350,DigiStock Hub,30,No,,
+SKU00210,P011,APIGateway Pro,South,South,3768,218,TechSupply Ltd,7,No,,
+SKU00211,P011,APIGateway Pro,South,South,2925,99,GlobalParts Inc,28,No,,
+SKU00212,P011,APIGateway Pro,East,East,2953,474,TechSupply Ltd,17,No,,
+SKU00213,P011,APIGateway Pro,East,East,86,65,EastWest Logistics,18,No,,
+SKU00214,P011,APIGateway Pro,East,East,1693,228,GlobalParts Inc,9,No,,
+SKU00215,P011,APIGateway Pro,West,West,1121,482,NovaBridge Supplies,26,No,,
+SKU00216,P011,APIGateway Pro,West,West,2498,283,DigiStock Hub,15,No,,
+SKU00217,P011,APIGateway Pro,West,West,1355,197,NovaBridge Supplies,12,No,,
+SKU00218,P011,APIGateway Pro,West,West,2065,95,NovaBridge Supplies,16,No,,
+SKU00219,P011,APIGateway Pro,West,West,1211,342,EastWest Logistics,8,No,,
+SKU00220,P011,APIGateway Pro,Central,Central,423,468,DigiStock Hub,23,No,,
+SKU00221,P011,APIGateway Pro,Central,Central,1043,413,CoreComponents,17,No,,
+SKU00222,P011,APIGateway Pro,Central,Central,1636,486,AlphaSupplier,25,No,,
+SKU00223,P011,APIGateway Pro,Central,Central,3456,172,CoreComponents,26,No,,
+SKU00224,P012,BackupCloud Ultra,North,North,425,303,GlobalParts Inc,11,No,,
+SKU00225,P012,BackupCloud Ultra,North,North,1719,266,EastWest Logistics,26,No,,
+SKU00226,P012,BackupCloud Ultra,North,North,3239,315,SwiftParts Co,9,No,,
+SKU00227,P012,BackupCloud Ultra,South,South,2256,220,CoreComponents,17,No,,
+SKU00228,P012,BackupCloud Ultra,South,South,3743,135,CoreComponents,23,No,,
+SKU00229,P012,BackupCloud Ultra,South,South,576,198,DigiStock Hub,26,No,,
+SKU00230,P012,BackupCloud Ultra,East,East,190,402,GlobalParts Inc,30,No,,
+SKU00231,P012,BackupCloud Ultra,East,East,2286,250,EastWest Logistics,5,No,,
+SKU00232,P012,BackupCloud Ultra,East,East,1295,391,GlobalParts Inc,7,No,,
+SKU00233,P012,BackupCloud Ultra,West,West,121,213,AlphaSupplier,30,No,,
+SKU00234,P012,BackupCloud Ultra,West,West,148,336,TechSupply Ltd,23,No,,
+SKU00235,P012,BackupCloud Ultra,West,West,903,471,SwiftParts Co,13,No,,
+SKU00236,P012,BackupCloud Ultra,West,West,3643,108,EastWest Logistics,20,No,,
+SKU00237,P012,BackupCloud Ultra,West,West,881,423,AlphaSupplier,25,No,,
+SKU00238,P012,BackupCloud Ultra,Central,Central,1361,265,NovaBridge Supplies,12,No,,
+SKU00239,P012,BackupCloud Ultra,Central,Central,2500,414,NovaBridge Supplies,17,No,,
+SKU00240,P012,BackupCloud Ultra,Central,Central,102,95,NovaBridge Supplies,30,No,,
+SKU00241,P001,CloudSync Pro,North,North,254,351,GlobalParts Inc,21,No,,
+SKU00242,P010,InsightDash,Central,Central,1061,83,DigiStock Hub,21,No,,
+SKU00243,P002,DataVault Enterprise,North,North,1368,322,GlobalParts Inc,10,No,,
+SKU00244,P009,WorkflowPro,South,South,1475,192,TechSupply Ltd,15,No,,
+SKU00245,P009,WorkflowPro,Central,Central,836,369,GlobalParts Inc,24,No,,
+SKU00246,P012,BackupCloud Ultra,South,South,302,184,NovaBridge Supplies,25,No,,
+SKU00247,P008,CyberAudit Suite,West,West,1839,95,NovaBridge Supplies,18,No,,
+SKU00248,P007,ServerLink X1,South,South,2286,379,GlobalParts Inc,21,No,,
+SKU00249,P002,DataVault Enterprise,South,South,661,395,AlphaSupplier,21,No,,
+SKU00250,P002,DataVault Enterprise,East,East,2443,205,DigiStock Hub,13,No,,
+SKU00251,P008,CyberAudit Suite,North,North,1523,162,TechSupply Ltd,7,No,,
+SKU00252,P001,CloudSync Pro,East,East,2888,330,NovaBridge Supplies,12,No,,
+SKU00253,P001,CloudSync Pro,Central,Central,1872,304,NovaBridge Supplies,24,No,,
+SKU00254,P008,CyberAudit Suite,Central,Central,2163,198,EastWest Logistics,8,No,,
+SKU00255,P009,WorkflowPro,Central,Central,611,207,EastWest Logistics,18,No,,
+SKU00256,P010,InsightDash,South,South,2043,258,SwiftParts Co,25,No,,
+SKU00257,P001,CloudSync Pro,North,North,1761,298,AlphaSupplier,20,No,,
+SKU00258,P012,BackupCloud Ultra,North,North,2185,303,DigiStock Hub,17,No,,
+SKU00259,P003,NetShield Plus,Central,Central,2322,160,AlphaSupplier,12,No,,
+SKU00260,P007,ServerLink X1,Central,Central,2254,390,SwiftParts Co,5,No,,
+SKU00261,P002,DataVault Enterprise,West,West,2720,132,DigiStock Hub,17,No,,
+SKU00262,P003,NetShield Plus,Central,Central,750,144,AlphaSupplier,18,No,,
+SKU00263,P007,ServerLink X1,West,West,2208,313,GlobalParts Inc,23,No,,
+SKU00264,P012,BackupCloud Ultra,South,South,1933,379,AlphaSupplier,7,No,,
+SKU00265,P007,ServerLink X1,East,East,792,145,GlobalParts Inc,19,No,,
+SKU00266,P005,ConnectBridge,Central,Central,2490,173,SwiftParts Co,23,No,,
+SKU00267,P009,WorkflowPro,North,North,655,215,SwiftParts Co,24,No,,
+SKU00268,P008,CyberAudit Suite,West,West,2004,127,AlphaSupplier,15,No,,
+SKU00269,P010,InsightDash,West,West,1657,201,GlobalParts Inc,22,No,,
+SKU00270,P004,AnalyticsEdge,Central,Central,1612,322,GlobalParts Inc,15,No,,
+SKU00271,P001,CloudSync Pro,North,North,1291,113,DigiStock Hub,8,No,,
+SKU00272,P007,ServerLink X1,East,East,2077,332,NovaBridge Supplies,23,No,,
+SKU00273,P002,DataVault Enterprise,South,South,2517,230,AlphaSupplier,16,No,,
+SKU00274,P002,DataVault Enterprise,Central,Central,2282,275,TechSupply Ltd,25,No,,
+SKU00275,P002,DataVault Enterprise,East,East,2252,269,GlobalParts Inc,6,No,,
+SKU00276,P011,APIGateway Pro,East,East,278,52,EastWest Logistics,13,No,,
+SKU00277,P005,ConnectBridge,Central,Central,2983,376,EastWest Logistics,21,No,,
+SKU00278,P008,CyberAudit Suite,Central,Central,2112,228,DigiStock Hub,6,No,,
+SKU00279,P011,APIGateway Pro,South,South,2731,58,EastWest Logistics,23,No,,
+SKU00280,P004,AnalyticsEdge,North,North,605,102,EastWest Logistics,15,No,,
+SKU00281,P011,APIGateway Pro,North,North,361,379,AlphaSupplier,25,No,,
+SKU00282,P001,CloudSync Pro,West,West,1227,137,GlobalParts Inc,17,No,,
+SKU00283,P011,APIGateway Pro,Central,Central,1511,126,EastWest Logistics,10,No,,
+SKU00284,P004,AnalyticsEdge,South,South,1771,359,NovaBridge Supplies,8,No,,
+SKU00285,P011,APIGateway Pro,Central,Central,164,246,EastWest Logistics,6,No,,
+SKU00286,P001,CloudSync Pro,West,West,2717,150,GlobalParts Inc,9,No,,
+SKU00287,P005,ConnectBridge,South,South,1676,383,AlphaSupplier,9,No,,
+SKU00288,P005,ConnectBridge,Central,Central,1948,236,NovaBridge Supplies,20,No,,
+SKU00289,P012,BackupCloud Ultra,East,East,201,217,DigiStock Hub,7,No,,
+SKU00290,P011,APIGateway Pro,East,East,1349,250,SwiftParts Co,18,No,,
+SKU00291,P011,APIGateway Pro,West,West,1147,75,AlphaSupplier,22,No,,
+SKU00292,P008,CyberAudit Suite,South,South,1582,380,CoreComponents,13,No,,
+SKU00293,P006,StorageMax HDD,South,South,1141,219,TechSupply Ltd,13,No,,
+SKU00294,P007,ServerLink X1,West,West,2348,324,AlphaSupplier,16,No,,
+SKU00295,P009,WorkflowPro,South,South,2828,187,NovaBridge Supplies,14,No,,
+SKU00296,P009,WorkflowPro,South,South,2808,230,AlphaSupplier,25,No,,
+SKU00297,P003,NetShield Plus,West,West,2125,160,AlphaSupplier,17,No,,
+SKU00298,P005,ConnectBridge,Central,Central,1382,173,EastWest Logistics,5,No,,
+SKU00299,P011,APIGateway Pro,West,West,2036,236,DigiStock Hub,5,No,,
+SKU00300,P009,WorkflowPro,Central,Central,1290,174,EastWest Logistics,25,No,,
+SKU00301,P007,ServerLink X1,Central,Central,2397,161,CoreComponents,14,No,,
+SKU00302,P004,AnalyticsEdge,West,West,2545,222,GlobalParts Inc,16,No,,
+SKU00303,P001,CloudSync Pro,East,East,1407,80,SwiftParts Co,6,No,,
+SKU00304,P010,InsightDash,South,South,2279,187,AlphaSupplier,19,No,,
+SKU00305,P003,NetShield Plus,North,North,309,284,NovaBridge Supplies,13,No,,
+SKU00306,P003,NetShield Plus,Central,Central,903,340,GlobalParts Inc,19,No,,
+SKU00307,P008,CyberAudit Suite,South,South,2107,122,SwiftParts Co,13,No,,
+SKU00308,P011,APIGateway Pro,East,East,2831,371,GlobalParts Inc,12,No,,
+SKU00309,P009,WorkflowPro,North,North,359,265,EastWest Logistics,15,No,,
+SKU00310,P009,WorkflowPro,East,East,550,231,GlobalParts Inc,9,No,,
+SKU00311,P012,BackupCloud Ultra,North,North,1328,225,GlobalParts Inc,10,No,,
+SKU00312,P009,WorkflowPro,North,North,1376,157,SwiftParts Co,12,No,,
+SKU00313,P002,DataVault Enterprise,South,South,2000,355,CoreComponents,12,No,,
+SKU00314,P004,AnalyticsEdge,West,West,2641,219,NovaBridge Supplies,7,No,,
+SKU00315,P012,BackupCloud Ultra,North,North,557,122,NovaBridge Supplies,16,No,,
+SKU00316,P010,InsightDash,North,North,1225,135,AlphaSupplier,16,No,,
+SKU00317,P003,NetShield Plus,West,West,1182,126,AlphaSupplier,17,No,,
+SKU00318,P003,NetShield Plus,East,East,554,76,SwiftParts Co,20,No,,
+SKU00319,P004,AnalyticsEdge,Central,Central,888,333,SwiftParts Co,16,No,,
+SKU00320,P005,ConnectBridge,East,East,428,182,AlphaSupplier,6,No,,
+SKU00321,P010,InsightDash,North,North,2494,168,SwiftParts Co,8,No,,
+SKU00322,P002,DataVault Enterprise,West,West,2826,205,SwiftParts Co,16,No,,
+SKU00323,P006,StorageMax HDD,South,South,2920,282,GlobalParts Inc,18,No,,
+SKU00324,P003,NetShield Plus,West,West,863,328,TechSupply Ltd,18,No,,
+SKU00325,P008,CyberAudit Suite,South,South,1113,276,CoreComponents,17,No,,
+SKU00326,P002,DataVault Enterprise,South,South,455,391,SwiftParts Co,20,No,,
+SKU00327,P006,StorageMax HDD,West,West,783,267,CoreComponents,8,No,,
+SKU00328,P003,NetShield Plus,West,West,217,313,CoreComponents,21,No,,
+SKU00329,P002,DataVault Enterprise,Central,Central,2782,276,AlphaSupplier,10,No,,
+SKU00330,P001,CloudSync Pro,Central,Central,2645,80,AlphaSupplier,23,No,,
+SKU00331,P004,AnalyticsEdge,North,North,2571,270,NovaBridge Supplies,5,No,,
+SKU00332,P004,AnalyticsEdge,Central,Central,2548,222,TechSupply Ltd,18,No,,
+SKU00333,P012,BackupCloud Ultra,West,West,342,209,SwiftParts Co,6,No,,
+SKU00334,P012,BackupCloud Ultra,East,East,2621,352,EastWest Logistics,9,No,,
+SKU00335,P011,APIGateway Pro,West,West,1905,166,TechSupply Ltd,10,No,,
+SKU00336,P004,AnalyticsEdge,East,East,1038,321,GlobalParts Inc,14,No,,
+SKU00337,P009,WorkflowPro,East,East,470,386,CoreComponents,25,No,,
+SKU00338,P003,NetShield Plus,North,North,694,239,NovaBridge Supplies,17,No,,
+SKU00339,P005,ConnectBridge,East,East,289,397,EastWest Logistics,22,No,,
+SKU00340,P003,NetShield Plus,South,South,538,176,CoreComponents,9,No,,
+SKU00341,P008,CyberAudit Suite,East,East,1619,276,AlphaSupplier,19,No,,
+SKU00342,P003,NetShield Plus,Central,Central,2597,82,TechSupply Ltd,15,No,,
+SKU00343,P005,ConnectBridge,Central,Central,199,196,CoreComponents,11,No,,
+SKU00344,P002,DataVault Enterprise,Central,Central,2996,153,CoreComponents,12,No,,
+SKU00345,P007,ServerLink X1,Central,Central,1625,165,TechSupply Ltd,6,No,,
+SKU00346,P011,APIGateway Pro,South,South,2821,349,DigiStock Hub,20,No,,
+SKU00347,P002,DataVault Enterprise,North,North,1413,58,AlphaSupplier,9,No,,
+SKU00348,P011,APIGateway Pro,Central,Central,569,394,DigiStock Hub,24,No,,
+SKU00349,P003,NetShield Plus,West,West,1491,82,DigiStock Hub,11,No,,
+SKU00350,P003,NetShield Plus,Central,Central,556,268,EastWest Logistics,24,No,,
+SKU00351,P002,DataVault Enterprise,North,North,2162,300,NovaBridge Supplies,24,No,,
+SKU00352,P003,NetShield Plus,South,South,501,353,NovaBridge Supplies,17,No,,
+SKU00353,P010,InsightDash,North,North,1419,276,NovaBridge Supplies,19,No,,
+SKU00354,P007,ServerLink X1,West,West,566,63,SwiftParts Co,9,No,,
+SKU00355,P010,InsightDash,Central,Central,2895,281,DigiStock Hub,5,No,,
+SKU00356,P008,CyberAudit Suite,East,East,1518,354,TechSupply Ltd,16,No,,
+SKU00357,P004,AnalyticsEdge,North,North,1141,190,SwiftParts Co,6,No,,
+SKU00358,P001,CloudSync Pro,South,South,124,117,AlphaSupplier,21,No,,
+SKU00359,P004,AnalyticsEdge,Central,Central,2124,334,GlobalParts Inc,11,No,,
+SKU00360,P012,BackupCloud Ultra,East,East,2713,227,GlobalParts Inc,10,No,,
+SKU00361,P010,InsightDash,East,East,2160,254,DigiStock Hub,17,No,,
+SKU00362,P001,CloudSync Pro,South,South,2756,74,CoreComponents,5,No,,
+SKU00363,P010,InsightDash,South,South,1218,258,DigiStock Hub,16,No,,
+SKU00364,P005,ConnectBridge,North,North,2297,124,NovaBridge Supplies,18,No,,
+SKU00365,P009,WorkflowPro,Central,Central,494,72,TechSupply Ltd,12,No,,
+SKU00366,P009,WorkflowPro,South,South,1928,138,TechSupply Ltd,6,No,,
+SKU00367,P006,StorageMax HDD,North,North,1098,175,CoreComponents,17,No,,
+SKU00368,P001,CloudSync Pro,North,North,2334,208,EastWest Logistics,9,No,,
+SKU00369,P001,CloudSync Pro,North,North,1062,324,EastWest Logistics,16,No,,
+SKU00370,P004,AnalyticsEdge,South,South,229,331,NovaBridge Supplies,7,No,,
+SKU00371,P011,APIGateway Pro,West,West,2242,112,AlphaSupplier,12,No,,
+SKU00372,P007,ServerLink X1,North,North,1073,325,TechSupply Ltd,25,No,,
+SKU00373,P012,BackupCloud Ultra,West,West,1105,244,GlobalParts Inc,19,No,,
+SKU00374,P012,BackupCloud Ultra,Central,Central,2526,206,DigiStock Hub,18,No,,
+SKU00375,P008,CyberAudit Suite,South,South,289,71,GlobalParts Inc,16,No,,
+SKU00376,P003,NetShield Plus,North,North,1152,101,GlobalParts Inc,20,No,,
+SKU00377,P001,CloudSync Pro,West,West,567,272,NovaBridge Supplies,13,No,,
+SKU00378,P009,WorkflowPro,East,East,212,384,SwiftParts Co,8,No,,
+SKU00379,P003,NetShield Plus,South,South,1979,53,SwiftParts Co,7,No,,
+SKU00380,P002,DataVault Enterprise,Central,Central,429,368,CoreComponents,25,No,,
+SKU00381,P005,ConnectBridge,East,East,1163,236,AlphaSupplier,24,No,,
+SKU00382,P008,CyberAudit Suite,South,South,2626,252,SwiftParts Co,15,No,,
+SKU00383,P007,ServerLink X1,North,North,2557,145,DigiStock Hub,18,No,,
+SKU00384,P008,CyberAudit Suite,North,North,1067,274,DigiStock Hub,8,No,,
+SKU00385,P012,BackupCloud Ultra,Central,Central,2149,262,EastWest Logistics,18,No,,
+SKU00386,P004,AnalyticsEdge,Central,Central,1551,255,TechSupply Ltd,9,No,,
+SKU00387,P012,BackupCloud Ultra,West,West,1663,275,NovaBridge Supplies,5,No,,
+SKU00388,P006,StorageMax HDD,East,East,2125,156,DigiStock Hub,8,No,,
+SKU00389,P004,AnalyticsEdge,Central,Central,2249,294,CoreComponents,6,No,,
+SKU00390,P003,NetShield Plus,South,South,990,385,CoreComponents,17,No,,
+SKU00391,P002,DataVault Enterprise,East,East,1317,250,AlphaSupplier,10,No,,
+SKU00392,P008,CyberAudit Suite,West,West,938,161,GlobalParts Inc,14,No,,
+SKU00393,P011,APIGateway Pro,North,North,393,284,AlphaSupplier,8,No,,
+SKU00394,P011,APIGateway Pro,East,East,813,370,TechSupply Ltd,16,No,,
+SKU00395,P003,NetShield Plus,East,East,2194,166,TechSupply Ltd,24,No,,
+SKU00396,P007,ServerLink X1,Central,Central,1826,156,AlphaSupplier,13,No,,
+SKU00397,P008,CyberAudit Suite,North,North,1125,248,SwiftParts Co,17,No,,
+SKU00398,P009,WorkflowPro,Central,Central,1687,353,DigiStock Hub,5,No,,
+SKU00399,P004,AnalyticsEdge,West,West,2357,336,NovaBridge Supplies,5,No,,
+SKU00400,P001,CloudSync Pro,East,East,2317,162,DigiStock Hub,24,No,,
+SKU00401,P011,APIGateway Pro,South,South,1744,166,TechSupply Ltd,16,No,,
+SKU00402,P010,InsightDash,South,South,693,354,TechSupply Ltd,25,No,,
+SKU00403,P003,NetShield Plus,West,West,336,246,SwiftParts Co,24,No,,
+SKU00404,P004,AnalyticsEdge,East,East,363,72,CoreComponents,6,No,,
+SKU00405,P007,ServerLink X1,South,South,2471,98,TechSupply Ltd,22,No,,
+SKU00406,P008,CyberAudit Suite,South,South,625,312,EastWest Logistics,13,No,,
+SKU00407,P008,CyberAudit Suite,North,North,2224,148,GlobalParts Inc,7,No,,
+SKU00408,P009,WorkflowPro,North,North,1928,348,AlphaSupplier,25,No,,
+SKU00409,P001,CloudSync Pro,West,West,1470,396,DigiStock Hub,21,No,,
+SKU00410,P010,InsightDash,Central,Central,2787,179,DigiStock Hub,14,No,,
+SKU00411,P010,InsightDash,Central,Central,1938,369,GlobalParts Inc,15,No,,
+SKU00412,P003,NetShield Plus,South,South,536,301,TechSupply Ltd,8,No,,
+SKU00413,P005,ConnectBridge,Central,Central,1776,221,AlphaSupplier,16,No,,
+SKU00414,P009,WorkflowPro,North,North,2364,367,TechSupply Ltd,5,No,,
+SKU00415,P007,ServerLink X1,North,North,2117,158,SwiftParts Co,18,No,,
+SKU00416,P004,AnalyticsEdge,North,North,1770,152,TechSupply Ltd,10,No,,
+SKU00417,P010,InsightDash,West,West,1601,230,DigiStock Hub,10,No,,
+SKU00418,P012,BackupCloud Ultra,West,West,523,264,CoreComponents,24,No,,
+SKU00419,P007,ServerLink X1,South,South,2098,337,TechSupply Ltd,7,No,,
+SKU00420,P010,InsightDash,South,South,2252,352,GlobalParts Inc,17,No,,
+SKU00421,P009,WorkflowPro,South,South,2957,74,TechSupply Ltd,11,No,,
+SKU00422,P011,APIGateway Pro,North,North,2146,89,AlphaSupplier,20,No,,
+SKU00423,P006,StorageMax HDD,South,South,2898,137,TechSupply Ltd,17,No,,
+SKU00424,P004,AnalyticsEdge,South,South,1826,111,NovaBridge Supplies,7,No,,
+SKU00425,P008,CyberAudit Suite,Central,Central,2258,218,CoreComponents,23,No,,
+SKU00426,P001,CloudSync Pro,North,North,1371,358,GlobalParts Inc,12,No,,
+SKU00427,P008,CyberAudit Suite,South,South,2563,232,CoreComponents,16,No,,
+SKU00428,P009,WorkflowPro,East,East,2162,165,SwiftParts Co,18,No,,
+SKU00429,P004,AnalyticsEdge,Central,Central,2500,330,TechSupply Ltd,9,No,,
+SKU00430,P008,CyberAudit Suite,East,East,992,359,EastWest Logistics,9,No,,
+SKU00431,P006,StorageMax HDD,East,East,533,274,CoreComponents,7,No,,
+SKU00432,P010,InsightDash,South,South,1421,335,TechSupply Ltd,25,No,,
+SKU00433,P012,BackupCloud Ultra,East,East,2121,265,EastWest Logistics,8,No,,
+SKU00434,P012,BackupCloud Ultra,South,South,2994,146,AlphaSupplier,6,No,,
+SKU00435,P002,DataVault Enterprise,Central,Central,1718,169,CoreComponents,16,No,,
+SKU00436,P005,ConnectBridge,North,North,951,334,CoreComponents,15,No,,
+SKU00437,P004,AnalyticsEdge,North,North,1385,249,NovaBridge Supplies,6,No,,
+SKU00438,P010,InsightDash,South,South,135,290,AlphaSupplier,21,No,,
+SKU00439,P011,APIGateway Pro,East,East,2646,73,AlphaSupplier,14,No,,
+SKU00440,P006,StorageMax HDD,Central,Central,2305,287,EastWest Logistics,25,No,,
+SKU00441,P005,ConnectBridge,North,North,2403,362,EastWest Logistics,8,No,,
+SKU00442,P008,CyberAudit Suite,West,West,2705,146,SwiftParts Co,25,No,,
+SKU00443,P002,DataVault Enterprise,West,West,1740,310,TechSupply Ltd,7,No,,
+SKU00444,P004,AnalyticsEdge,South,South,2646,290,NovaBridge Supplies,18,No,,
+SKU00445,P008,CyberAudit Suite,North,North,2058,119,TechSupply Ltd,20,No,,
+SKU00446,P011,APIGateway Pro,South,South,2994,200,GlobalParts Inc,10,No,,
+SKU00447,P005,ConnectBridge,South,South,2764,137,EastWest Logistics,13,No,,
+SKU00448,P002,DataVault Enterprise,Central,Central,2251,167,GlobalParts Inc,18,No,,
+SKU00449,P011,APIGateway Pro,South,South,857,170,AlphaSupplier,15,No,,
+SKU00450,P005,ConnectBridge,North,North,485,328,TechSupply Ltd,25,No,,
+SKU00451,P005,ConnectBridge,East,East,1199,136,CoreComponents,22,No,,
+SKU00452,P005,ConnectBridge,South,South,2841,392,GlobalParts Inc,10,No,,
+SKU00453,P012,BackupCloud Ultra,East,East,1102,238,GlobalParts Inc,24,No,,
+SKU00454,P005,ConnectBridge,West,West,1784,229,TechSupply Ltd,8,No,,
+SKU00455,P011,APIGateway Pro,Central,Central,1844,386,TechSupply Ltd,15,No,,
+SKU00456,P007,ServerLink X1,East,East,133,363,CoreComponents,8,No,,
+SKU00457,P005,ConnectBridge,West,West,1539,148,TechSupply Ltd,11,No,,
+SKU00458,P008,CyberAudit Suite,North,North,1410,209,EastWest Logistics,14,No,,
+SKU00459,P006,StorageMax HDD,North,North,2903,374,GlobalParts Inc,21,No,,
+SKU00460,P003,NetShield Plus,West,West,411,391,TechSupply Ltd,5,No,,
+SKU00461,P011,APIGateway Pro,South,South,1403,246,SwiftParts Co,24,No,,
+SKU00462,P005,ConnectBridge,South,South,2467,353,EastWest Logistics,6,No,,
+SKU00463,P011,APIGateway Pro,South,South,1090,295,AlphaSupplier,17,No,,
+SKU00464,P007,ServerLink X1,Central,Central,2819,266,EastWest Logistics,10,No,,
+SKU00465,P010,InsightDash,East,East,1057,168,AlphaSupplier,7,No,,
+SKU00466,P010,InsightDash,East,East,480,83,NovaBridge Supplies,24,No,,
+SKU00467,P011,APIGateway Pro,North,North,2644,168,CoreComponents,9,No,,
+SKU00468,P005,ConnectBridge,South,South,1304,51,AlphaSupplier,18,No,,
+SKU00469,P011,APIGateway Pro,South,South,2198,146,CoreComponents,18,No,,
+SKU00470,P004,AnalyticsEdge,South,South,1328,395,NovaBridge Supplies,12,No,,
+SKU00471,P005,ConnectBridge,South,South,2035,239,TechSupply Ltd,21,No,,
+SKU00472,P007,ServerLink X1,West,West,2607,180,GlobalParts Inc,21,No,,
+SKU00473,P007,ServerLink X1,East,East,1279,139,CoreComponents,12,No,,
+SKU00474,P012,BackupCloud Ultra,Central,Central,823,246,EastWest Logistics,22,No,,
+SKU00475,P006,StorageMax HDD,East,East,185,280,CoreComponents,11,No,,
+SKU00476,P006,StorageMax HDD,North,North,2465,227,EastWest Logistics,22,No,,
+SKU00477,P011,APIGateway Pro,Central,Central,2645,241,CoreComponents,20,No,,
+SKU00478,P011,APIGateway Pro,North,North,1118,341,AlphaSupplier,24,No,,
+SKU00479,P007,ServerLink X1,East,East,1438,157,SwiftParts Co,24,No,,
+SKU00480,P002,DataVault Enterprise,West,West,1758,218,GlobalParts Inc,13,No,,
+SKU00481,P008,CyberAudit Suite,North,North,2350,317,NovaBridge Supplies,5,No,,
+SKU00482,P001,CloudSync Pro,Central,Central,2511,224,CoreComponents,9,No,,
+SKU00483,P009,WorkflowPro,Central,Central,1965,158,CoreComponents,14,No,,
+SKU00484,P012,BackupCloud Ultra,Central,Central,2742,255,AlphaSupplier,21,No,,
+SKU00485,P007,ServerLink X1,West,West,1943,351,CoreComponents,19,No,,
+SKU00486,P001,CloudSync Pro,West,West,2970,104,DigiStock Hub,25,No,,
+SKU00487,P001,CloudSync Pro,West,West,2493,76,TechSupply Ltd,13,No,,
+SKU00488,P010,InsightDash,West,West,436,91,GlobalParts Inc,11,No,,
+SKU00489,P009,WorkflowPro,East,East,1935,102,SwiftParts Co,17,No,,
+SKU00490,P008,CyberAudit Suite,East,East,1815,271,SwiftParts Co,5,No,,
+SKU00491,P011,APIGateway Pro,East,East,413,327,AlphaSupplier,5,No,,
+SKU00492,P011,APIGateway Pro,North,North,1674,301,CoreComponents,13,No,,
+SKU00493,P010,InsightDash,South,South,937,195,NovaBridge Supplies,16,No,,
+SKU00494,P010,InsightDash,West,West,2457,314,SwiftParts Co,5,No,,
+SKU00495,P005,ConnectBridge,East,East,168,380,SwiftParts Co,18,No,,
+SKU00496,P007,ServerLink X1,Central,Central,1039,298,SwiftParts Co,14,No,,
+SKU00497,P001,CloudSync Pro,South,South,1182,141,AlphaSupplier,7,No,,
+SKU00498,P008,CyberAudit Suite,Central,Central,2507,135,SwiftParts Co,19,No,,
+SKU00499,P002,DataVault Enterprise,East,East,236,116,SwiftParts Co,6,No,,
+SKU00500,P011,APIGateway Pro,South,South,2307,215,DigiStock Hub,18,No,,
+SKU00501,P012,BackupCloud Ultra,South,South,1641,204,TechSupply Ltd,25,No,,
+SKU00502,P007,ServerLink X1,South,South,2218,381,CoreComponents,23,No,,
+SKU00503,P004,AnalyticsEdge,West,West,2390,76,AlphaSupplier,11,No,,
+SKU00504,P006,StorageMax HDD,Central,Central,1536,163,GlobalParts Inc,7,No,,
+SKU00505,P001,CloudSync Pro,North,North,678,274,AlphaSupplier,24,No,,
+SKU00506,P006,StorageMax HDD,North,North,2600,382,NovaBridge Supplies,5,No,,
+SKU00507,P005,ConnectBridge,Central,Central,1610,125,DigiStock Hub,19,No,,
+SKU00508,P006,StorageMax HDD,Central,Central,1640,293,GlobalParts Inc,11,No,,
+SKU00509,P007,ServerLink X1,East,East,1799,125,GlobalParts Inc,11,No,,
+SKU00510,P012,BackupCloud Ultra,West,West,983,179,CoreComponents,14,No,,
+SKU00511,P004,AnalyticsEdge,Central,Central,1157,256,AlphaSupplier,12,No,,
+SKU00512,P004,AnalyticsEdge,North,North,2300,86,EastWest Logistics,11,No,,
+SKU00513,P004,AnalyticsEdge,East,East,1901,397,AlphaSupplier,7,No,,
+SKU00514,P008,CyberAudit Suite,North,North,1937,162,TechSupply Ltd,19,No,,
+SKU00515,P005,ConnectBridge,East,East,1563,286,DigiStock Hub,18,No,,
+SKU00516,P003,NetShield Plus,West,West,656,248,NovaBridge Supplies,17,No,,
+SKU00517,P008,CyberAudit Suite,Central,Central,1382,71,DigiStock Hub,20,No,,
+SKU00518,P005,ConnectBridge,West,West,1633,363,CoreComponents,14,No,,
+SKU00519,P011,APIGateway Pro,South,South,1268,307,SwiftParts Co,9,No,,
+SKU00520,P010,InsightDash,East,East,879,278,DigiStock Hub,13,No,,
+SKU00521,P001,CloudSync Pro,South,South,2050,249,DigiStock Hub,18,No,,
+SKU00522,P009,WorkflowPro,West,West,1252,62,CoreComponents,9,No,,
+SKU00523,P001,CloudSync Pro,West,West,1825,289,SwiftParts Co,7,No,,
+SKU00524,P005,ConnectBridge,Central,Central,1923,229,NovaBridge Supplies,14,No,,
+SKU00525,P002,DataVault Enterprise,North,North,1398,291,NovaBridge Supplies,25,No,,
+SKU00526,P004,AnalyticsEdge,North,North,2647,351,GlobalParts Inc,6,No,,
+SKU00527,P011,APIGateway Pro,North,North,2438,192,GlobalParts Inc,18,No,,
+SKU00528,P006,StorageMax HDD,West,West,1562,309,EastWest Logistics,12,No,,
+SKU00529,P012,BackupCloud Ultra,East,East,1178,225,NovaBridge Supplies,21,No,,
+SKU00530,P006,StorageMax HDD,West,West,1596,175,SwiftParts Co,10,No,,
+SKU00531,P004,AnalyticsEdge,South,South,1785,270,GlobalParts Inc,25,No,,
+SKU00532,P011,APIGateway Pro,North,North,250,183,DigiStock Hub,5,No,,
+SKU00533,P010,InsightDash,North,North,387,80,NovaBridge Supplies,14,No,,
+SKU00534,P010,InsightDash,East,East,1826,89,TechSupply Ltd,24,No,,
+SKU00535,P012,BackupCloud Ultra,Central,Central,2155,340,AlphaSupplier,15,No,,
+SKU00536,P002,DataVault Enterprise,North,North,2343,102,SwiftParts Co,21,No,,
+SKU00537,P004,AnalyticsEdge,West,West,1233,255,AlphaSupplier,7,No,,
+SKU00538,P005,ConnectBridge,East,East,2026,279,AlphaSupplier,7,No,,
+SKU00539,P009,WorkflowPro,West,West,2193,299,GlobalParts Inc,13,No,,
+SKU00540,P012,BackupCloud Ultra,West,West,2490,260,AlphaSupplier,25,No,,
+SKU00541,P007,ServerLink X1,Central,Central,703,364,GlobalParts Inc,16,No,,
+SKU00542,P012,BackupCloud Ultra,South,South,1610,256,SwiftParts Co,24,No,,
+SKU00543,P010,InsightDash,East,East,168,319,TechSupply Ltd,13,No,,
+SKU00544,P012,BackupCloud Ultra,South,South,2972,169,NovaBridge Supplies,5,No,,
+SKU00545,P012,BackupCloud Ultra,South,South,2452,145,DigiStock Hub,18,No,,
+SKU00546,P005,ConnectBridge,North,North,1392,192,DigiStock Hub,12,No,,
+SKU00547,P010,InsightDash,Central,Central,1829,139,EastWest Logistics,7,No,,
+SKU00548,P005,ConnectBridge,North,North,1552,84,NovaBridge Supplies,7,No,,
+SKU00549,P009,WorkflowPro,West,West,1640,66,CoreComponents,20,No,,
+SKU00550,P005,ConnectBridge,West,West,1097,159,TechSupply Ltd,13,No,,
+SKU00551,P008,CyberAudit Suite,Central,Central,1490,135,CoreComponents,19,No,,
+SKU00552,P005,ConnectBridge,East,East,625,51,NovaBridge Supplies,15,No,,
+SKU00553,P010,InsightDash,East,East,1255,102,GlobalParts Inc,10,No,,
+SKU00554,P012,BackupCloud Ultra,South,South,2166,296,NovaBridge Supplies,16,No,,
+SKU00555,P002,DataVault Enterprise,Central,Central,2893,258,AlphaSupplier,14,No,,
+SKU00556,P008,CyberAudit Suite,West,West,1338,98,NovaBridge Supplies,7,No,,
+SKU00557,P004,AnalyticsEdge,East,East,412,308,NovaBridge Supplies,5,No,,
+SKU00558,P003,NetShield Plus,East,East,2205,241,NovaBridge Supplies,13,No,,
+SKU00559,P007,ServerLink X1,East,East,2289,90,SwiftParts Co,11,No,,
+SKU00560,P010,InsightDash,Central,Central,2303,236,EastWest Logistics,8,No,,
+SKU00561,P008,CyberAudit Suite,Central,Central,2567,217,SwiftParts Co,24,No,,
+SKU00562,P010,InsightDash,North,North,2464,317,CoreComponents,7,No,,
+SKU00563,P003,NetShield Plus,Central,Central,1636,219,SwiftParts Co,21,No,,
+SKU00564,P002,DataVault Enterprise,West,West,1987,226,EastWest Logistics,11,No,,
+SKU00565,P009,WorkflowPro,South,South,497,350,NovaBridge Supplies,14,No,,
+SKU00566,P009,WorkflowPro,Central,Central,475,330,GlobalParts Inc,6,No,,
+SKU00567,P004,AnalyticsEdge,Central,Central,366,182,AlphaSupplier,11,No,,
+SKU00568,P005,ConnectBridge,South,South,2981,360,EastWest Logistics,14,No,,
+SKU00569,P003,NetShield Plus,North,North,2922,361,SwiftParts Co,23,No,,
+SKU00570,P008,CyberAudit Suite,South,South,313,350,TechSupply Ltd,10,No,,
+SKU00571,P002,DataVault Enterprise,Central,Central,1387,129,DigiStock Hub,11,No,,
+SKU00572,P005,ConnectBridge,North,North,456,201,AlphaSupplier,7,No,,
+SKU00573,P004,AnalyticsEdge,South,South,443,220,SwiftParts Co,16,No,,
+SKU00574,P004,AnalyticsEdge,North,North,357,214,NovaBridge Supplies,6,No,,
+SKU00575,P004,AnalyticsEdge,North,North,1358,201,GlobalParts Inc,19,No,,
+SKU00576,P008,CyberAudit Suite,Central,Central,460,393,TechSupply Ltd,6,No,,
+SKU00577,P010,InsightDash,West,West,1576,364,CoreComponents,15,No,,
+SKU00578,P006,StorageMax HDD,West,West,1766,271,NovaBridge Supplies,14,No,,
+SKU00579,P006,StorageMax HDD,East,East,590,335,EastWest Logistics,24,No,,
+SKU00580,P010,InsightDash,North,North,679,258,CoreComponents,15,No,,
+SKU00581,P003,NetShield Plus,North,North,1807,207,TechSupply Ltd,24,No,,
+SKU00582,P012,BackupCloud Ultra,North,North,193,264,TechSupply Ltd,17,No,,
+SKU00583,P011,APIGateway Pro,West,West,2926,365,TechSupply Ltd,5,No,,
+SKU00584,P001,CloudSync Pro,Central,Central,2706,117,EastWest Logistics,13,No,,
+SKU00585,P003,NetShield Plus,North,North,1756,324,EastWest Logistics,18,No,,
+SKU00586,P009,WorkflowPro,South,South,722,92,DigiStock Hub,16,No,,
+SKU00587,P011,APIGateway Pro,West,West,798,382,AlphaSupplier,24,No,,
+SKU00588,P010,InsightDash,West,West,698,65,NovaBridge Supplies,25,No,,
+SKU00589,P005,ConnectBridge,West,West,2446,94,GlobalParts Inc,5,No,,
+SKU00590,P006,StorageMax HDD,Central,Central,1043,121,SwiftParts Co,20,No,,
+SKU00591,P003,NetShield Plus,South,South,2357,371,DigiStock Hub,6,No,,
+SKU00592,P012,BackupCloud Ultra,South,South,746,124,GlobalParts Inc,6,No,,
+SKU00593,P011,APIGateway Pro,West,West,1194,336,SwiftParts Co,24,No,,
+SKU00594,P008,CyberAudit Suite,South,South,1140,147,DigiStock Hub,8,No,,
+SKU00595,P003,NetShield Plus,Central,Central,1532,95,CoreComponents,15,No,,
+SKU00596,P003,NetShield Plus,North,North,1456,396,GlobalParts Inc,9,No,,
+SKU00597,P011,APIGateway Pro,Central,Central,1736,58,AlphaSupplier,6,No,,
+SKU00598,P005,ConnectBridge,Central,Central,217,138,EastWest Logistics,13,No,,
+SKU00599,P001,CloudSync Pro,West,West,1568,203,DigiStock Hub,13,No,,
+SKU00600,P008,CyberAudit Suite,West,West,2936,360,SwiftParts Co,6,No,,
+SKU00601,P012,BackupCloud Ultra,Central,Central,195,181,TechSupply Ltd,25,No,,
+SKU00602,P009,WorkflowPro,Central,Central,2168,219,AlphaSupplier,17,No,,
+SKU00603,P012,BackupCloud Ultra,East,East,936,68,TechSupply Ltd,17,No,,
+SKU00604,P006,StorageMax HDD,East,East,1867,118,NovaBridge Supplies,21,No,,
+SKU00605,P009,WorkflowPro,West,West,2274,310,DigiStock Hub,17,No,,
+SKU00606,P006,StorageMax HDD,West,West,2955,364,NovaBridge Supplies,7,No,,
+SKU00607,P004,AnalyticsEdge,West,West,2799,76,AlphaSupplier,25,No,,
+SKU00608,P003,NetShield Plus,South,South,2523,61,TechSupply Ltd,8,No,,
+SKU00609,P012,BackupCloud Ultra,South,South,2377,245,GlobalParts Inc,13,No,,
+SKU00610,P008,CyberAudit Suite,Central,Central,1234,390,DigiStock Hub,7,No,,
+SKU00611,P010,InsightDash,Central,Central,163,159,GlobalParts Inc,11,No,,
+SKU00612,P006,StorageMax HDD,North,North,1150,316,SwiftParts Co,12,No,,
+SKU00613,P009,WorkflowPro,South,South,2432,198,CoreComponents,7,No,,
+SKU00614,P010,InsightDash,North,North,1163,285,GlobalParts Inc,16,No,,
+SKU00615,P004,AnalyticsEdge,East,East,1904,115,NovaBridge Supplies,23,No,,
+SKU00616,P006,StorageMax HDD,North,North,1774,292,NovaBridge Supplies,25,No,,
+SKU00617,P001,CloudSync Pro,Central,Central,1457,163,EastWest Logistics,17,No,,
+SKU00618,P008,CyberAudit Suite,North,North,2379,180,AlphaSupplier,25,No,,
+SKU00619,P009,WorkflowPro,West,West,1458,244,EastWest Logistics,23,No,,
+SKU00620,P003,NetShield Plus,East,East,2817,389,EastWest Logistics,10,No,,
+SKU00621,P009,WorkflowPro,South,South,2297,50,TechSupply Ltd,21,No,,
+SKU00622,P004,AnalyticsEdge,South,South,1105,241,NovaBridge Supplies,6,No,,
+SKU00623,P007,ServerLink X1,Central,Central,2206,225,AlphaSupplier,22,No,,
+SKU00624,P012,BackupCloud Ultra,East,East,2891,266,DigiStock Hub,18,No,,
+SKU00625,P011,APIGateway Pro,West,West,2157,59,AlphaSupplier,13,No,,
+SKU00626,P006,StorageMax HDD,Central,Central,996,295,CoreComponents,13,No,,
+SKU00627,P010,InsightDash,East,East,2454,293,SwiftParts Co,9,No,,
+SKU00628,P002,DataVault Enterprise,South,South,1563,375,NovaBridge Supplies,7,No,,
+SKU00629,P008,CyberAudit Suite,East,East,1511,400,SwiftParts Co,24,No,,
+SKU00630,P011,APIGateway Pro,South,South,2160,368,DigiStock Hub,13,No,,
+SKU00631,P009,WorkflowPro,West,West,1232,94,TechSupply Ltd,25,No,,
+SKU00632,P005,ConnectBridge,Central,Central,1680,400,EastWest Logistics,18,No,,
+SKU00633,P008,CyberAudit Suite,East,East,592,383,TechSupply Ltd,24,No,,
+SKU00634,P010,InsightDash,West,West,1838,181,SwiftParts Co,12,No,,
+SKU00635,P005,ConnectBridge,Central,Central,1764,232,SwiftParts Co,7,No,,
+SKU00636,P006,StorageMax HDD,West,West,1372,107,AlphaSupplier,19,No,,
+SKU00637,P009,WorkflowPro,Central,Central,1848,171,GlobalParts Inc,6,No,,
+SKU00638,P010,InsightDash,South,South,1537,308,EastWest Logistics,6,No,,
+SKU00639,P002,DataVault Enterprise,West,West,885,69,TechSupply Ltd,15,No,,
+SKU00640,P010,InsightDash,West,West,2771,377,EastWest Logistics,10,No,,
+SKU00641,P005,ConnectBridge,South,South,617,318,CoreComponents,22,No,,
+SKU00642,P012,BackupCloud Ultra,South,South,1350,389,EastWest Logistics,20,No,,
+SKU00643,P007,ServerLink X1,West,West,2366,74,CoreComponents,18,No,,
+SKU00644,P011,APIGateway Pro,North,North,439,374,GlobalParts Inc,13,No,,
+SKU00645,P001,CloudSync Pro,South,South,905,203,GlobalParts Inc,7,No,,
+SKU00646,P006,StorageMax HDD,South,South,1896,173,SwiftParts Co,21,No,,
+SKU00647,P007,ServerLink X1,West,West,2090,103,SwiftParts Co,15,No,,
+SKU00648,P005,ConnectBridge,East,East,1807,58,SwiftParts Co,12,No,,
+SKU00649,P010,InsightDash,South,South,1709,70,AlphaSupplier,20,No,,
+SKU00650,P005,ConnectBridge,West,West,2692,120,DigiStock Hub,9,No,,
+SKU00651,P001,CloudSync Pro,East,East,944,252,CoreComponents,24,No,,
+SKU00652,P010,InsightDash,North,North,538,356,EastWest Logistics,21,No,,
+SKU00653,P006,StorageMax HDD,West,West,1920,370,EastWest Logistics,21,No,,
+SKU00654,P006,StorageMax HDD,North,North,799,93,SwiftParts Co,15,No,,
+SKU00655,P012,BackupCloud Ultra,South,South,2381,175,GlobalParts Inc,20,No,,
+SKU00656,P008,CyberAudit Suite,East,East,1410,331,EastWest Logistics,7,No,,
+SKU00657,P003,NetShield Plus,West,West,847,263,CoreComponents,11,No,,
+SKU00658,P010,InsightDash,East,East,1728,294,CoreComponents,14,No,,
+SKU00659,P012,BackupCloud Ultra,West,West,110,278,GlobalParts Inc,20,No,,
+SKU00660,P006,StorageMax HDD,North,North,2829,338,TechSupply Ltd,24,No,,
+SKU00661,P009,WorkflowPro,North,North,1968,297,SwiftParts Co,16,No,,
+SKU00662,P002,DataVault Enterprise,South,South,2445,396,CoreComponents,14,No,,
+SKU00663,P002,DataVault Enterprise,East,East,2574,134,SwiftParts Co,11,No,,
+SKU00664,P011,APIGateway Pro,North,North,1859,191,EastWest Logistics,21,No,,
+SKU00665,P011,APIGateway Pro,South,South,2219,379,SwiftParts Co,23,No,,
+SKU00666,P008,CyberAudit Suite,East,East,1902,277,AlphaSupplier,16,No,,
+SKU00667,P007,ServerLink X1,East,East,2485,68,DigiStock Hub,5,No,,
+SKU00668,P006,StorageMax HDD,East,East,1341,363,CoreComponents,25,No,,
+SKU00669,P012,BackupCloud Ultra,South,South,2715,206,NovaBridge Supplies,18,No,,
+SKU00670,P009,WorkflowPro,West,West,2792,302,TechSupply Ltd,15,No,,
+SKU00671,P007,ServerLink X1,Central,Central,815,122,GlobalParts Inc,23,No,,
+SKU00672,P005,ConnectBridge,Central,Central,320,299,AlphaSupplier,12,No,,
+SKU00673,P005,ConnectBridge,North,North,1516,157,SwiftParts Co,23,No,,
+SKU00674,P008,CyberAudit Suite,West,West,611,76,GlobalParts Inc,8,No,,
+SKU00675,P002,DataVault Enterprise,East,East,2735,179,DigiStock Hub,19,No,,
+SKU00676,P004,AnalyticsEdge,East,East,2617,184,NovaBridge Supplies,7,No,,
+SKU00677,P011,APIGateway Pro,East,East,2943,324,DigiStock Hub,9,No,,
+SKU00678,P003,NetShield Plus,East,East,1596,289,SwiftParts Co,17,No,,
+SKU00679,P005,ConnectBridge,North,North,1014,225,CoreComponents,25,No,,
+SKU00680,P012,BackupCloud Ultra,West,West,1365,98,AlphaSupplier,22,No,,
+SKU00681,P006,StorageMax HDD,East,East,2015,159,SwiftParts Co,9,No,,
+SKU00682,P004,AnalyticsEdge,South,South,2297,237,SwiftParts Co,16,No,,
+SKU00683,P009,WorkflowPro,North,North,2861,348,SwiftParts Co,20,No,,
+SKU00684,P012,BackupCloud Ultra,Central,Central,1334,299,SwiftParts Co,21,No,,
+SKU00685,P002,DataVault Enterprise,West,West,1748,72,EastWest Logistics,21,No,,
+SKU00686,P005,ConnectBridge,North,North,892,260,EastWest Logistics,12,No,,
+SKU00687,P004,AnalyticsEdge,East,East,1918,50,CoreComponents,5,No,,
+SKU00688,P008,CyberAudit Suite,North,North,1130,255,DigiStock Hub,25,No,,
+SKU00689,P012,BackupCloud Ultra,North,North,1142,302,DigiStock Hub,12,No,,
+SKU00690,P005,ConnectBridge,North,North,2377,228,SwiftParts Co,23,No,,
+SKU00691,P006,StorageMax HDD,North,North,2222,160,DigiStock Hub,14,No,,
+SKU00692,P006,StorageMax HDD,West,West,251,112,DigiStock Hub,5,No,,
+SKU00693,P004,AnalyticsEdge,Central,Central,1690,101,GlobalParts Inc,7,No,,
+SKU00694,P008,CyberAudit Suite,East,East,2622,397,GlobalParts Inc,6,No,,
+SKU00695,P002,DataVault Enterprise,West,West,244,246,DigiStock Hub,23,No,,
+SKU00696,P011,APIGateway Pro,East,East,2453,67,DigiStock Hub,22,No,,
+SKU00697,P007,ServerLink X1,Central,Central,829,320,SwiftParts Co,15,No,,
+SKU00698,P011,APIGateway Pro,North,North,1729,129,TechSupply Ltd,16,No,,
+SKU00699,P010,InsightDash,South,South,2822,331,AlphaSupplier,19,No,,
+SKU00700,P007,ServerLink X1,South,South,1545,151,AlphaSupplier,20,No,,
+SKU00701,P004,AnalyticsEdge,East,East,2859,232,AlphaSupplier,6,No,,
+SKU00702,P008,CyberAudit Suite,North,North,1961,115,EastWest Logistics,22,No,,
+SKU00703,P009,WorkflowPro,South,South,1206,93,NovaBridge Supplies,12,No,,
+SKU00704,P006,StorageMax HDD,North,North,894,363,GlobalParts Inc,7,No,,
+SKU00705,P005,ConnectBridge,South,South,293,359,DigiStock Hub,14,No,,
+SKU00706,P003,NetShield Plus,West,West,2701,208,NovaBridge Supplies,18,No,,
+SKU00707,P007,ServerLink X1,South,South,1384,295,AlphaSupplier,19,No,,
+SKU00708,P002,DataVault Enterprise,East,East,2230,61,NovaBridge Supplies,5,No,,
+SKU00709,P011,APIGateway Pro,North,North,1968,394,NovaBridge Supplies,16,No,,
+SKU00710,P011,APIGateway Pro,West,West,1594,337,EastWest Logistics,17,No,,
+SKU00711,P001,CloudSync Pro,Central,Central,813,225,EastWest Logistics,18,No,,
+SKU00712,P004,AnalyticsEdge,West,West,2521,185,TechSupply Ltd,9,No,,
+SKU00713,P009,WorkflowPro,Central,Central,1698,269,TechSupply Ltd,7,No,,
+SKU00714,P003,NetShield Plus,South,South,903,135,TechSupply Ltd,13,No,,
+SKU00715,P011,APIGateway Pro,South,South,1420,131,AlphaSupplier,7,No,,
+SKU00716,P002,DataVault Enterprise,Central,Central,2103,378,EastWest Logistics,15,No,,
+SKU00717,P010,InsightDash,East,East,1715,213,DigiStock Hub,13,No,,
+SKU00718,P011,APIGateway Pro,East,East,1646,240,NovaBridge Supplies,10,No,,
+SKU00719,P006,StorageMax HDD,East,East,1247,196,TechSupply Ltd,8,No,,
+SKU00720,P009,WorkflowPro,North,North,2916,322,SwiftParts Co,7,No,,
+SKU00721,P004,AnalyticsEdge,West,West,1943,146,GlobalParts Inc,15,No,,
+SKU00722,P003,NetShield Plus,North,North,944,332,TechSupply Ltd,23,No,,
+SKU00723,P004,AnalyticsEdge,West,West,1856,312,CoreComponents,8,No,,
+SKU00724,P009,WorkflowPro,East,East,2134,91,CoreComponents,17,No,,
+SKU00725,P011,APIGateway Pro,South,South,779,64,TechSupply Ltd,13,No,,
+SKU00726,P011,APIGateway Pro,Central,Central,1098,151,NovaBridge Supplies,15,No,,
+SKU00727,P005,ConnectBridge,North,North,499,106,EastWest Logistics,19,No,,
+SKU00728,P003,NetShield Plus,Central,Central,948,249,GlobalParts Inc,11,No,,
+SKU00729,P001,CloudSync Pro,Central,Central,2072,252,CoreComponents,19,No,,
+SKU00730,P008,CyberAudit Suite,North,North,2447,55,AlphaSupplier,20,No,,
+SKU00731,P007,ServerLink X1,North,North,2326,171,DigiStock Hub,17,No,,
+SKU00732,P003,NetShield Plus,Central,Central,1628,51,DigiStock Hub,18,No,,
+SKU00733,P011,APIGateway Pro,West,West,2922,83,AlphaSupplier,10,No,,
+SKU00734,P002,DataVault Enterprise,West,West,703,71,CoreComponents,22,No,,
+SKU00735,P009,WorkflowPro,Central,Central,1716,337,GlobalParts Inc,14,No,,
+SKU00736,P002,DataVault Enterprise,Central,Central,1697,344,NovaBridge Supplies,6,No,,
+SKU00737,P004,AnalyticsEdge,South,South,1685,202,SwiftParts Co,17,No,,
+SKU00738,P005,ConnectBridge,Central,Central,1858,289,CoreComponents,8,No,,
+SKU00739,P010,InsightDash,Central,Central,441,255,GlobalParts Inc,15,No,,
+SKU00740,P012,BackupCloud Ultra,South,South,2595,399,GlobalParts Inc,17,No,,
+SKU00741,P005,ConnectBridge,Central,Central,235,339,DigiStock Hub,25,No,,
+SKU00742,P001,CloudSync Pro,South,South,1322,116,SwiftParts Co,8,No,,
+SKU00743,P012,BackupCloud Ultra,Central,Central,1945,399,GlobalParts Inc,8,No,,
+SKU00744,P009,WorkflowPro,North,North,1630,336,TechSupply Ltd,11,No,,
+SKU00745,P007,ServerLink X1,Central,Central,682,346,AlphaSupplier,19,No,,
+SKU00746,P001,CloudSync Pro,West,West,1235,139,TechSupply Ltd,15,No,,
+SKU00747,P004,AnalyticsEdge,North,North,2550,177,AlphaSupplier,9,No,,
+SKU00748,P006,StorageMax HDD,South,South,1744,51,EastWest Logistics,10,No,,
+SKU00749,P002,DataVault Enterprise,West,West,2440,62,DigiStock Hub,16,No,,
+SKU00750,P005,ConnectBridge,Central,Central,142,122,NovaBridge Supplies,11,No,,
+SKU00751,P006,StorageMax HDD,Central,Central,1045,307,CoreComponents,11,No,,
+SKU00752,P011,APIGateway Pro,Central,Central,2716,92,GlobalParts Inc,18,No,,
+SKU00753,P006,StorageMax HDD,West,West,1080,217,TechSupply Ltd,20,No,,
+SKU00754,P005,ConnectBridge,East,East,1139,243,NovaBridge Supplies,16,No,,
+SKU00755,P002,DataVault Enterprise,North,North,767,91,CoreComponents,6,No,,
+SKU00756,P002,DataVault Enterprise,South,South,2324,175,NovaBridge Supplies,7,No,,
+SKU00757,P010,InsightDash,East,East,1605,312,DigiStock Hub,23,No,,
+SKU00758,P010,InsightDash,North,North,1003,223,DigiStock Hub,8,No,,
+SKU00759,P008,CyberAudit Suite,West,West,433,298,GlobalParts Inc,11,No,,
+SKU00760,P001,CloudSync Pro,East,East,1782,306,DigiStock Hub,6,No,,
+SKU00761,P010,InsightDash,East,East,401,116,CoreComponents,17,No,,
+SKU00762,P001,CloudSync Pro,East,East,481,250,CoreComponents,22,No,,
+SKU00763,P004,AnalyticsEdge,Central,Central,2519,214,NovaBridge Supplies,12,No,,
+SKU00764,P008,CyberAudit Suite,West,West,2388,182,TechSupply Ltd,22,No,,
+SKU00765,P008,CyberAudit Suite,West,West,1973,287,AlphaSupplier,6,No,,
+SKU00766,P001,CloudSync Pro,West,West,1246,164,CoreComponents,15,No,,
+SKU00767,P011,APIGateway Pro,Central,Central,1963,396,NovaBridge Supplies,7,No,,
+SKU00768,P011,APIGateway Pro,West,West,1068,72,NovaBridge Supplies,12,No,,
+SKU00769,P003,NetShield Plus,East,East,2476,265,DigiStock Hub,15,No,,
+SKU00770,P008,CyberAudit Suite,East,East,1493,109,GlobalParts Inc,14,No,,
+SKU00771,P009,WorkflowPro,East,East,2284,72,CoreComponents,19,No,,
+SKU00772,P012,BackupCloud Ultra,South,South,579,327,TechSupply Ltd,16,No,,
+SKU00773,P007,ServerLink X1,North,North,1496,198,EastWest Logistics,20,No,,
+SKU00774,P001,CloudSync Pro,West,West,2534,348,SwiftParts Co,23,No,,
+SKU00775,P012,BackupCloud Ultra,East,East,2055,261,TechSupply Ltd,8,No,,
+SKU00776,P002,DataVault Enterprise,North,North,2082,344,DigiStock Hub,17,No,,
+SKU00777,P005,ConnectBridge,West,West,1582,198,SwiftParts Co,18,No,,
+SKU00778,P006,StorageMax HDD,West,West,713,312,DigiStock Hub,9,No,,
+SKU00779,P003,NetShield Plus,West,West,2898,345,NovaBridge Supplies,14,No,,
+SKU00780,P009,WorkflowPro,East,East,1199,398,GlobalParts Inc,11,No,,
+SKU00781,P010,InsightDash,North,North,2593,309,CoreComponents,17,No,,
+SKU00782,P009,WorkflowPro,East,East,1807,55,AlphaSupplier,17,No,,
+SKU00783,P012,BackupCloud Ultra,Central,Central,2547,143,AlphaSupplier,7,No,,
+SKU00784,P004,AnalyticsEdge,Central,Central,641,259,DigiStock Hub,6,No,,
+SKU00785,P010,InsightDash,West,West,1905,283,DigiStock Hub,24,No,,
+SKU00786,P006,StorageMax HDD,West,West,267,384,NovaBridge Supplies,23,No,,
+SKU00787,P010,InsightDash,West,West,691,242,NovaBridge Supplies,20,No,,
+SKU00788,P008,CyberAudit Suite,Central,Central,852,277,TechSupply Ltd,7,No,,
+SKU00789,P001,CloudSync Pro,West,West,1076,233,TechSupply Ltd,9,No,,
+SKU00790,P009,WorkflowPro,Central,Central,1818,138,EastWest Logistics,6,No,,
+SKU00791,P007,ServerLink X1,Central,Central,2775,135,CoreComponents,11,No,,
+SKU00792,P003,NetShield Plus,South,South,888,400,NovaBridge Supplies,6,No,,
+SKU00793,P003,NetShield Plus,South,South,2626,351,NovaBridge Supplies,13,No,,
+SKU00794,P005,ConnectBridge,West,West,192,255,GlobalParts Inc,17,No,,
+SKU00795,P010,InsightDash,East,East,2998,166,GlobalParts Inc,17,No,,
+SKU00796,P010,InsightDash,East,East,2780,116,NovaBridge Supplies,15,No,,
+SKU00797,P008,CyberAudit Suite,Central,Central,1704,215,EastWest Logistics,24,No,,
+SKU00798,P005,ConnectBridge,North,North,659,308,SwiftParts Co,12,No,,
+SKU00799,P008,CyberAudit Suite,North,North,235,245,CoreComponents,13,No,,
+SKU00800,P009,WorkflowPro,Central,Central,1477,197,DigiStock Hub,15,No,,
+SKU00801,P004,AnalyticsEdge,North,North,576,346,GlobalParts Inc,13,No,,
+SKU00802,P003,NetShield Plus,East,East,1533,209,EastWest Logistics,21,No,,
+SKU00803,P001,CloudSync Pro,East,East,1114,277,AlphaSupplier,14,No,,
+SKU00804,P003,NetShield Plus,East,East,1464,65,DigiStock Hub,22,No,,
+SKU00805,P007,ServerLink X1,Central,Central,2271,376,DigiStock Hub,22,No,,
+SKU00806,P007,ServerLink X1,North,North,2880,142,GlobalParts Inc,12,No,,
+SKU00807,P012,BackupCloud Ultra,Central,Central,632,136,TechSupply Ltd,12,No,,
+SKU00808,P002,DataVault Enterprise,West,West,240,97,SwiftParts Co,22,No,,
+SKU00809,P007,ServerLink X1,West,West,955,353,EastWest Logistics,22,No,,
+SKU00810,P008,CyberAudit Suite,Central,Central,2248,297,EastWest Logistics,21,No,,
+SKU00811,P008,CyberAudit Suite,South,South,2965,89,CoreComponents,10,No,,
+SKU00812,P005,ConnectBridge,Central,Central,1583,259,EastWest Logistics,23,No,,
+SKU00813,P002,DataVault Enterprise,West,West,2830,345,AlphaSupplier,14,No,,
+SKU00814,P005,ConnectBridge,North,North,1849,54,NovaBridge Supplies,11,No,,
+SKU00815,P003,NetShield Plus,Central,Central,2380,309,GlobalParts Inc,20,No,,
+SKU00816,P001,CloudSync Pro,North,North,1427,90,GlobalParts Inc,10,No,,
+SKU00817,P009,WorkflowPro,West,West,1378,223,TechSupply Ltd,9,No,,
+SKU00818,P001,CloudSync Pro,South,South,2889,131,GlobalParts Inc,7,No,,
+SKU00819,P012,BackupCloud Ultra,West,West,1578,202,SwiftParts Co,13,No,,
+SKU00820,P002,DataVault Enterprise,West,West,1228,321,DigiStock Hub,24,No,,
+SKU00821,P003,NetShield Plus,North,North,327,187,AlphaSupplier,18,No,,
+SKU00822,P003,NetShield Plus,West,West,1408,382,GlobalParts Inc,8,No,,
+SKU00823,P006,StorageMax HDD,South,South,1761,398,DigiStock Hub,13,No,,
+SKU00824,P005,ConnectBridge,South,South,308,167,AlphaSupplier,6,No,,
+SKU00825,P008,CyberAudit Suite,Central,Central,1499,199,NovaBridge Supplies,11,No,,
+SKU00826,P001,CloudSync Pro,Central,Central,1625,309,DigiStock Hub,9,No,,
+SKU00827,P004,AnalyticsEdge,Central,Central,985,253,GlobalParts Inc,18,No,,
+SKU00828,P001,CloudSync Pro,North,North,1163,221,DigiStock Hub,24,No,,
+SKU00829,P003,NetShield Plus,South,South,651,255,DigiStock Hub,7,No,,
+SKU00830,P005,ConnectBridge,Central,Central,1501,306,TechSupply Ltd,24,No,,
+SKU00831,P011,APIGateway Pro,West,West,128,98,SwiftParts Co,6,No,,
+SKU00832,P012,BackupCloud Ultra,North,North,2416,271,DigiStock Hub,24,No,,
+SKU00833,P008,CyberAudit Suite,South,South,213,366,EastWest Logistics,16,No,,
+SKU00834,P002,DataVault Enterprise,Central,Central,635,73,TechSupply Ltd,22,No,,
+SKU00835,P003,NetShield Plus,Central,Central,1545,114,NovaBridge Supplies,12,No,,
+SKU00836,P012,BackupCloud Ultra,South,South,2414,280,GlobalParts Inc,13,No,,
+SKU00837,P010,InsightDash,South,South,2052,349,SwiftParts Co,21,No,,
+SKU00838,P003,NetShield Plus,Central,Central,522,225,SwiftParts Co,15,No,,
+SKU00839,P002,DataVault Enterprise,North,North,1858,158,DigiStock Hub,7,No,,
+SKU00840,P005,ConnectBridge,Central,Central,775,59,DigiStock Hub,15,No,,
+SKU00841,P008,CyberAudit Suite,East,East,2950,106,CoreComponents,10,No,,
+SKU00842,P005,ConnectBridge,Central,Central,2015,171,AlphaSupplier,10,No,,
+SKU00843,P007,ServerLink X1,South,South,1516,357,TechSupply Ltd,21,No,,
+SKU00844,P009,WorkflowPro,South,South,2938,85,EastWest Logistics,14,No,,
+SKU00845,P011,APIGateway Pro,Central,Central,2024,280,NovaBridge Supplies,25,No,,
+SKU00846,P007,ServerLink X1,West,West,2066,137,CoreComponents,14,No,,
+SKU00847,P004,AnalyticsEdge,East,East,909,372,SwiftParts Co,14,No,,
+SKU00848,P010,InsightDash,West,West,2225,303,EastWest Logistics,24,No,,
+SKU00849,P007,ServerLink X1,East,East,2051,106,SwiftParts Co,17,No,,
+SKU00850,P012,BackupCloud Ultra,East,East,1012,315,GlobalParts Inc,10,No,,
+SKU00851,P010,InsightDash,Central,Central,292,165,CoreComponents,22,No,,
+SKU00852,P011,APIGateway Pro,North,North,2724,201,EastWest Logistics,14,No,,
+SKU00853,P008,CyberAudit Suite,Central,Central,1815,75,GlobalParts Inc,6,No,,
+SKU00854,P010,InsightDash,East,East,138,357,TechSupply Ltd,18,No,,
+SKU00855,P012,BackupCloud Ultra,East,East,2078,166,DigiStock Hub,18,No,,
+SKU00856,P003,NetShield Plus,East,East,787,257,AlphaSupplier,9,No,,
+SKU00857,P003,NetShield Plus,East,East,1171,354,EastWest Logistics,6,No,,
+SKU00858,P004,AnalyticsEdge,West,West,2555,168,GlobalParts Inc,24,No,,
+SKU00859,P002,DataVault Enterprise,East,East,2678,80,TechSupply Ltd,15,No,,
+SKU00860,P003,NetShield Plus,West,West,1090,105,TechSupply Ltd,19,No,,
+SKU00861,P003,NetShield Plus,South,South,1722,209,TechSupply Ltd,13,No,,
+SKU00862,P008,CyberAudit Suite,East,East,1824,342,GlobalParts Inc,5,No,,
+SKU00863,P011,APIGateway Pro,North,North,2236,186,EastWest Logistics,24,No,,
+SKU00864,P004,AnalyticsEdge,South,South,1451,362,CoreComponents,19,No,,
+SKU00865,P005,ConnectBridge,South,South,746,344,NovaBridge Supplies,25,No,,
+SKU00866,P006,StorageMax HDD,Central,Central,1809,400,AlphaSupplier,20,No,,
+SKU00867,P008,CyberAudit Suite,North,North,1545,177,GlobalParts Inc,10,No,,
+SKU00868,P003,NetShield Plus,West,West,769,204,DigiStock Hub,12,No,,
+SKU00869,P007,ServerLink X1,East,East,143,71,NovaBridge Supplies,9,No,,
+SKU00870,P010,InsightDash,Central,Central,165,344,GlobalParts Inc,25,No,,
+SKU00871,P001,CloudSync Pro,West,West,1331,282,AlphaSupplier,7,No,,
+SKU00872,P011,APIGateway Pro,East,East,1333,124,DigiStock Hub,21,No,,
+SKU00873,P008,CyberAudit Suite,South,South,2990,216,SwiftParts Co,13,No,,
+SKU00874,P011,APIGateway Pro,North,North,1263,140,NovaBridge Supplies,8,No,,
+SKU00875,P007,ServerLink X1,Central,Central,2118,356,EastWest Logistics,6,No,,
+SKU00876,P012,BackupCloud Ultra,West,West,1914,236,CoreComponents,23,No,,
+SKU00877,P004,AnalyticsEdge,Central,Central,904,206,NovaBridge Supplies,23,No,,
+SKU00878,P007,ServerLink X1,Central,Central,178,191,SwiftParts Co,11,No,,
+SKU00879,P012,BackupCloud Ultra,Central,Central,850,227,EastWest Logistics,21,No,,
+SKU00880,P008,CyberAudit Suite,Central,Central,2942,163,SwiftParts Co,19,No,,
+SKU00881,P004,AnalyticsEdge,South,South,2192,100,NovaBridge Supplies,12,No,,
+SKU00882,P001,CloudSync Pro,West,West,1052,191,SwiftParts Co,12,No,,
+SKU00883,P011,APIGateway Pro,South,South,306,142,NovaBridge Supplies,18,No,,
+SKU00884,P005,ConnectBridge,North,North,832,128,CoreComponents,20,No,,
+SKU00885,P005,ConnectBridge,North,North,2694,341,SwiftParts Co,11,No,,
+SKU00886,P012,BackupCloud Ultra,West,West,744,78,NovaBridge Supplies,12,No,,
+SKU00887,P006,StorageMax HDD,North,North,1427,87,AlphaSupplier,6,No,,
+SKU00888,P003,NetShield Plus,South,South,640,217,TechSupply Ltd,5,No,,
+SKU00889,P008,CyberAudit Suite,North,North,1597,232,SwiftParts Co,22,No,,
+SKU00890,P008,CyberAudit Suite,North,North,2507,186,GlobalParts Inc,13,No,,
+SKU00891,P003,NetShield Plus,South,South,2752,395,CoreComponents,15,No,,
+SKU00892,P007,ServerLink X1,East,East,391,90,EastWest Logistics,16,No,,
+SKU00893,P006,StorageMax HDD,North,North,639,214,NovaBridge Supplies,21,No,,
+SKU00894,P001,CloudSync Pro,West,West,2217,88,TechSupply Ltd,12,No,,
+SKU00895,P012,BackupCloud Ultra,East,East,187,228,NovaBridge Supplies,14,No,,
+SKU00896,P010,InsightDash,East,East,380,365,DigiStock Hub,8,No,,
+SKU00897,P006,StorageMax HDD,West,West,1386,233,DigiStock Hub,8,No,,
+SKU00898,P007,ServerLink X1,West,West,1044,138,EastWest Logistics,13,No,,
+SKU00899,P007,ServerLink X1,South,South,171,270,TechSupply Ltd,18,No,,
+SKU00900,P003,NetShield Plus,North,North,2849,392,SwiftParts Co,18,No,,
+SKU00901,P004,AnalyticsEdge,East,East,638,54,GlobalParts Inc,19,No,,
+SKU00902,P007,ServerLink X1,North,North,1380,71,CoreComponents,9,No,,
+SKU00903,P001,CloudSync Pro,East,East,2586,337,AlphaSupplier,21,No,,
+SKU00904,P006,StorageMax HDD,West,West,2539,278,DigiStock Hub,7,No,,
+SKU00905,P005,ConnectBridge,South,South,2909,160,AlphaSupplier,5,No,,
+SKU00906,P009,WorkflowPro,North,North,2528,69,TechSupply Ltd,6,No,,
+SKU00907,P002,DataVault Enterprise,East,East,1810,99,GlobalParts Inc,11,No,,
+SKU00908,P010,InsightDash,South,South,2088,312,TechSupply Ltd,22,No,,
+SKU00909,P010,InsightDash,South,South,256,193,AlphaSupplier,8,No,,
+SKU00910,P007,ServerLink X1,South,South,2372,317,TechSupply Ltd,18,No,,
+SKU00911,P009,WorkflowPro,West,West,2998,324,SwiftParts Co,7,No,,
+SKU00912,P009,WorkflowPro,East,East,1822,355,GlobalParts Inc,16,No,,
+SKU00913,P011,APIGateway Pro,North,North,2806,352,AlphaSupplier,15,No,,
+SKU00914,P007,ServerLink X1,Central,Central,2296,132,AlphaSupplier,20,No,,
+SKU00915,P003,NetShield Plus,Central,Central,240,56,DigiStock Hub,9,No,,
+SKU00916,P012,BackupCloud Ultra,West,West,741,50,TechSupply Ltd,14,No,,
+SKU00917,P008,CyberAudit Suite,South,South,2689,148,DigiStock Hub,11,No,,
+SKU00918,P006,StorageMax HDD,West,West,1258,59,DigiStock Hub,21,No,,
+SKU00919,P004,AnalyticsEdge,North,North,2285,163,GlobalParts Inc,17,No,,
+SKU00920,P010,InsightDash,West,West,2231,356,SwiftParts Co,8,No,,
+SKU00921,P011,APIGateway Pro,East,East,1519,195,NovaBridge Supplies,18,No,,
+SKU00922,P008,CyberAudit Suite,North,North,1165,248,DigiStock Hub,13,No,,
+SKU00923,P010,InsightDash,North,North,1880,244,AlphaSupplier,19,No,,
+SKU00924,P006,StorageMax HDD,North,North,2398,222,DigiStock Hub,8,No,,
+SKU00925,P002,DataVault Enterprise,West,West,1346,231,AlphaSupplier,6,No,,
+SKU00926,P006,StorageMax HDD,Central,Central,1596,255,NovaBridge Supplies,14,No,,
+SKU00927,P004,AnalyticsEdge,North,North,2163,74,DigiStock Hub,11,No,,
+SKU00928,P010,InsightDash,South,South,166,66,EastWest Logistics,16,No,,
+SKU00929,P009,WorkflowPro,East,East,1855,219,NovaBridge Supplies,12,No,,
+SKU00930,P008,CyberAudit Suite,West,West,2074,173,GlobalParts Inc,11,No,,
+SKU00931,P002,DataVault Enterprise,West,West,2128,335,DigiStock Hub,8,No,,
+SKU00932,P010,InsightDash,South,South,1802,105,SwiftParts Co,14,No,,
+SKU00933,P009,WorkflowPro,West,West,2857,128,GlobalParts Inc,8,No,,
+SKU00934,P003,NetShield Plus,East,East,2822,79,EastWest Logistics,16,No,,
+SKU00935,P005,ConnectBridge,East,East,1415,62,GlobalParts Inc,15,No,,
+SKU00936,P005,ConnectBridge,Central,Central,228,309,GlobalParts Inc,23,No,,
+SKU00937,P010,InsightDash,Central,Central,955,340,DigiStock Hub,17,No,,
+SKU00938,P011,APIGateway Pro,West,West,1070,316,DigiStock Hub,9,No,,
+SKU00939,P005,ConnectBridge,West,West,498,250,NovaBridge Supplies,5,No,,
+SKU00940,P004,AnalyticsEdge,East,East,1118,319,NovaBridge Supplies,6,No,,
+SKU00941,P001,CloudSync Pro,North,North,2476,90,CoreComponents,12,No,,
+SKU00942,P006,StorageMax HDD,South,South,2619,207,NovaBridge Supplies,5,No,,
+SKU00943,P008,CyberAudit Suite,East,East,535,274,AlphaSupplier,15,No,,
+SKU00944,P005,ConnectBridge,West,West,1687,128,DigiStock Hub,11,No,,
+SKU00945,P006,StorageMax HDD,North,North,2237,360,AlphaSupplier,10,No,,
+SKU00946,P003,NetShield Plus,East,East,735,281,SwiftParts Co,25,No,,
+SKU00947,P007,ServerLink X1,North,North,117,134,EastWest Logistics,12,No,,
+SKU00948,P001,CloudSync Pro,South,South,1019,196,GlobalParts Inc,16,No,,
+SKU00949,P007,ServerLink X1,West,West,1949,102,EastWest Logistics,16,No,,
+SKU00950,P002,DataVault Enterprise,East,East,2224,338,GlobalParts Inc,13,No,,
+SKU00951,P002,DataVault Enterprise,Central,Central,2676,134,GlobalParts Inc,15,No,,
+SKU00952,P002,DataVault Enterprise,West,West,1748,270,GlobalParts Inc,22,No,,
+SKU00953,P002,DataVault Enterprise,South,South,990,346,EastWest Logistics,20,No,,
+SKU00954,P009,WorkflowPro,Central,Central,1303,191,DigiStock Hub,25,No,,
+SKU00955,P010,InsightDash,North,North,2490,335,AlphaSupplier,11,No,,
+SKU00956,P007,ServerLink X1,North,North,1436,121,DigiStock Hub,17,No,,
+SKU00957,P010,InsightDash,East,East,2359,194,CoreComponents,14,No,,
+SKU00958,P003,NetShield Plus,North,North,692,131,CoreComponents,22,No,,
+SKU00959,P003,NetShield Plus,East,East,2298,328,AlphaSupplier,11,No,,
+SKU00960,P012,BackupCloud Ultra,North,North,1100,286,NovaBridge Supplies,19,No,,
+SKU00961,P002,DataVault Enterprise,East,East,1603,71,NovaBridge Supplies,7,No,,
+SKU00962,P002,DataVault Enterprise,Central,Central,229,128,AlphaSupplier,17,No,,
+SKU00963,P011,APIGateway Pro,Central,Central,598,184,TechSupply Ltd,24,No,,
+SKU00964,P004,AnalyticsEdge,Central,Central,1774,53,AlphaSupplier,7,No,,
+SKU00965,P001,CloudSync Pro,East,East,1960,97,TechSupply Ltd,8,No,,
+SKU00966,P010,InsightDash,Central,Central,612,211,AlphaSupplier,24,No,,
+SKU00967,P003,NetShield Plus,East,East,2091,259,NovaBridge Supplies,14,No,,
+SKU00968,P002,DataVault Enterprise,North,North,1002,184,TechSupply Ltd,13,No,,
+SKU00969,P002,DataVault Enterprise,South,South,385,314,TechSupply Ltd,8,No,,
+SKU00970,P009,WorkflowPro,North,North,1378,54,SwiftParts Co,7,No,,
+SKU00971,P012,BackupCloud Ultra,South,South,741,211,TechSupply Ltd,19,No,,
+SKU00972,P010,InsightDash,North,North,1368,209,DigiStock Hub,6,No,,
+SKU00973,P009,WorkflowPro,East,East,1796,50,CoreComponents,6,No,,
+SKU00974,P007,ServerLink X1,West,West,509,201,DigiStock Hub,21,No,,
+SKU00975,P004,AnalyticsEdge,North,North,189,151,TechSupply Ltd,13,No,,
+SKU00976,P006,StorageMax HDD,West,West,1213,211,DigiStock Hub,9,No,,
+SKU00977,P003,NetShield Plus,West,West,1443,388,DigiStock Hub,24,No,,
+SKU00978,P005,ConnectBridge,North,North,1963,187,GlobalParts Inc,12,No,,
+SKU00979,P004,AnalyticsEdge,West,West,1187,182,DigiStock Hub,5,No,,
+SKU00980,P010,InsightDash,South,South,1111,361,TechSupply Ltd,12,No,,
+SKU00981,P007,ServerLink X1,Central,Central,1283,95,EastWest Logistics,25,No,,
+SKU00982,P007,ServerLink X1,East,East,390,52,AlphaSupplier,5,No,,
+SKU00983,P004,AnalyticsEdge,South,South,1847,280,SwiftParts Co,12,No,,
+SKU00984,P002,DataVault Enterprise,Central,Central,286,228,DigiStock Hub,17,No,,
+SKU00985,P004,AnalyticsEdge,North,North,2907,68,TechSupply Ltd,5,No,,
+SKU00986,P009,WorkflowPro,Central,Central,1763,379,SwiftParts Co,14,No,,
+SKU00987,P007,ServerLink X1,North,North,778,214,NovaBridge Supplies,17,No,,
+SKU00988,P001,CloudSync Pro,West,West,1282,60,GlobalParts Inc,13,No,,
+SKU00989,P008,CyberAudit Suite,East,East,2234,254,DigiStock Hub,24,No,,
+SKU00990,P005,ConnectBridge,Central,Central,1650,375,CoreComponents,21,No,,
+SKU00991,P005,ConnectBridge,Central,Central,384,289,GlobalParts Inc,25,No,,
+SKU00992,P004,AnalyticsEdge,West,West,536,62,GlobalParts Inc,19,No,,
+SKU00993,P008,CyberAudit Suite,North,North,394,277,DigiStock Hub,12,No,,
+SKU00994,P011,APIGateway Pro,West,West,1382,343,CoreComponents,24,No,,
+SKU00995,P004,AnalyticsEdge,South,South,251,277,TechSupply Ltd,8,No,,
+SKU00996,P002,DataVault Enterprise,West,West,536,343,AlphaSupplier,6,No,,
+SKU00997,P001,CloudSync Pro,East,East,2623,62,EastWest Logistics,7,No,,
+SKU00998,P005,ConnectBridge,East,East,1303,94,SwiftParts Co,15,No,,
+SKU00999,P010,InsightDash,West,West,1933,193,NovaBridge Supplies,12,No,,
+SKU01000,P004,AnalyticsEdge,Central,Central,1341,389,AlphaSupplier,15,No,,

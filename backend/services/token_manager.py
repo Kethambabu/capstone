@@ -106,7 +106,7 @@ def get_cumulative_token_stats() -> dict:
             
     # Local SQLite fallback
     try:
-        conn = sqlite3.connect(config.DB_PATH)
+        conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
         cursor = conn.cursor()
         cursor.execute("SELECT SUM(metric_value) FROM observability_metrics WHERE metric_name = 'total_input_tokens'")
         input_sum = cursor.fetchone()[0] or 0.0

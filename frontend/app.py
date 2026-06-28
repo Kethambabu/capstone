@@ -292,16 +292,89 @@ with tab2:
                                     
                                     if not chart_data.empty:
                                         st.markdown(f"#### {title}")
+                                        import altair as alt
                                         if chart_type == "line_chart":
                                             x = chart.get("x_axis")
                                             y = chart.get("y_axis")
-                                            st.line_chart(chart_data.set_index(x)[y])
+                                            line = alt.Chart(chart_data).mark_line(
+                                                interpolate="monotone",
+                                                color="#3b82f6",
+                                                strokeWidth=3
+                                            ).encode(
+                                                x=alt.X(field=x, type="nominal", sort=None, title=x),
+                                                y=alt.Y(field=y, type="quantitative", title=y),
+                                                tooltip=[x, alt.Tooltip(field=y, format="$,.2f" if "revenue" in y.lower() or "sales" in y.lower() else ",.0f")]
+                                            )
+                                            points = alt.Chart(chart_data).mark_point(
+                                                color="#60a5fa",
+                                                size=60,
+                                                filled=True
+                                            ).encode(
+                                                x=alt.X(field=x, type="nominal", sort=None),
+                                                y=alt.Y(field=y, type="quantitative"),
+                                                tooltip=[x, alt.Tooltip(field=y, format="$,.2f" if "revenue" in y.lower() or "sales" in y.lower() else ",.0f")]
+                                            )
+                                            full_chart = (line + points).properties(
+                                                height=350
+                                            ).configure_axis(
+                                                labelColor="#94a3b8",
+                                                titleColor="#e2e8f0",
+                                                gridColor="#1e293b"
+                                            ).configure_view(
+                                                strokeWidth=0
+                                            )
+                                            st.altair_chart(full_chart, use_container_width=True)
                                         elif chart_type == "bar_chart":
                                             x = chart.get("x_axis")
                                             y = chart.get("y_axis")
-                                            st.bar_chart(chart_data.set_index(x)[y])
+                                            bar = alt.Chart(chart_data).mark_bar(
+                                                cornerRadiusTopLeft=6,
+                                                cornerRadiusTopRight=6,
+                                                color="#3b82f6"
+                                            ).encode(
+                                                x=alt.X(field=x, type="nominal", sort="-y", title=x),
+                                                y=alt.Y(field=y, type="quantitative", title=y),
+                                                color=alt.Color(
+                                                    field=x,
+                                                    type="nominal",
+                                                    scale=alt.Scale(scheme="tableau10"),
+                                                    legend=None
+                                                ),
+                                                tooltip=[x, alt.Tooltip(field=y, format="$,.2f" if "revenue" in y.lower() or "sales" in y.lower() else ",.0f")]
+                                            ).properties(
+                                                height=350
+                                            ).configure_axis(
+                                                labelColor="#94a3b8",
+                                                titleColor="#e2e8f0",
+                                                gridColor="#1e293b"
+                                            ).configure_view(
+                                                strokeWidth=0
+                                            )
+                                            st.altair_chart(bar, use_container_width=True)
                                         elif chart_type == "pie_chart":
-                                            st.bar_chart(chart_data.set_index(chart_data.columns[0])[chart_data.columns[1]])
+                                            x_col = chart_data.columns[0]
+                                            y_col = chart_data.columns[1]
+                                            donut_chart = alt.Chart(chart_data).mark_arc(
+                                                innerRadius=70, 
+                                                stroke="#0b0f19", 
+                                                strokeWidth=2
+                                            ).encode(
+                                                theta=alt.Theta(field=y_col, type="quantitative"),
+                                                color=alt.Color(
+                                                    field=x_col, 
+                                                    type="nominal",
+                                                    scale=alt.Scale(scheme="tableau20")
+                                                ),
+                                                tooltip=[x_col, alt.Tooltip(field=y_col, format="$,.2f" if "revenue" in y_col.lower() or "sales" in y_col.lower() else ",.0f")]
+                                            ).properties(
+                                                height=350
+                                            ).configure_legend(
+                                                labelColor="#e2e8f0",
+                                                titleColor="#e2e8f0"
+                                            ).configure_view(
+                                                strokeWidth=0
+                                            )
+                                            st.altair_chart(donut_chart, use_container_width=True)
                     else:
                         st.error(f"Analysis failed: {response.json().get('detail', response.text)}")
                 except Exception as e:

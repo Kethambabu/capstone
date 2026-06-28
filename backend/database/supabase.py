@@ -38,6 +38,10 @@ else:
 def db_init():
     """Initializes the database. For local fallback, creates SQLite tables."""
     conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL;")
+    except Exception as e:
+        print(f"Failed to set WAL mode: {e}")
     cursor = conn.cursor()
     
     # Drop investigations and agent_runs to recreate with Phase 5 schemas
@@ -321,12 +325,12 @@ def get_dataset(dataset_id: str):
     return None
 
 def get_dataset_by_name(name: str):
-    """Retrieves dataset metadata matching name (case-insensitive, partial matching)."""
+    """Retrieves dataset metadata matching name (case-insensitive, partial matching, ordered by most recent)."""
     clean_name = name.lower().replace(".csv", "").strip()
     
     if supabase_client:
         try:
-            response = supabase_client.table("datasets").select("*").ilike("name", f"{clean_name}%").execute()
+            response = supabase_client.table("datasets").select("*").ilike("name", f"{clean_name}%").order("uploaded_at", desc=True).execute()
             if response.data:
                 return response.data[0]
         except Exception as e:
@@ -334,7 +338,7 @@ def get_dataset_by_name(name: str):
             
     conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, uploaded_at, file_path FROM datasets WHERE name LIKE ?", (f"{clean_name}%",))
+    cursor.execute("SELECT id, name, uploaded_at, file_path FROM datasets WHERE name LIKE ? ORDER BY uploaded_at DESC", (f"{clean_name}%",))
     row = cursor.fetchone()
     conn.close()
     if row:
