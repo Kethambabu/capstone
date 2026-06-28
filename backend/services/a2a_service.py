@@ -105,13 +105,16 @@ async def a2a_send_message(sender: str, receiver: str, task: str, dataset: str) 
             confidence = 90
             accuracy = 95
             completeness = 92
-            if "Overall Confidence Score:**" in final_report:
-                try:
-                    conf_match = re.search(r"Overall Confidence Score:\*\*\s*(\d+)%", final_report)
-                    if conf_match:
-                        confidence = int(conf_match.group(1))
-                except Exception:
-                    pass
+            try:
+                conf_match = re.search(r"overall\s+confidence\s+score[^\n]*?(\d+)", final_report, re.IGNORECASE)
+                if not conf_match:
+                    conf_match = re.search(r"confidence\s+score[^\n]*?(\d+)", final_report, re.IGNORECASE)
+                if not conf_match:
+                    conf_match = re.search(r"confidence[^\n]*?(\d+)", final_report, re.IGNORECASE)
+                if conf_match:
+                    confidence = int(conf_match.group(1))
+            except Exception:
+                pass
             return {
                 "accuracy": accuracy,
                 "completeness": completeness,

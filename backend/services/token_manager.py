@@ -89,7 +89,7 @@ def get_cumulative_token_stats() -> dict:
     if supabase.supabase_client:
         try:
             response = supabase.supabase_client.table("observability_metrics").select("metric_name, metric_value").execute()
-            if response.data:
+            if response.data and len(response.data) > 0:
                 import pandas as pd
                 df = pd.DataFrame(response.data)
                 input_sum = df[df["metric_name"] == "total_input_tokens"]["metric_value"].sum()

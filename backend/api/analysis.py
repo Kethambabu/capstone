@@ -25,6 +25,8 @@ class LocalRateLimiter:
         self.requests = {} # ip -> list of timestamps
         
     def is_allowed(self, ip: str) -> bool:
+        if ip in ("127.0.0.1", "localhost", "::1"):
+            return True
         now = time.time()
         if ip not in self.requests:
             self.requests[ip] = [now]
@@ -267,21 +269,21 @@ Please revise the report to directly address these critiques. Fix any contradict
 def generate_ui_hints(report_text: str, active_agents: list = None) -> list:
     """
     Generates dynamic UI layout hints for the frontend based on findings in the report text.
+    Supports: markdown table parsing + bullet-point metric extraction fallback.
     """
     hints = []
     text_lower = report_text.lower()
-    
+
     if active_agents is None:
         active_agents = ["revenue", "customer", "risk", "forecast"]
-        
-    # 1. Helper to parse markdown tables
+
+    # ── 1. Markdown table parser ──────────────────────────────────────────────
     def parse_markdown_tables(text: str) -> list:
         tables = []
         lines = [line.strip() for line in text.split('\n')]
         in_table = False
         headers = []
         rows = []
-        
         for line in lines:
             if line.startswith('|'):
                 parts = [p.strip() for p in line.split('|')[1:-1]]
@@ -301,43 +303,67 @@ def generate_ui_hints(report_text: str, active_agents: list = None) -> list:
                     in_table = False
                     headers = []
                     rows = []
-                    
         if in_table and headers and rows:
             tables.append({"headers": headers, "rows": rows})
-            
         return tables
 
-    # 2. Dynamic KPI Cards extraction
+    # ── 2. Bullet-point metric extractor (fallback when no tables exist) ──────
+    def extract_bullet_metrics(text: str) -> list:
+        """
+        Parses lines like '* **Key Label:** 42%' or '- Revenue: $1.2M' and
+        returns [{label, value}] dicts.
+        """
+        import re
+        patterns = [
+            r"[\*\-]\s+\*{1,2}([^:*]+)\*{0,2}:\s*\*{0,2}\$?\+?([\d,.]+)%?",
+            r"[\*\-]\s+([^:*]+):\s*\$?\+?([\d,.]+)%?",
+        ]
+        results = []
+        seen_labels = set()
+        for line in text.split('\n'):
+            line = line.strip()
+            for pat in patterns:
+                m = re.match(pat, line, re.IGNORECASE)
+                if m:
+                    label = m.group(1).strip().strip('*').strip()
+                    val_str = m.group(2).replace(',', '')
+                    try:
+                        val = float(val_str)
+                        if label not in seen_labels and len(label) < 60:
+                            results.append({"label": label, "value": val})
+                            seen_labels.add(label)
+                    except ValueError:
+                        pass
+                    break
+        return results
+
+    # ── 3. Dynamic KPI Cards extraction ──────────────────────────────────────
     import re
-    
+
     # Confidence Score Card
-    confidence_match = re.search(r"overall confidence score:\s*\*\*?(\d+)%?\*\*?", text_lower)
+    confidence_match = re.search(r"overall\s+confidence\s+score[^\n]*?(\d+)", text_lower)
     if not confidence_match:
-        confidence_match = re.search(r"confidence score:\s*\*\*?(\d+)%?\*\*?", text_lower)
+        confidence_match = re.search(r"confidence\s+score[^\n]*?(\d+)", text_lower)
     if not confidence_match:
-        confidence_match = re.search(r"confidence:\s*\*\*?(\d+)%?\*\*?", text_lower)
+        confidence_match = re.search(r"\bconfidence[^\n]*?(\d+)", text_lower)
     if confidence_match:
         val = f"{confidence_match.group(1)}%"
-        hints.append({
-            "type": "kpi_card",
-            "label": "Fleet Confidence Score",
-            "value": val,
-            "color": "blue",
-            "description": "Advisory partner confidence score from evaluation agent."
-        })
     else:
-        hints.append({
-            "type": "kpi_card",
-            "label": "Fleet Confidence Score",
-            "value": "88%",
-            "color": "blue",
-            "description": "Advisory partner confidence score from evaluation agent."
-        })
+        # Try to extract from heuristic evaluation section
+        ev_match = re.search(r"accuracy:\s*(\d+)/100", text_lower)
+        val = f"{ev_match.group(1)}%" if ev_match else "N/A"
+    hints.append({
+        "type": "kpi_card",
+        "label": "Fleet Confidence Score",
+        "value": val,
+        "color": "blue",
+        "description": "Advisory partner confidence score from evaluation agent."
+    })
 
     # Churn Rate Card
-    churn_match = re.search(r"overall customer churn rate:\s*\*\*?([\d\.]+)%?\*\*?", text_lower)
+    churn_match = re.search(r"overall\s+customer\s+churn\s+rate[^\n]*?([\d\.]+)", text_lower)
     if not churn_match:
-        churn_match = re.search(r"churn rate:\s*\*\*?([\d\.]+)%?\*\*?", text_lower)
+        churn_match = re.search(r"churn\s+rate[^\n]*?([\d\.]+)", text_lower)
     if churn_match:
         val = f"{churn_match.group(1)}%"
         hints.append({
@@ -349,7 +375,7 @@ def generate_ui_hints(report_text: str, active_agents: list = None) -> list:
         })
 
     # Revenue Growth Card
-    growth_match = re.search(r"projected revenue growth:\s*\*\*?\+?([\d\.]+)%?\*\*?", text_lower)
+    growth_match = re.search(r"projected\s+revenue\s+growth[^\n]*?([\d\.]+)", text_lower)
     if growth_match:
         val = f"+{growth_match.group(1)}%"
         hints.append({
@@ -363,91 +389,376 @@ def generate_ui_hints(report_text: str, active_agents: list = None) -> list:
     # 3. Dynamic Charts Generation from Markdown Tables
     try:
         tables = parse_markdown_tables(report_text)
+        chart_count = {"line": 0, "bar": 0, "pie": 0, "area": 0, "scatter": 0, "hbar": 0}
+
         for table in tables:
             headers_lower = [h.lower() for h in table["headers"]]
-            
-            # Find time-based columns
-            time_idx = -1
-            for idx, h in enumerate(headers_lower):
-                if any(t in h for t in ["month", "date", "period", "year"]):
-                    time_idx = idx
-                    break
-            
-            # Find categorical columns
-            cat_idx = -1
-            for idx, h in enumerate(headers_lower):
-                if idx == time_idx:
-                    continue
-                if any(c in h for c in ["region", "warehouse", "category", "product", "segment", "status", "event_type", "event type"]):
-                    cat_idx = idx
-                    break
-            
-            # Find numeric value column
-            val_idx = -1
-            for idx, h in enumerate(headers_lower):
-                if idx in [time_idx, cat_idx]:
-                    continue
-                if any(v in h for v in ["revenue", "sales", "predicted_revenue", "monthly_revenue", "amount", "churned", "count", "total", "spend", "budget"]):
-                    val_idx = idx
-                    break
-            
-            # Scenario A: Time-series Line Chart
+
+            # ── Index detection ────────────────────────────────────────────
+            time_idx = next(
+                (i for i, h in enumerate(headers_lower)
+                 if any(t in h for t in ["month", "date", "period", "year", "quarter", "week"])),
+                -1
+            )
+            cat_idx = next(
+                (i for i, h in enumerate(headers_lower)
+                 if i != time_idx and any(c in h for c in [
+                     "region", "warehouse", "category", "product", "segment",
+                     "status", "event_type", "event type", "channel", "tier",
+                     "brand", "country", "city", "department", "type"
+                 ])),
+                -1
+            )
+            val_idx = next(
+                (i for i, h in enumerate(headers_lower)
+                 if i not in [time_idx, cat_idx] and any(v in h for v in [
+                     "revenue", "sales", "predicted_revenue", "monthly_revenue",
+                     "amount", "churned", "count", "total", "spend", "budget",
+                     "profit", "cost", "value", "price", "quantity", "units",
+                     "growth", "rate", "score", "margin"
+                 ])),
+                -1
+            )
+            val2_idx = next(
+                (i for i, h in enumerate(headers_lower)
+                 if i not in [time_idx, cat_idx, val_idx] and any(v in h for v in [
+                     "revenue", "sales", "profit", "cost", "count", "units",
+                     "growth", "rate", "score", "margin", "amount", "quantity"
+                 ])),
+                -1
+            )
+
+            def safe_rows(x_idx, y_idx):
+                rows_out = []
+                for r in table["rows"]:
+                    if len(r) > max(x_idx, y_idx):
+                        try:
+                            x_val = r[x_idx]
+                            y_str = r[y_idx].replace('$', '').replace(',', '').replace('%', '').strip()
+                            y_num = float(y_str)
+                            rows_out.append({
+                                table["headers"][x_idx]: x_val,
+                                table["headers"][y_idx]: y_num
+                            })
+                        except (ValueError, IndexError):
+                            continue
+                return rows_out
+
+            def is_currency(col_name):
+                return any(k in col_name.lower() for k in ["revenue", "sales", "amount", "cost", "spend", "profit", "budget", "price"])
+
+            # ── A: Time-series → Line Chart or Area Chart ─────────────────
             if time_idx != -1 and val_idx != -1:
-                chart_data = []
-                for r in table["rows"]:
-                    if len(r) > max(time_idx, val_idx):
-                        try:
-                            time_val = r[time_idx]
-                            val_str = r[val_idx].replace('$', '').replace(',', '').strip()
-                            val_str = val_str.replace('%', '')
-                            val_num = float(val_str)
-                            chart_data.append({
-                                table["headers"][time_idx]: time_val,
-                                table["headers"][val_idx]: val_num
-                            })
-                        except ValueError:
-                            continue
+                chart_data = safe_rows(time_idx, val_idx)
                 if chart_data and len(chart_data) > 1:
-                    hints.append({
-                        "type": "line_chart",
-                        "title": f"Trend: {table['headers'][val_idx]} by {table['headers'][time_idx]}",
-                        "x_axis": table["headers"][time_idx],
-                        "y_axis": table["headers"][val_idx],
-                        "data": chart_data
-                    })
-                    
-            # Scenario B: Categorical Bar/Pie Chart
+                    if chart_count["line"] == 0:
+                        hints.append({
+                            "type": "line_chart",
+                            "title": f"Trend: {table['headers'][val_idx]} by {table['headers'][time_idx]}",
+                            "x_axis": table["headers"][time_idx],
+                            "y_axis": table["headers"][val_idx],
+                            "is_currency": is_currency(table["headers"][val_idx]),
+                            "data": chart_data
+                        })
+                        chart_count["line"] += 1
+                    elif chart_count["area"] == 0:
+                        hints.append({
+                            "type": "area_chart",
+                            "title": f"Area Trend: {table['headers'][val_idx]} over {table['headers'][time_idx]}",
+                            "x_axis": table["headers"][time_idx],
+                            "y_axis": table["headers"][val_idx],
+                            "is_currency": is_currency(table["headers"][val_idx]),
+                            "data": chart_data
+                        })
+                        chart_count["area"] += 1
+
+                # Multi-line chart when secondary numeric column exists alongside time
+                if val2_idx != -1:
+                    chart_data2 = []
+                    for r in table["rows"]:
+                        if len(r) > max(time_idx, val_idx, val2_idx):
+                            try:
+                                chart_data2.append({
+                                    table["headers"][time_idx]: r[time_idx],
+                                    table["headers"][val_idx]: float(r[val_idx].replace('$', '').replace(',', '').replace('%', '').strip()),
+                                    table["headers"][val2_idx]: float(r[val2_idx].replace('$', '').replace(',', '').replace('%', '').strip())
+                                })
+                            except (ValueError, IndexError):
+                                continue
+                    if chart_data2 and len(chart_data2) > 1:
+                        hints.append({
+                            "type": "multi_line_chart",
+                            "title": f"Comparison: {table['headers'][val_idx]} vs {table['headers'][val2_idx]}",
+                            "x_axis": table["headers"][time_idx],
+                            "series": [table["headers"][val_idx], table["headers"][val2_idx]],
+                            "data": chart_data2
+                        })
+
+            # ── B: Categorical → Bar / Pie / Horizontal Bar ───────────────
             if cat_idx != -1 and val_idx != -1:
-                chart_data = []
-                for r in table["rows"]:
-                    if len(r) > max(cat_idx, val_idx):
-                        try:
-                            cat_val = r[cat_idx]
-                            val_str = r[val_idx].replace('$', '').replace(',', '').strip()
-                            val_str = val_str.replace('%', '')
-                            val_num = float(val_str)
-                            chart_data.append({
-                                table["headers"][cat_idx]: cat_val,
-                                table["headers"][val_idx]: val_num
-                            })
-                        except ValueError:
-                            continue
+                chart_data = safe_rows(cat_idx, val_idx)
                 if chart_data:
-                    chart_type = "bar_chart"
-                    cat_header_lower = table["headers"][cat_idx].lower()
-                    if "pie" in report_text.lower() or "pie" in cat_header_lower or any(s in cat_header_lower for s in ["segment", "status", "channel", "category", "product"]) or len(chart_data) <= 8:
-                        chart_type = "pie_chart"
+                    n = len(chart_data)
+                    cat_h = table["headers"][cat_idx].lower()
+                    val_h = table["headers"][val_idx]
+
+                    if any(s in cat_h for s in ["segment", "status", "channel", "category", "product", "tier"]) and n <= 8:
+                        if chart_count["pie"] == 0:
+                            hints.append({
+                                "type": "pie_chart",
+                                "title": f"Distribution: {val_h} by {table['headers'][cat_idx]}",
+                                "x_axis": table["headers"][cat_idx],
+                                "y_axis": val_h,
+                                "is_currency": is_currency(val_h),
+                                "data": chart_data
+                            })
+                            chart_count["pie"] += 1
+                    elif n > 6:
+                        if chart_count["hbar"] == 0:
+                            hints.append({
+                                "type": "horizontal_bar",
+                                "title": f"Ranking: {val_h} by {table['headers'][cat_idx]}",
+                                "x_axis": val_h,
+                                "y_axis": table["headers"][cat_idx],
+                                "is_currency": is_currency(val_h),
+                                "data": chart_data
+                            })
+                            chart_count["hbar"] += 1
+                    else:
+                        if chart_count["bar"] < 2:
+                            hints.append({
+                                "type": "bar_chart",
+                                "title": f"Breakdown: {val_h} by {table['headers'][cat_idx]}",
+                                "x_axis": table["headers"][cat_idx],
+                                "y_axis": val_h,
+                                "is_currency": is_currency(val_h),
+                                "data": chart_data
+                            })
+                            chart_count["bar"] += 1
+
+                # Stacked bar when time AND category AND value all exist
+                if time_idx != -1:
+                    stacked_data = []
+                    for r in table["rows"]:
+                        if len(r) > max(time_idx, cat_idx, val_idx):
+                            try:
+                                stacked_data.append({
+                                    table["headers"][time_idx]: r[time_idx],
+                                    table["headers"][cat_idx]: r[cat_idx],
+                                    table["headers"][val_idx]: float(
+                                        r[val_idx].replace('$', '').replace(',', '').replace('%', '').strip()
+                                    )
+                                })
+                            except (ValueError, IndexError):
+                                continue
+                    if stacked_data and len(stacked_data) > 1:
+                        hints.append({
+                            "type": "stacked_bar_chart",
+                            "title": f"Stacked: {table['headers'][val_idx]} by {table['headers'][time_idx]} & {table['headers'][cat_idx]}",
+                            "x_axis": table["headers"][time_idx],
+                            "color_field": table["headers"][cat_idx],
+                            "y_axis": table["headers"][val_idx],
+                            "is_currency": is_currency(table["headers"][val_idx]),
+                            "data": stacked_data
+                        })
+
+            # ── C: Scatter plot — two numeric cols, no time axis ─────────
+            if val_idx != -1 and val2_idx != -1 and time_idx == -1 and chart_count["scatter"] == 0:
+                scatter_data = []
+                for r in table["rows"]:
+                    if len(r) > max(val_idx, val2_idx):
+                        try:
+                            point = {
+                                table["headers"][val_idx]: float(r[val_idx].replace('$', '').replace(',', '').replace('%', '').strip()),
+                                table["headers"][val2_idx]: float(r[val2_idx].replace('$', '').replace(',', '').replace('%', '').strip())
+                            }
+                            if cat_idx != -1 and len(r) > cat_idx:
+                                point[table["headers"][cat_idx]] = r[cat_idx]
+                            scatter_data.append(point)
+                        except (ValueError, IndexError):
+                            continue
+                if scatter_data and len(scatter_data) > 2:
                     hints.append({
-                        "type": chart_type,
-                        "title": f"Breakdown: {table['headers'][val_idx]} by {table['headers'][cat_idx]}",
-                        "x_axis": table["headers"][cat_idx],
-                        "y_axis": table["headers"][val_idx],
-                        "data": chart_data
+                        "type": "scatter_plot",
+                        "title": f"Correlation: {table['headers'][val_idx]} vs {table['headers'][val2_idx]}",
+                        "x_axis": table["headers"][val_idx],
+                        "y_axis": table["headers"][val2_idx],
+                        "color_field": table["headers"][cat_idx] if cat_idx != -1 else None,
+                        "data": scatter_data
                     })
+                    chart_count["scatter"] += 1
+
+            # ── D: Histogram — single numeric column, no x/cat axis ───────
+            if val_idx != -1 and time_idx == -1 and cat_idx == -1 and len(table["rows"]) > 4:
+                hist_data = []
+                for r in table["rows"]:
+                    if len(r) > val_idx:
+                        try:
+                            hist_data.append({
+                                table["headers"][val_idx]: float(
+                                    r[val_idx].replace('$', '').replace(',', '').replace('%', '').strip()
+                                )
+                            })
+                        except (ValueError, IndexError):
+                            continue
+                if hist_data and len(hist_data) > 4:
+                    hints.append({
+                        "type": "histogram",
+                        "title": f"Distribution: {table['headers'][val_idx]}",
+                        "x_axis": table["headers"][val_idx],
+                        "is_currency": is_currency(table["headers"][val_idx]),
+                        "data": hist_data
+                    })
+
+            # ── E: Waterfall — growth/change column with categories ───────
+            growth_idx = next(
+                (i for i, h in enumerate(headers_lower)
+                 if any(g in h for g in ["growth", "change", "delta", "difference", "variance"])),
+                -1
+            )
+            if cat_idx != -1 and growth_idx != -1:
+                wf_data = []
+                for r in table["rows"]:
+                    if len(r) > max(cat_idx, growth_idx):
+                        try:
+                            wf_data.append({
+                                table["headers"][cat_idx]: r[cat_idx],
+                                table["headers"][growth_idx]: float(
+                                    r[growth_idx].replace('$', '').replace(',', '').replace('%', '').replace('+', '').strip()
+                                )
+                            })
+                        except (ValueError, IndexError):
+                            continue
+                if wf_data and len(wf_data) > 1:
+                    hints.append({
+                        "type": "waterfall_chart",
+                        "title": f"Waterfall: {table['headers'][growth_idx]} by {table['headers'][cat_idx]}",
+                        "x_axis": table["headers"][cat_idx],
+                        "y_axis": table["headers"][growth_idx],
+                        "data": wf_data
+                    })
+
+        # ── Gauge Chart — from confidence or risk score ────────────────────
+        gauge_val = None
+        gauge_label = None
+        risk_match = re.search(r"risk\s+score[^\n]*?([\d\.]+)", text_lower)
+        if risk_match:
+            gauge_val = float(risk_match.group(1))
+            gauge_label = "Risk Score"
+        elif confidence_match:
+            try:
+                gauge_val = float(confidence_match.group(1))
+                gauge_label = "Fleet Confidence"
+            except Exception:
+                pass
+        if gauge_val is not None:
+            hints.append({
+                "type": "gauge_chart",
+                "title": f"Gauge: {gauge_label}",
+                "value": gauge_val,
+                "max": 100,
+                "label": gauge_label
+            })
+
     except Exception as e:
         print(f"Error parsing tables for UI hints: {e}")
 
-    return hints
+    # ── Fallback: Generate charts from bullet-point metrics when no tables exist ──
+    try:
+        chart_hints_exist = any(h["type"] not in ("kpi_card", "gauge_chart") for h in hints)
+        if not chart_hints_exist:
+            bullet_metrics = extract_bullet_metrics(report_text)
+            chart_worthy = [
+                m for m in bullet_metrics
+                if 0 < m["value"] <= 10_000_000
+                and any(kw in m["label"].lower() for kw in [
+                    "revenue", "sales", "growth", "churn", "cost", "profit",
+                    "rate", "score", "count", "amount", "decline", "drop",
+                    "increase", "percent", "spend", "margin", "units", "forecast",
+                    "accuracy", "completeness", "consistency", "hallucination"
+                ])
+            ]
+            if len(chart_worthy) >= 2:
+                hints.append({
+                    "type": "bar_chart",
+                    "title": "Key Metrics Overview",
+                    "x_axis": "Metric",
+                    "y_axis": "Value",
+                    "is_currency": False,
+                    "data": [{"Metric": m["label"][:40], "Value": m["value"]} for m in chart_worthy[:10]]
+                })
+
+            # Monthly / period line chart
+            import re as _re2
+            month_pattern = _re2.compile(
+                r"(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|"
+                r"aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)"
+                r"[^:]*[:–\-]?\s*\$?([\d,]+(?:\.\d+)?)",
+                _re2.IGNORECASE
+            )
+            month_matches = month_pattern.findall(report_text)
+            if len(month_matches) >= 2:
+                month_data = []
+                seen_months = set()
+                for mon, val in month_matches:
+                    mon_cap = mon.capitalize()[:3]
+                    if mon_cap not in seen_months:
+                        try:
+                            month_data.append({"Period": mon_cap, "Revenue": float(val.replace(",", ""))})
+                            seen_months.add(mon_cap)
+                        except ValueError:
+                            pass
+                if len(month_data) >= 2:
+                    hints.append({
+                        "type": "line_chart",
+                        "title": "Revenue Trend by Period",
+                        "x_axis": "Period",
+                        "y_axis": "Revenue",
+                        "is_currency": True,
+                        "data": month_data
+                    })
+
+            # Waterfall: % change figures
+            pct_pattern = _re2.compile(
+                r"([A-Z][a-zA-Z\s]{2,40}?)\s*(?:declined?|dropped?|fell?|decreased?|grew?|increased?)[^\d]*([-+]?\d+(?:\.\d+)?)%",
+                _re2.IGNORECASE
+            )
+            pct_matches = pct_pattern.findall(report_text)
+            if len(pct_matches) >= 2:
+                wf_data = []
+                seen_wf = set()
+                for label, val in pct_matches:
+                    label = label.strip()[:35]
+                    if label not in seen_wf:
+                        try:
+                            wf_data.append({"Category": label, "Change (%)": float(val)})
+                            seen_wf.add(label)
+                        except ValueError:
+                            pass
+                if len(wf_data) >= 2:
+                    hints.append({
+                        "type": "waterfall_chart",
+                        "title": "Performance Change Breakdown",
+                        "x_axis": "Category",
+                        "y_axis": "Change (%)",
+                        "data": wf_data
+                    })
+    except Exception as fb_err:
+        print(f"Fallback chart generation error: {fb_err}")
+
+    def sanitize_floats(obj):
+        import math
+        if isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return None
+            return obj
+        elif isinstance(obj, dict):
+            return {k: sanitize_floats(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [sanitize_floats(x) for x in obj]
+        return obj
+
+    return sanitize_floats(hints)
 
 router = APIRouter()
 
@@ -541,6 +852,23 @@ async def analyze_dataset(request: AnalysisRequest, fastapi_req: Request):
     try:
         dataset_meta = dataset_service.get_dataset_meta(request.dataset_id)
         dataset_name = dataset_meta.get("name", "")
+        
+        # Dynamic Dataset Routing: override dataset_id and dataset_name if query matches specific keywords
+        _q_lower = request.question.lower()
+        if "customer" in _q_lower or "churn" in _q_lower or "segment" in _q_lower:
+            try:
+                _cust_meta = dataset_service.get_dataset_by_name("customers")
+                request.dataset_id = _cust_meta["id"]
+                dataset_name = _cust_meta["name"]
+            except Exception:
+                pass
+        else:
+            try:
+                _sales_meta = dataset_service.get_dataset_by_name("sales")
+                request.dataset_id = _sales_meta["id"]
+                dataset_name = _sales_meta["name"]
+            except Exception:
+                pass
     except Exception as e:
         supabase.update_investigation_state(investigation_id, "FAILED")
         raise HTTPException(status_code=404, detail=f"Dataset {request.dataset_id} not found: {str(e)}")
@@ -992,32 +1320,39 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
         # Mode 1: Quota Saver (Single-Query Direct Engine)
         if request.execution_mode == "quota_saver" and not config.MOCK_MODE:
             try:
-                # Get dataset name
-                dataset_meta = dataset_service.get_dataset_meta(request.dataset_id)
-                dataset_name = dataset_meta.get("name", "sales")
-                
+                # dataset_name is already dynamically routed and loaded at the beginning of the function
+
                 from backend.agents.security.security_agent import is_role_allowed_for_dataset
-                
+                import datetime as _dt_ops
+
                 # Initialize bypassed values
                 revenue_findings = "Revenue Agent was bypassed for this query by the routing planner."
                 customer_findings = "Customer Agent was bypassed for this query by the routing planner."
                 risk_findings = "Risk Agent was bypassed for this query by the routing planner."
                 forecast_card_content = "* **Revenue Forecast**: Bypassed by intent detector."
-                
-                # 1. Revenue check
+
+                # ── 1. Revenue Agent ──────────────────────────────────────────
                 _rev_t0 = time.time()
+                _rev_run_id = str(uuid.uuid4())
+                _rev_start  = _dt_ops.datetime.utcnow().isoformat()
+                supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "RUNNING", _rev_start, None, 0.0)
+
                 if "revenue" in active_agents or primary_category == "general":
                     if not is_role_allowed_for_dataset(request.role, dataset_name):
                         revenue_findings = f"Access Denied: User with role '{request.role}' does not have permissions to access revenue data."
+                        supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "SKIPPED", _rev_start, _dt_ops.datetime.utcnow().isoformat(), time.time() - _rev_t0)
                         try:
                             trace.agent_error("Revenue Agent", "Access denied by RBAC policy", "Bypassed")
                         except Exception:
                             pass
                     else:
-                        # Run local revenue analysis
                         from backend.tools.analytics_tools import run_revenue_analysis
                         print(f"[ADK TRACE] Local execution: run_revenue_analysis for dataset '{dataset_name}'")
                         revenue_findings = run_revenue_analysis(dataset_name, request.question)
+                        _rev_dur = time.time() - _rev_t0
+                        supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "COMPLETED", _rev_start, _dt_ops.datetime.utcnow().isoformat(), _rev_dur)
+                        supabase.db_store_observability_metric("Revenue Agent_duration", _rev_dur)
+                        supabase.db_store_observability_metric("Revenue Agent_status_COMPLETED", 1.0)
                         try:
                             trace.agent_work("Revenue Agent", [
                                 f"Reading dataset: {dataset_name}...",
@@ -1025,21 +1360,27 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
                                 "Calculating YoY growth...",
                                 "Checking regional performance...",
                                 "MCP: run_analysis(type=revenue)",
-                            ], elapsed=time.time() - _rev_t0)
+                            ], elapsed=_rev_dur)
                         except Exception:
                             pass
+                else:
+                    supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "SKIPPED", _rev_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
                 
-                # 2. Customer check
-                _cust_t0 = time.time()
+                # ── 2. Customer Agent ─────────────────────────────────────────
+                _cust_t0    = time.time()
+                _cust_run_id = str(uuid.uuid4())
+                _cust_start  = _dt_ops.datetime.utcnow().isoformat()
+                supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "RUNNING", _cust_start, None, 0.0)
+
                 if "customer" in active_agents or primary_category == "general":
                     if not is_role_allowed_for_dataset(request.role, "customers"):
                         customer_findings = f"Access Denied: User with role '{request.role}' does not have permissions to access customer data."
+                        supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "SKIPPED", _cust_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
                         try:
                             trace.agent_error("Customer Agent", "Access denied by RBAC policy", "Bypassed")
                         except Exception:
                             pass
                     else:
-                        # Run local customer analysis (look for "customers" dataset)
                         from backend.tools.analytics_tools import run_customer_analysis
                         try:
                             cust_meta = dataset_service.get_dataset_by_name("customers.csv")
@@ -1052,6 +1393,10 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
                                 cust_name = dataset_name
                         print(f"[ADK TRACE] Local execution: run_customer_analysis for dataset '{cust_name}'")
                         customer_findings = run_customer_analysis(cust_name)
+                        _cust_dur = time.time() - _cust_t0
+                        supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "COMPLETED", _cust_start, _dt_ops.datetime.utcnow().isoformat(), _cust_dur)
+                        supabase.db_store_observability_metric("Customer Agent_duration", _cust_dur)
+                        supabase.db_store_observability_metric("Customer Agent_status_COMPLETED", 1.0)
                         try:
                             trace.agent_work("Customer Agent", [
                                 f"Reading dataset: {cust_name}...",
@@ -1062,57 +1407,80 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
                         except Exception:
                             pass
                 
-                # 3. Risk check
-                _risk_t0 = time.time()
+                else:
+                    supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "SKIPPED", _cust_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
+
+                # ── 3. Risk Agent ─────────────────────────────────────────────
+                _risk_t0    = time.time()
+                _risk_run_id = str(uuid.uuid4())
+                _risk_start  = _dt_ops.datetime.utcnow().isoformat()
+                supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "RUNNING", _risk_start, None, 0.0)
+
                 if "risk" in active_agents or primary_category == "general":
                     if not is_role_allowed_for_dataset(request.role, "risks"):
                         risk_findings = f"Access Denied: User with role '{request.role}' does not have permissions to access risk data."
+                        supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "SKIPPED", _risk_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
                         try:
                             trace.agent_error("Risk Agent", "Access denied by RBAC policy", "Bypassed")
                         except Exception:
                             pass
                     else:
-                        # Run local risk analysis
                         from backend.tools.analytics_tools import run_risk_analysis
                         print(f"[ADK TRACE] Local execution: run_risk_analysis for dataset '{dataset_name}'")
                         risk_findings = run_risk_analysis(dataset_name)
+                        _risk_dur = time.time() - _risk_t0
+                        supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "COMPLETED", _risk_start, _dt_ops.datetime.utcnow().isoformat(), _risk_dur)
+                        supabase.db_store_observability_metric("Risk Agent_duration", _risk_dur)
+                        supabase.db_store_observability_metric("Risk Agent_status_COMPLETED", 1.0)
                         try:
                             trace.agent_work("Risk Agent", [
                                 "Loading anomaly detection rules...",
                                 "Scanning for variance events...",
                                 "Checking regional drops...",
                                 "MCP: run_analysis(type=risk)",
-                            ], elapsed=time.time() - _risk_t0)
+                            ], elapsed=_risk_dur)
                         except Exception:
                             pass
+                else:
+                    supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "SKIPPED", _risk_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
                 
-                # 4. Forecast check
-                _fore_t0 = time.time()
+                # ── 4. Forecast Agent ─────────────────────────────────────────
+                _fore_t0    = time.time()
+                _fore_run_id = str(uuid.uuid4())
+                _fore_start  = _dt_ops.datetime.utcnow().isoformat()
+                supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "RUNNING", _fore_start, None, 0.0)
+
                 if "forecast" in active_agents or primary_category == "general":
                     if not is_role_allowed_for_dataset(request.role, "forecast"):
                         forecast_card_content = f"* **Access Denied**: User with role '{request.role}' does not have permissions to access forecast data."
+                        supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "SKIPPED", _fore_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
                         try:
                             trace.agent_error("Forecast Agent", "Access denied by RBAC policy", "Bypassed")
                         except Exception:
                             pass
                     else:
-                        # Run local forecast analysis
                         from backend.services.forecast_service import calculate_local_forecast
                         print(f"[ADK TRACE] Local execution: calculate_local_forecast for dataset '{dataset_name}'")
                         forecast_res = calculate_local_forecast(dataset_name)
                         forecast_growth = forecast_res.get("forecast_growth", 8.2)
-                        forecast_conf = forecast_res.get("confidence", 91)
+                        forecast_conf   = forecast_res.get("confidence", 91)
                         forecast_card_content = f"""* **Projected Revenue Growth**: +{forecast_growth}% (Heuristic Estimate)
 * **Model Confidence**: {forecast_conf}% (Heuristic Estimate)"""
+                        _fore_dur = time.time() - _fore_t0
+                        supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "COMPLETED", _fore_start, _dt_ops.datetime.utcnow().isoformat(), _fore_dur)
+                        supabase.db_store_observability_metric("Forecast Agent_duration", _fore_dur)
+                        supabase.db_store_observability_metric("Forecast Agent_status_COMPLETED", 1.0)
                         try:
                             trace.agent_work("Forecast Agent", [
                                 "Loading historical data...",
                                 "Running statistical forecast model...",
                                 "Generating growth projection...",
                                 "MCP: query_data + run_analysis(type=forecast)",
-                            ], elapsed=time.time() - _fore_t0)
+                            ], elapsed=_fore_dur)
                         except Exception:
                             pass
+                else:
+                    supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "SKIPPED", _fore_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
                 
             except Exception as data_err:
                 print(f"Data calculations failed: {data_err}. Using mock values.")
