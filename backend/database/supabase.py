@@ -134,13 +134,14 @@ def db_init():
     conn.close()
     print("Local database initialized/verified with Memory, Skills, Security, Evaluation, and Observability tables.")
 
-    # --- Self-Healing & Seeding Logic ---
+    # --- Self-Healing Logic (stale record cleanup only) ---
+    # NOTE: Auto-seeding from data/ directory is intentionally DISABLED.
+    # Datasets must be explicitly uploaded by the user through the Dataset Explorer.
+    # This ensures that user-deleted datasets are permanently removed and never silently re-added.
     try:
         import os
-        import uuid
-        import shutil
-        
-        # 1. Clean up stale local dataset records whose files don't exist on disk
+
+        # Clean up stale local dataset records whose files no longer exist on disk
         conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
         cursor = conn.cursor()
         cursor.execute("SELECT id, name, file_path FROM datasets")
@@ -150,69 +151,13 @@ def db_init():
             if not r_path.startswith("supabase://") and not os.path.exists(r_path):
                 stale_ids.append(r_id)
         if stale_ids:
-            print(f"[Self-Healing] Found {len(stale_ids)} stale local dataset records. Deleting them.")
+            print(f"[Self-Healing] Found {len(stale_ids)} stale local dataset records. Removing them.")
             for s_id in stale_ids:
                 cursor.execute("DELETE FROM datasets WHERE id = ?", (s_id,))
             conn.commit()
-        
-        # 2. Seed files from data/ directory
-        data_dir = config.BASE_DIR.parent / "data"
-        if data_dir.exists() and data_dir.is_dir():
-            csv_files = list(data_dir.glob("*.csv"))
-            for csv_file in csv_files:
-                name = csv_file.name
-                # Check if this name is already in the database and exists on disk
-                cursor.execute("SELECT file_path FROM datasets WHERE name = ?", (name,))
-                db_row = cursor.fetchone()
-                exists_locally = False
-                if db_row:
-                    db_path = db_row[0]
-                    if db_path.startswith("supabase://") or os.path.exists(db_path):
-                        exists_locally = True
-                
-                if not exists_locally:
-                    print(f"[Seeder] Seeding dataset {name} into database...")
-                    dataset_id = str(uuid.uuid4())
-                    dest_path = config.UPLOAD_DIR / f"{dataset_id}_{name}"
-                    shutil.copy(str(csv_file), str(dest_path))
-                    
-                    uploaded_at = datetime.datetime.utcnow().isoformat()
-                    cursor.execute(
-                        "INSERT INTO datasets (id, name, uploaded_at, file_path) VALUES (?, ?, ?, ?)",
-                        (dataset_id, name, uploaded_at, str(dest_path))
-                    )
-                    conn.commit()
-                    print(f"[Seeder] Successfully seeded {name} as {dataset_id}")
-                    
-                    # Alias matching: seed copy as sales.csv and customers.csv if matching name
-                    if name == "sales_large.csv":
-                        cursor.execute("SELECT id FROM datasets WHERE name = 'sales.csv'")
-                        if not cursor.fetchone():
-                            alias_id = str(uuid.uuid4())
-                            alias_dest = config.UPLOAD_DIR / f"{alias_id}_sales.csv"
-                            shutil.copy(str(csv_file), str(alias_dest))
-                            cursor.execute(
-                                "INSERT INTO datasets (id, name, uploaded_at, file_path) VALUES (?, ?, ?, ?)",
-                                (alias_id, "sales.csv", uploaded_at, str(alias_dest))
-                            )
-                            conn.commit()
-                            print(f"[Seeder] Seeded alias 'sales.csv' for 'sales_large.csv'")
-                            
-                    if name == "customers_large.csv":
-                        cursor.execute("SELECT id FROM datasets WHERE name = 'customers.csv'")
-                        if not cursor.fetchone():
-                            alias_id = str(uuid.uuid4())
-                            alias_dest = config.UPLOAD_DIR / f"{alias_id}_customers.csv"
-                            shutil.copy(str(csv_file), str(alias_dest))
-                            cursor.execute(
-                                "INSERT INTO datasets (id, name, uploaded_at, file_path) VALUES (?, ?, ?, ?)",
-                                (alias_id, "customers.csv", uploaded_at, str(alias_dest))
-                            )
-                            conn.commit()
-                            print(f"[Seeder] Seeded alias 'customers.csv' for 'customers_large.csv'")
         conn.close()
     except Exception as ex:
-        print(f"[Seeder/Self-Healing] Error seeding database: {ex}")
+        print(f"[Self-Healing] Error during stale record cleanup: {ex}")
 
 
 def insert_investigation(investigation_id: str, question: str, status: str):
@@ -297,6 +242,24 @@ def insert_dataset(dataset_id: str, name: str, file_path: str):
     conn.commit()
     conn.close()
     print("Successfully inserted dataset metadata locally.")
+    return True
+
+def db_delete_dataset(dataset_id: str) -> bool:
+    """Deletes dataset metadata record."""
+    if supabase_client:
+        try:
+            supabase_client.table("datasets").delete().eq("id", dataset_id).execute()
+            print("Successfully deleted dataset metadata from Supabase.")
+        except Exception as e:
+            _handle_supabase_error(e)
+            print(f"Failed to delete from Supabase: {e}. Deleting from local database.")
+            
+    conn = sqlite3.connect(config.DB_PATH, timeout=30.0)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM datasets WHERE id = ?", (dataset_id,))
+    conn.commit()
+    conn.close()
+    print("Successfully deleted dataset metadata locally.")
     return True
 
 def get_dataset(dataset_id: str):

@@ -51,4 +51,24 @@ def get_dataset_content(dataset_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve dataset content: {str(e)}")
 
+@router.delete("/datasets/{dataset_id}")
+def delete_dataset(dataset_id: str):
+    """
+    Endpoint to delete an uploaded dataset from storage and database.
+    """
+    try:
+        dataset_service.delete_dataset(dataset_id)
+        
+        # Invalidate the cache for this dataset
+        try:
+            from backend.api.analysis import clear_query_cache
+            clear_query_cache(dataset_id)
+        except Exception as cache_err:
+            print(f"Failed to clear cache on delete: {cache_err}")
+            
+        return {"status": "success", "message": f"Dataset {dataset_id} deleted successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete dataset: {str(e)}")
+
+
 

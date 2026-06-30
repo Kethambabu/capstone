@@ -68,3 +68,34 @@ def download_file(file_path: str) -> bytes:
     # Local path
     with open(file_path, "rb") as f:
         return f.read()
+
+def delete_file(file_path: str) -> bool:
+    """
+    Deletes the file from local storage or Supabase storage.
+    """
+    if file_path.startswith("supabase://"):
+        if supabase.supabase_client:
+            try:
+                # Format: supabase://datasets/dataset_id/filename.csv
+                parts = file_path.replace("supabase://", "").split("/", 1)
+                bucket_name = parts[0]
+                storage_path = parts[1]
+                
+                supabase.supabase_client.storage.from_(bucket_name).remove([storage_path])
+                print(f"Deleted from Supabase storage: {storage_path}")
+                return True
+            except Exception as e:
+                supabase._handle_supabase_error(e)
+                print(f"Failed to delete from Supabase storage: {e}")
+        return False
+    else:
+        # Local path
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"Deleted local file: {file_path}")
+                return True
+        except Exception as e:
+            print(f"Failed to delete local file {file_path}: {e}")
+    return False
+

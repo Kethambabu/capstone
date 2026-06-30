@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
+import io
 
 # Page setup for premium executive branding
 st.set_page_config(
@@ -77,6 +78,17 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(59, 130, 246, 0.5) !important;
         transform: translateY(-1px) !important;
         border-color: #60a5fa !important;
+    }
+
+    /* Danger button override */
+    div.stButton > button[kind="secondary"] {
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+        border-color: #ef4444 !important;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3) !important;
+    }
+    div.stButton > button[kind="secondary"]:hover {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        box-shadow: 0 6px 15px rgba(239, 68, 68, 0.5) !important;
     }
 
     /* Tabs */
@@ -164,6 +176,52 @@ st.markdown("""
         background: linear-gradient(90deg, rgba(59,130,246,0.08) 0%, transparent 100%);
         border-radius: 0 6px 6px 0;
     }
+
+    /* Explorer stat card */
+    .stat-card {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
+    .stat-value {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: #60a5fa;
+        margin: 0.15rem 0;
+    }
+    .stat-label {
+        font-size: 0.78rem;
+        color: #64748b;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* Column type badge */
+    .dtype-badge {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+    .dtype-numeric { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .dtype-text    { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+    .dtype-date    { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); }
+    .dtype-bool    { background: rgba(251,191,36,0.15);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+    /* Explorer info box */
+    .explorer-info {
+        background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(29,78,216,0.04) 100%);
+        border: 1px solid rgba(59,130,246,0.2);
+        border-radius: 10px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 1.2rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -177,15 +235,128 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
-st.sidebar.markdown("### 📂 Dataset Management")
-uploaded_files = st.sidebar.file_uploader(
-    "Upload CSV Datasets (Select Multiple)",
-    type=["csv"],
-    accept_multiple_files=True
-)
+BACKEND_URL = "http://localhost:8000"
 
-with st.sidebar.expander("⚙️ Advanced Settings", expanded=False):
+# ── Session state: datasets ───────────────────────────────────────────────────
+# Sync datasets_list from DB and rebuild the id-lookup dict
+def _sync_datasets_from_backend():
+    """Fetch the authoritative dataset list from the backend and rebuild session state."""
+    try:
+        response = requests.get(f"{BACKEND_URL}/datasets", timeout=5)
+        if response.status_code == 200:
+            ds_list = response.json()
+            st.session_state["datasets_list"] = ds_list
+            # Rebuild id-lookup dict from live DB data (NOT only from uploaded files)
+            st.session_state["datasets"] = {ds["name"]: ds["id"] for ds in ds_list}
+            return ds_list
+    except Exception:
+        pass
+    return st.session_state.get("datasets_list", [])
+
+if "datasets" not in st.session_state:
+    st.session_state["datasets"] = {}
+    st.session_state["datasets_list"] = []
+    st.session_state["selected_dataset"] = None
+    _sync_datasets_from_backend()
+    if st.session_state["datasets_list"]:
+        st.session_state["selected_dataset"] = st.session_state["datasets_list"][0]["name"]
+
+# Track telemetry refresh state
+if "last_query_ts" not in st.session_state:
+    st.session_state["last_query_ts"] = None
+if "telemetry_refreshed" not in st.session_state:
+    st.session_state["telemetry_refreshed"] = True
+
+# ── Sidebar — Dataset Management & Settings ─────────────────────────────────
+# 1. Dataset Selection & Deletion
+st.sidebar.markdown('<div class="section-header">🗂️ Dataset Management</div>', unsafe_allow_html=True)
+
+# Always re-read dataset_options from session state
+dataset_options = [ds["name"] for ds in st.session_state.get("datasets_list", [])]
+
+selected_dataset_id = None
+if not dataset_options:
+    st.sidebar.info("No datasets uploaded yet.")
+else:
+    if (
+        "selected_dataset" not in st.session_state
+        or st.session_state["selected_dataset"] not in dataset_options
+    ):
+        st.session_state["selected_dataset"] = dataset_options[0]
+
+    try:
+        selected_index = dataset_options.index(st.session_state["selected_dataset"])
+    except ValueError:
+        selected_index = 0
+
+    selected_filename = st.sidebar.selectbox(
+        "Select Active Dataset:",
+        options=dataset_options,
+        index=selected_index,
+        key="dataset_selector"
+    )
+    st.session_state["selected_dataset"] = selected_filename
+
+    # Resolve dataset_id from the live datasets_list lookup
+    selected_ds_record = next(
+        (ds for ds in st.session_state.get("datasets_list", []) if ds["name"] == selected_filename),
+        None
+    )
+    selected_dataset_id = selected_ds_record["id"] if selected_ds_record else None
+
+    # Delete dataset button in sidebar
+    if st.sidebar.button("🗑️ Delete Dataset", key="del_selected_btn", type="secondary",
+                         width="stretch",
+                         help="Permanently delete this dataset from storage and the database"):
+        if not selected_dataset_id:
+            st.sidebar.error("Cannot delete: dataset ID not found.")
+        else:
+            with st.sidebar.spinner(f"Deleting **{selected_filename}**…"):
+                try:
+                    del_resp = requests.delete(
+                        f"{BACKEND_URL}/datasets/{selected_dataset_id}", timeout=10
+                    )
+                    if del_resp.status_code == 200:
+                        st.sidebar.success(f"✅ **{selected_filename}** deleted!")
+                        # Re-sync from backend
+                        _sync_datasets_from_backend()
+                        remaining = [ds["name"] for ds in st.session_state.get("datasets_list", [])]
+                        st.session_state["selected_dataset"] = remaining[0] if remaining else None
+                        st.rerun()
+                    else:
+                        st.sidebar.error(f"Delete failed: {del_resp.text}")
+                except Exception as e:
+                    st.sidebar.error(f"Error: {str(e)}")
+
+# 2. Upload New Dataset Expander
+with st.sidebar.expander("➕ Upload New Dataset", expanded=False):
+    uploaded_files = st.file_uploader(
+        "Upload CSV Datasets (you can select multiple)",
+        type=["csv"],
+        accept_multiple_files=True,
+        key="sidebar_uploader"
+    )
+    if uploaded_files:
+        for uploaded_file in uploaded_files:
+            filename = uploaded_file.name
+            if filename not in st.session_state.get("datasets", {}):
+                with st.sidebar.spinner(f"Ingesting **{filename}**…"):
+                    try:
+                        uploaded_file.seek(0)
+                        files = {"file": (filename, uploaded_file.read(), "text/csv")}
+                        response = requests.post(f"{BACKEND_URL}/upload", files=files)
+                        if response.status_code == 200:
+                            _sync_datasets_from_backend()
+                            st.session_state["selected_dataset"] = filename
+                            st.sidebar.success(f"✅ **{filename}** uploaded!")
+                            st.rerun()
+                        else:
+                            st.sidebar.error(f"Upload failed for **{filename}**: {response.text}")
+                    except Exception as e:
+                        st.sidebar.error(f"Backend error: {str(e)}")
+
+# 3. Settings Expander
+with st.sidebar.expander("⚙️ Advanced Settings", expanded=True):
     user_role = st.selectbox(
         "Select Session Role (RBAC):",
         options=["Admin", "CEO", "Finance Manager", "Sales Manager", "Analyst", "Viewer"],
@@ -209,52 +380,6 @@ mode_map = {
 }
 execution_mode = mode_map[execution_mode_label]
 
-BACKEND_URL = "http://localhost:8000"
-
-# ── Session state: datasets ───────────────────────────────────────────────────
-# Initialize datasets storage in session state
-if "datasets" not in st.session_state:
-    st.session_state["datasets"] = {}
-    try:
-        response = requests.get(f"{BACKEND_URL}/datasets")
-        if response.status_code == 200:
-            for dataset in response.json():
-                st.session_state["datasets"][dataset["name"]] = dataset["id"]
-    except Exception as e:
-        st.sidebar.error(f"Failed to fetch datasets list from database: {e}")
-
-# Track telemetry refresh state
-if "last_query_ts" not in st.session_state:
-    st.session_state["last_query_ts"] = None
-if "telemetry_refreshed" not in st.session_state:
-    st.session_state["telemetry_refreshed"] = True
-
-# Ingest newly uploaded files
-if uploaded_files:
-    for uploaded_file in uploaded_files:
-        filename = uploaded_file.name
-        if filename not in st.session_state["datasets"]:
-            with st.spinner(f"Ingesting {filename} into storage engine..."):
-                try:
-                    uploaded_file.seek(0)
-                    files = {"file": (filename, uploaded_file.read(), "text/csv")}
-                    response = requests.post(f"{BACKEND_URL}/upload", files=files)
-                    if response.status_code == 200:
-                        st.session_state["datasets"][filename] = response.json()["dataset_id"]
-                        st.sidebar.success(f"✅ {filename} Synced!")
-                    else:
-                        st.sidebar.error(f"Sync failed for {filename}: {response.text}")
-                except Exception as e:
-                    st.sidebar.error(f"Failed to connect to backend for {filename}: {str(e)}")
-
-# Select primary dataset
-selected_filename = None
-selected_dataset_id = None
-dataset_options = list(st.session_state["datasets"].keys())
-if dataset_options:
-    selected_filename = st.sidebar.selectbox("Select Primary Dataset for analysis:", dataset_options)
-    selected_dataset_id = st.session_state["datasets"][selected_filename]
-
 # ── Tabs ──────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3 = st.tabs(["📊 Dataset Explorer", "🔍 Strategic Advisory Portal", "📈 Fleet Telemetry & Ops"])
 
@@ -262,39 +387,343 @@ tab1, tab2, tab3 = st.tabs(["📊 Dataset Explorer", "🔍 Strategic Advisory Po
 # TAB 1 — Dataset Explorer
 # ══════════════════════════════════════════════════════════════════════════════
 with tab1:
-    if selected_filename:
-        df = None
-        if uploaded_files:
-            target_file = next((f for f in uploaded_files if f.name == selected_filename), None)
-            if target_file:
-                target_file.seek(0)
-                df = pd.read_csv(target_file)
+    # Always re-read dataset_options from session state
+    dataset_options = [ds["name"] for ds in st.session_state.get("datasets_list", [])]
 
-        if df is None:
-            with st.spinner("Downloading dataset preview from storage..."):
-                try:
-                    response = requests.get(f"{BACKEND_URL}/datasets/{selected_dataset_id}/content")
-                    if response.status_code == 200:
-                        import io
-                        df = pd.read_csv(io.BytesIO(response.content))
-                    else:
-                        st.error(f"Failed to fetch content from backend: {response.text}")
-                except Exception as e:
-                    st.error(f"Error fetching dataset preview: {str(e)}")
-
-        if df is not None:
-            st.markdown(f"### 📋 Preview: {selected_filename} (Top 10 Records)")
-            st.dataframe(df.head(10), width="stretch")
-            st.markdown("### 📊 Descriptive Analytics Summary")
-            st.dataframe(df.describe(include="all").astype(str), width="stretch")
+    if not dataset_options:
+        st.markdown("""
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+padding:3rem;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);
+border-radius:14px;border:1px dashed #334155;margin-top:1rem;">
+    <div style="font-size:3rem;margin-bottom:1rem;">📂</div>
+    <div style="font-size:1.2rem;font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;">No datasets yet</div>
+    <div style="color:#64748b;font-size:0.95rem;text-align:center;">
+        Use the dataset management tools in the sidebar to upload a CSV file and get started.
+    </div>
+</div>
+""", unsafe_allow_html=True)
     else:
-        st.info("💡 Please upload one or more CSV datasets in the sidebar to preview data.")
+        # Load dataframe for the selected dataset
+        selected_filename = st.session_state.get("selected_dataset")
+        selected_ds_record = next(
+            (ds for ds in st.session_state.get("datasets_list", []) if ds["name"] == selected_filename),
+            None
+        )
+        selected_dataset_id = selected_ds_record["id"] if selected_ds_record else None
+
+        df = None
+        if selected_dataset_id:
+            with st.spinner("Loading dataset…"):
+                try:
+                    content_resp = requests.get(
+                        f"{BACKEND_URL}/datasets/{selected_dataset_id}/content", timeout=15
+                    )
+                    if content_resp.status_code == 200:
+                        df = pd.read_csv(io.BytesIO(content_resp.content))
+                    else:
+                        st.error(f"Failed to fetch dataset content: {content_resp.text}")
+                except Exception as e:
+                    st.error(f"Error loading dataset: {str(e)}")
+
+        if df is not None and not df.empty:
+            # ── Dataset-level KPIs ─────────────────────────────────────────────
+            n_rows, n_cols = df.shape
+            n_numeric  = len(df.select_dtypes(include="number").columns)
+            n_text     = len(df.select_dtypes(include=["object", "str"]).columns)
+            n_missing  = int(df.isnull().sum().sum())
+            missing_pct = f"{n_missing / (n_rows * n_cols) * 100:.1f}%" if n_rows * n_cols > 0 else "0%"
+            n_dupes    = int(df.duplicated().sum())
+
+            k1, k2, k3, k4, k5, k6 = st.columns(6)
+            k1.markdown(f'<div class="stat-card"><div class="stat-label">Rows</div><div class="stat-value" style="color:#60a5fa">{n_rows:,}</div></div>', unsafe_allow_html=True)
+            k2.markdown(f'<div class="stat-card"><div class="stat-label">Columns</div><div class="stat-value" style="color:#34d399">{n_cols}</div></div>', unsafe_allow_html=True)
+            k3.markdown(f'<div class="stat-card"><div class="stat-label">Numeric</div><div class="stat-value" style="color:#a78bfa">{n_numeric}</div></div>', unsafe_allow_html=True)
+            k4.markdown(f'<div class="stat-card"><div class="stat-label">Text</div><div class="stat-value" style="color:#fbbf24">{n_text}</div></div>', unsafe_allow_html=True)
+            k5.markdown(f'<div class="stat-card"><div class="stat-label">Missing</div><div class="stat-value" style="color:#f87171">{missing_pct}</div></div>', unsafe_allow_html=True)
+            k6.markdown(f'<div class="stat-card"><div class="stat-label">Duplicates</div><div class="stat-value" style="color:#f87171">{n_dupes:,}</div></div>', unsafe_allow_html=True)
+
+            st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+
+            # ── Explorer sub-tabs ──────────────────────────────────────────────
+            ex_tab1, ex_tab2, ex_tab3, ex_tab4 = st.tabs([
+                "🔍 Data Preview",
+                "📐 Column Profiles",
+                "📊 Quick Charts",
+                "⚠️ Data Quality"
+            ])
+
+            # ─── Sub-tab 1: Preview ────────────────────────────────────────────
+            with ex_tab1:
+                st.markdown(f"#### 📋 Preview — `{selected_filename}`")
+
+                # Search / filter
+                search_col, rows_col = st.columns([4, 1])
+                with search_col:
+                    search_text = st.text_input(
+                        "🔎 Filter rows (search any cell value):",
+                        placeholder="Type to filter…",
+                        key="explorer_search"
+                    )
+                with rows_col:
+                    preview_rows = st.selectbox("Show rows:", [10, 25, 50, 100, 500, "All"], index=0)
+
+                display_df = df.copy()
+                if search_text:
+                    mask = display_df.astype(str).apply(
+                        lambda col: col.str.contains(search_text, case=False, na=False)
+                    ).any(axis=1)
+                    display_df = display_df[mask]
+                    st.caption(f"🔍 Found **{len(display_df):,}** matching rows out of **{n_rows:,}**")
+
+                if preview_rows != "All":
+                    display_df = display_df.head(int(preview_rows))
+
+                st.dataframe(display_df, width="stretch", hide_index=False)
+
+                # Download button
+                csv_bytes = df.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    label="⬇️ Download Full Dataset as CSV",
+                    data=csv_bytes,
+                    file_name=selected_filename,
+                    mime="text/csv",
+                    key="download_btn"
+                )
+
+            # ─── Sub-tab 2: Column Profiles ────────────────────────────────────
+            with ex_tab2:
+                st.markdown("#### 📐 Column-Level Profiling")
+
+                profile_rows = []
+                for col in df.columns:
+                    dtype = df[col].dtype
+                    if pd.api.types.is_numeric_dtype(dtype):
+                        badge = '<span class="dtype-badge dtype-numeric">NUMERIC</span>'
+                        stats = {
+                            "Min": f"{df[col].min():,.2f}",
+                            "Max": f"{df[col].max():,.2f}",
+                            "Mean": f"{df[col].mean():,.2f}",
+                            "Std Dev": f"{df[col].std():,.2f}",
+                            "Unique": df[col].nunique()
+                        }
+                    elif pd.api.types.is_datetime64_any_dtype(dtype):
+                        badge = '<span class="dtype-badge dtype-date">DATETIME</span>'
+                        stats = {
+                            "Min": str(df[col].min()),
+                            "Max": str(df[col].max()),
+                            "Unique": df[col].nunique()
+                        }
+                    elif pd.api.types.is_bool_dtype(dtype):
+                        badge = '<span class="dtype-badge dtype-bool">BOOLEAN</span>'
+                        stats = {"True": int(df[col].sum()), "False": int((~df[col]).sum()), "Unique": 2}
+                    else:
+                        badge = '<span class="dtype-badge dtype-text">TEXT</span>'
+                        top_val = df[col].mode()[0] if not df[col].empty else "—"
+                        stats = {
+                            "Top Value": str(top_val)[:30],
+                            "Unique": df[col].nunique()
+                        }
+
+                    missing_cnt = int(df[col].isnull().sum())
+                    missing_col_pct = f"{missing_cnt / n_rows * 100:.1f}%" if n_rows > 0 else "0%"
+                    stats_str = " | ".join(f"{k}: **{v}**" for k, v in stats.items())
+
+                    profile_rows.append({
+                        "Column": col,
+                        "Type": str(dtype),
+                        "Non-Null": n_rows - missing_cnt,
+                        "Missing": missing_cnt,
+                        "Missing %": missing_col_pct,
+                        **{k: str(v) for k, v in stats.items()}
+                    })
+
+                profile_df = pd.DataFrame(profile_rows)
+                st.dataframe(profile_df, width="stretch", hide_index=True)
+
+            # ─── Sub-tab 3: Quick Charts ────────────────────────────────────────
+            with ex_tab3:
+                import altair as alt
+
+                numeric_cols = df.select_dtypes(include="number").columns.tolist()
+                text_cols    = df.select_dtypes(include=["object", "str"]).columns.tolist()
+
+                AXIS_CFG = dict(labelColor="#94a3b8", titleColor="#e2e8f0", gridColor="#1e293b")
+                VIEW_CFG = dict(strokeWidth=0)
+
+                if not numeric_cols:
+                    st.info("No numeric columns found for charting.")
+                else:
+                    chart_type_choice = st.radio(
+                        "Chart type:",
+                        ["Distribution (Histogram)", "Bar — Top Categories", "Scatter / Correlation"],
+                        horizontal=True,
+                        key="chart_type_radio"
+                    )
+
+                    if chart_type_choice == "Distribution (Histogram)":
+                        col_pick = st.selectbox("Select numeric column:", numeric_cols, key="hist_col")
+                        bins_pick = st.slider("Bins:", 5, 80, 20, key="hist_bins")
+                        hist = alt.Chart(df[[col_pick]].dropna()).mark_bar(
+                            color="#3b82f6", opacity=0.85,
+                            cornerRadiusTopLeft=4, cornerRadiusTopRight=4
+                        ).encode(
+                            x=alt.X(field=col_pick, type="quantitative",
+                                    bin=alt.Bin(maxbins=bins_pick), title=col_pick),
+                            y=alt.Y("count()", title="Frequency"),
+                            tooltip=[
+                                alt.Tooltip(field=col_pick, bin=True, format=",.2f"),
+                                alt.Tooltip("count()", title="Count")
+                            ]
+                        ).properties(height=360)
+                        st.altair_chart(
+                            hist.configure_axis(**AXIS_CFG).configure_view(**VIEW_CFG),
+                            width="stretch"
+                        )
+
+                    elif chart_type_choice == "Bar — Top Categories":
+                        if not text_cols:
+                            st.warning("No text/categorical columns found.")
+                        else:
+                            cat_col  = st.selectbox("Category column:", text_cols, key="bar_cat")
+                            val_col  = st.selectbox("Value column:", numeric_cols, key="bar_val")
+                            top_n    = st.slider("Top N categories:", 5, 30, 10, key="bar_topn")
+                            agg_func = st.radio("Aggregation:", ["Sum", "Mean", "Count"], horizontal=True, key="bar_agg")
+
+                            if agg_func == "Sum":
+                                agg_df = df.groupby(cat_col)[val_col].sum().reset_index()
+                            elif agg_func == "Mean":
+                                agg_df = df.groupby(cat_col)[val_col].mean().reset_index()
+                            else:
+                                agg_df = df.groupby(cat_col)[val_col].count().reset_index()
+
+                            agg_df = agg_df.nlargest(top_n, val_col)
+                            bar = alt.Chart(agg_df).mark_bar(
+                                cornerRadiusTopLeft=5, cornerRadiusTopRight=5
+                            ).encode(
+                                x=alt.X(field=cat_col, type="nominal", sort="-y", title=cat_col),
+                                y=alt.Y(field=val_col, type="quantitative", title=f"{agg_func} of {val_col}"),
+                                color=alt.Color(field=cat_col, type="nominal",
+                                                scale=alt.Scale(scheme="tableau20"), legend=None),
+                                tooltip=[cat_col, alt.Tooltip(field=val_col, format=",.2f")]
+                            ).properties(height=360)
+                            st.altair_chart(
+                                bar.configure_axis(**AXIS_CFG).configure_view(**VIEW_CFG),
+                                width="stretch"
+                            )
+
+                    elif chart_type_choice == "Scatter / Correlation":
+                        if len(numeric_cols) < 2:
+                            st.warning("Need at least 2 numeric columns for scatter plot.")
+                        else:
+                            sc1, sc2, sc3 = st.columns(3)
+                            x_col = sc1.selectbox("X axis:", numeric_cols, index=0, key="sc_x")
+                            y_col = sc2.selectbox("Y axis:", numeric_cols, index=min(1, len(numeric_cols)-1), key="sc_y")
+                            color_col = sc3.selectbox("Color by (optional):", ["None"] + text_cols, key="sc_color")
+
+                            enc = dict(
+                                x=alt.X(field=x_col, type="quantitative", title=x_col),
+                                y=alt.Y(field=y_col, type="quantitative", title=y_col),
+                                tooltip=[
+                                    alt.Tooltip(field=x_col, format=",.2f"),
+                                    alt.Tooltip(field=y_col, format=",.2f")
+                                ]
+                            )
+                            sc_df = df[[x_col, y_col] + ([color_col] if color_col != "None" else [])].dropna()
+                            if color_col != "None":
+                                enc["color"] = alt.Color(
+                                    field=color_col, type="nominal",
+                                    scale=alt.Scale(scheme="tableau20")
+                                )
+                                enc["tooltip"].append(color_col)
+
+                            scatter = alt.Chart(sc_df).mark_circle(size=80, opacity=0.8).encode(**enc).properties(height=380)
+                            trend   = alt.Chart(sc_df).transform_regression(x_col, y_col).mark_line(
+                                color="#f87171", strokeWidth=2, strokeDash=[5, 3]
+                            ).encode(
+                                x=alt.X(field=x_col, type="quantitative"),
+                                y=alt.Y(field=y_col, type="quantitative")
+                            )
+                            st.altair_chart(
+                                (scatter + trend)
+                                .configure_axis(**AXIS_CFG)
+                                .configure_view(**VIEW_CFG)
+                                .configure_legend(labelColor="#e2e8f0", titleColor="#94a3b8"),
+                                width="stretch"
+                            )
+
+            # ─── Sub-tab 4: Data Quality ────────────────────────────────────────
+            with ex_tab4:
+                import altair as alt
+
+                st.markdown("#### ⚠️ Data Quality Report")
+
+                AXIS_CFG = dict(labelColor="#94a3b8", titleColor="#e2e8f0", gridColor="#1e293b")
+                VIEW_CFG = dict(strokeWidth=0)
+
+                # Missing values heatmap-style bar chart
+                miss_df = pd.DataFrame({
+                    "Column": df.columns.tolist(),
+                    "Missing": df.isnull().sum().values,
+                    "Missing %": (df.isnull().sum().values / n_rows * 100).round(2)
+                }).sort_values("Missing %", ascending=False)
+
+                q1, q2 = st.columns(2)
+                with q1:
+                    total_complete = int((~df.isnull().any(axis=1)).sum())
+                    complete_pct = f"{total_complete / n_rows * 100:.1f}%" if n_rows else "—"
+                    st.markdown(f"""
+<div class="explorer-info">
+    <div style="font-size:0.8rem;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Complete Rows (No Nulls)</div>
+    <div style="font-size:2rem;font-weight:800;color:#34d399;margin:0.3rem 0;">{total_complete:,} <span style="font-size:1rem;color:#64748b;">/ {n_rows:,}</span></div>
+    <div style="font-size:0.9rem;color:#94a3b8;">{complete_pct} of dataset is fully complete</div>
+</div>
+""", unsafe_allow_html=True)
+                with q2:
+                    cols_with_missing = int((df.isnull().sum() > 0).sum())
+                    st.markdown(f"""
+<div class="explorer-info">
+    <div style="font-size:0.8rem;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Columns with Missing Data</div>
+    <div style="font-size:2rem;font-weight:800;color:#f87171;margin:0.3rem 0;">{cols_with_missing} <span style="font-size:1rem;color:#64748b;">/ {n_cols}</span></div>
+    <div style="font-size:0.9rem;color:#94a3b8;">{n_dupes:,} duplicate rows detected</div>
+</div>
+""", unsafe_allow_html=True)
+
+                if miss_df["Missing"].sum() > 0:
+                    st.markdown("##### Missing Values by Column")
+                    miss_chart = alt.Chart(miss_df[miss_df["Missing"] > 0]).mark_bar(
+                        cornerRadiusTopRight=4, cornerRadiusBottomRight=4
+                    ).encode(
+                        y=alt.Y("Column:N", sort="-x", title=None),
+                        x=alt.X("Missing %:Q", title="Missing %"),
+                        color=alt.Color(
+                            "Missing %:Q",
+                            scale=alt.Scale(domain=[0, 100], range=["#fbbf24", "#f87171"]),
+                            legend=None
+                        ),
+                        tooltip=["Column:N", "Missing:Q", "Missing %:Q"]
+                    ).properties(height=max(200, len(miss_df[miss_df["Missing"] > 0]) * 30))
+                    st.altair_chart(
+                        miss_chart.configure_axis(**AXIS_CFG).configure_view(**VIEW_CFG),
+                        width="stretch"
+                    )
+                else:
+                    st.success("✅ No missing values found — dataset is fully complete!")
+
+                # Duplicate rows
+                if n_dupes > 0:
+                    st.markdown(f"##### 🔁 Duplicate Rows Preview ({n_dupes} found)")
+                    st.dataframe(df[df.duplicated(keep="first")].head(20), width="stretch", hide_index=False)
+                else:
+                    st.success("✅ No duplicate rows detected.")
+
+        elif df is not None and df.empty:
+            st.warning("⚠️ The selected dataset appears to be empty (0 rows).")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TAB 2 — Strategic Advisory Portal
 # ══════════════════════════════════════════════════════════════════════════════
 with tab2:
-    if selected_filename and selected_dataset_id:
+    if st.session_state["datasets"]:
         st.markdown("### 🧠 Strategic Advisory Hub")
         st.write(
             "Ask strategic business questions. The Orchestrator will activate specialized analyst agents "
@@ -311,11 +740,15 @@ with tab2:
             with st.spinner("Orchestrating agent fleet and compiling sub-reports..."):
                 try:
                     payload = {
-                        "dataset_id": selected_dataset_id,
                         "question": question,
                         "role": user_role,
                         "execution_mode": execution_mode
                     }
+                    if "selected_dataset" in st.session_state and st.session_state["selected_dataset"]:
+                        ds_name = st.session_state["selected_dataset"]
+                        ds_record = next((ds for ds in st.session_state.get("datasets_list", []) if ds["name"] == ds_name), None)
+                        if ds_record:
+                            payload["dataset_id"] = ds_record["id"]
                     response = requests.post(f"{BACKEND_URL}/analyze", json=payload)
 
                     if response.status_code == 200:
@@ -326,6 +759,10 @@ with tab2:
                             st.warning("⚠️ Request blocked by the Safety Agent and logged in security events.")
                         else:
                             report = data["report"]
+                            
+                            # Save query timestamp
+                            import time as _time_ops
+                            st.session_state["last_query_ts"] = _time_ops.time()
 
                             # Parse active agents comment
                             import re
@@ -440,7 +877,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                 (line + pts).properties(height=H)
                                                 .configure_axis(**AXIS_CFG)
                                                 .configure_view(**VIEW_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 2. AREA CHART ────────────────────────────────
@@ -472,7 +909,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                 (area + line2).properties(height=H)
                                                 .configure_axis(**AXIS_CFG)
                                                 .configure_view(**VIEW_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 3. MULTI-LINE CHART ──────────────────────────
@@ -506,7 +943,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                     alt.layer(*layers).properties(height=H)
                                                     .configure_axis(**AXIS_CFG)
                                                     .configure_view(**VIEW_CFG),
-                                                    use_container_width=True
+                                                    width="stretch"
                                                 )
 
                                         # ── 4. BAR CHART ─────────────────────────────────
@@ -522,7 +959,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                             ).properties(height=H)
                                             st.altair_chart(
                                                 bar.configure_axis(**AXIS_CFG).configure_view(**VIEW_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 5. HORIZONTAL BAR ────────────────────────────
@@ -539,7 +976,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                             ).properties(height=max(H, len(chart_data) * 28))
                                             st.altair_chart(
                                                 hbar.configure_axis(**AXIS_CFG).configure_view(**VIEW_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 6. STACKED BAR ───────────────────────────────
@@ -560,7 +997,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                 .configure_axis(**AXIS_CFG)
                                                 .configure_view(**VIEW_CFG)
                                                 .configure_legend(**LEG_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 7. PIE / DONUT ───────────────────────────────
@@ -581,7 +1018,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                 donut
                                                 .configure_legend(**LEG_CFG)
                                                 .configure_view(**VIEW_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 8. SCATTER PLOT ──────────────────────────────
@@ -616,7 +1053,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                 .configure_axis(**AXIS_CFG)
                                                 .configure_view(**VIEW_CFG)
                                                 .configure_legend(**LEG_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 9. HISTOGRAM ─────────────────────────────────
@@ -636,7 +1073,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                             ).properties(height=H)
                                             st.altair_chart(
                                                 hist_chart.configure_axis(**AXIS_CFG).configure_view(**VIEW_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                         # ── 10. WATERFALL ────────────────────────────────
@@ -673,7 +1110,7 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                                                 .configure_axis(**AXIS_CFG)
                                                 .configure_view(**VIEW_CFG)
                                                 .configure_legend(**LEG_CFG),
-                                                use_container_width=True
+                                                width="stretch"
                                             )
 
                                     except Exception as chart_err:
@@ -685,17 +1122,12 @@ border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 24px rgba(0,0
                 except Exception as e:
                     st.error(f"Error calling backend: {str(e)}")
     else:
-        st.info("💡 Welcome to Boardroom AI! Please upload one or more CSV datasets in the sidebar to begin.")
+        st.info("💡 Welcome to Boardroom AI! Please upload one or more CSV datasets in the **Dataset Explorer** tab to begin.")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TAB 3 — Fleet Telemetry & Ops
 # ══════════════════════════════════════════════════════════════════════════════
 with tab3:
-    # ── Auto-refresh when a new query just completed ──────────────────────────
-    if not st.session_state.get("telemetry_refreshed", True):
-        st.session_state["telemetry_refreshed"] = True
-        st.rerun()
-
     st.markdown("""
 <div style="padding:1.2rem 1.5rem;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);
 border-radius:12px;border:1px solid #334155;margin-bottom:1.5rem;">
@@ -708,7 +1140,7 @@ border-radius:12px;border:1px solid #334155;margin-bottom:1.5rem;">
 
     col_refresh, col_hint = st.columns([1, 5])
     with col_refresh:
-        refresh = st.button("🔄 Refresh", type="secondary", use_container_width=True)
+        refresh = st.button("🔄 Refresh", type="secondary", width="stretch")
     with col_hint:
         last_ts = st.session_state.get("last_query_ts")
         if last_ts:
@@ -739,13 +1171,12 @@ border-radius:12px;border:1px solid #334155;margin-bottom:1.5rem;">
             if not df_runs_kpi.empty and "status" in df_runs_kpi.columns:
                 completed  = len(df_runs_kpi[df_runs_kpi["status"] == "COMPLETED"])
                 total_r    = len(df_runs_kpi)
-                all_agents = total_r   # every logged run (RUNNING, COMPLETED, SKIPPED) counts
+                all_agents = total_r
                 success_rate_val = f"{(completed/total_r)*100:.1f}%" if total_r else "—"
             else:
                 success_rate_val = "—"
                 all_agents = 0
 
-            # stats.total_agent_runs only counts COMPLETED; use live count from runs list
             total_agents = all_agents if all_agents > 0 else stats.get("total_agent_runs", 0)
             avg_latency  = stats.get("avg_agent_duration", 0.0)
             sec_alerts   = stats.get("total_security_events", 0)
@@ -812,7 +1243,6 @@ border-radius:12px;border:1px solid #334155;margin-bottom:1.5rem;">
             if runs:
                 df_runs_disp = pd.DataFrame(runs)
 
-                # Status badges
                 status_icons = {
                     "COMPLETED": "🟢 COMPLETED",
                     "RUNNING":   "🔵 RUNNING",

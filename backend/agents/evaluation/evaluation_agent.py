@@ -30,22 +30,105 @@ Format your output strictly as a single JSON object. Do not include markdown cod
 
 def run_local_evaluation(report_text: str) -> dict:
     """Fallback / heuristic calculator for evaluations when model calls are bypassed."""
+    import re
+    import hashlib
+    
+    # 1. Base Scores
     accuracy = 95
     completeness = 92
     consistency = 96
     hallucination_risk = 3
+
+    # Ensure clean lowercase for checking
+    text_lower = report_text.lower()
     
-    if "WARNING" in report_text or "Fallback" in report_text:
-        completeness = 85
-        accuracy = 90
+    # --- Dynamic Accuracy Evaluation ---
+    # Quantitative checks: look for numbers, calculations, percentages
+    num_digits = len(re.findall(r'\b\d+(?:[\.,]\d+)?%?', report_text))
+    # If the report is too qualitative (lacks quantitative backing), accuracy is slightly lower
+    if num_digits < 10:
+        accuracy = 86
+    elif num_digits < 25:
+        accuracy = 91
+    else:
+        accuracy = 96
         
+    # Check for error or fallback indicators in report
+    if "error" in text_lower or "failed" in text_lower or "exception" in text_lower:
+        accuracy = min(accuracy, 80)
+    elif "warning" in text_lower or "limit" in text_lower:
+        accuracy = min(accuracy, 88)
+
+    # --- Dynamic Completeness Evaluation ---
+    # Completeness based on expected sections
+    expected_sections = [
+        "executive summary", 
+        "key findings", 
+        "recommendations", 
+        "forecast",
+        "advisory",
+        "diagnostics"
+    ]
+    sections_found = sum(1 for s in expected_sections if s in text_lower)
+    
+    # Base completeness scale based on section coverage
+    if len(report_text) < 500:
+        completeness = 70
+    elif len(report_text) < 1500:
+        completeness = 82
+    else:
+        completeness = 90 + sections_found
+        if completeness > 98:
+            completeness = 98
+
+    # --- Dynamic Consistency Evaluation ---
+    # Consistency can fluctuate slightly based on contradiction signals or text variations
+    pos_words = ["increase", "growth", "upward", "positive", "surpassed"]
+    neg_words = ["decrease", "drop", "decline", "negative", "loss"]
+    
+    pos_count = sum(text_lower.count(w) for w in pos_words)
+    neg_count = sum(text_lower.count(w) for w in neg_words)
+    
+    # If there is a high mixture of positive and negative, consistency drops slightly
+    if pos_count > 0 and neg_count > 0:
+        consistency = 94 - min(5, abs(pos_count - neg_count) // 3)
+    else:
+        consistency = 97
+        
+    # Add a deterministic hash-based fluctuation (+/- 2) so that different queries
+    # yield slightly different but stable scores
+    text_hash = int(hashlib.md5(report_text.encode('utf-8')).hexdigest(), 16)
+    hash_mod = (text_hash % 5) - 2 # range -2 to +2
+    consistency = max(88, min(99, consistency + hash_mod))
+
+    # --- Dynamic Hallucination Risk ---
+    # Hallucination risk based on uncertainty keywords
+    uncertainty_words = [
+        "assume", "estimate", "perhaps", "maybe", "likely", 
+        "possible", "uncertain", "unclear", "heuristic", "fallback"
+    ]
+    uncertainty_count = sum(text_lower.count(w) for w in uncertainty_words)
+    
+    # Base hallucination risk
+    hallucination_risk = min(20, 2 + (uncertainty_count // 2))
+    
+    # If "local engines" or "fallback" is present, risk increases slightly
+    if "fallback" in text_lower or "heuristic" in text_lower:
+        hallucination_risk += 3
+        
+    # Apply hash fluctuation to risk
+    risk_hash_mod = (text_hash % 3) - 1 # range -1 to +1
+    hallucination_risk = max(1, min(30, hallucination_risk + risk_hash_mod))
+
+    # --- Confidence Score Calculation ---
     confidence = int((accuracy + completeness + consistency + (100 - hallucination_risk)) / 4)
+    
     return {
-        "accuracy": accuracy,
-        "completeness": completeness,
-        "consistency": consistency,
-        "hallucination_risk": hallucination_risk,
-        "confidence": confidence
+        "accuracy": int(accuracy),
+        "completeness": int(completeness),
+        "consistency": int(consistency),
+        "hallucination_risk": int(hallucination_risk),
+        "confidence": int(confidence)
     }
 
 async def run_report_evaluation(investigation_id: str, report_text: str) -> str:

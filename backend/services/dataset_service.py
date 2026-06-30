@@ -43,3 +43,19 @@ def get_dataset_content_by_name(name: str) -> bytes:
     """
     meta = get_dataset_by_name(name)
     return storage_service.download_file(meta["file_path"])
+
+def delete_dataset(dataset_id: str) -> bool:
+    """
+    Deletes the dataset file content and removes the metadata record.
+    """
+    try:
+        meta = get_dataset_meta(dataset_id)
+        file_path = meta.get("file_path", "")
+        if file_path:
+            storage_service.delete_file(file_path)
+        supabase.db_delete_dataset(dataset_id)
+        return True
+    except Exception as e:
+        print(f"Error in delete_dataset service: {e}")
+        raise e
+

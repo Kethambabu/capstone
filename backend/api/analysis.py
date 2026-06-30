@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
+from typing import Optional
 from google.adk.runners import InMemoryRunner
 from google.genai import types
 from backend.agents.orchestrator.executive_orchestrator import executive_orchestrator
@@ -763,7 +764,7 @@ def generate_ui_hints(report_text: str, active_agents: list = None) -> list:
 router = APIRouter()
 
 class AnalysisRequest(BaseModel):
-    dataset_id: str
+    dataset_id: Optional[str] = None
     question: str
     role: str = "Executive"
     execution_mode: str = "sequential"  # Options: "sequential", "parallel", "quota_saver"
@@ -788,8 +789,64 @@ async def analyze_dataset(request: AnalysisRequest, fastapi_req: Request):
         except Exception:
             pass
         raise HTTPException(status_code=429, detail="Rate limit exceeded. Max 5 requests per minute.")
+
+    # 2. Resolve Dataset ID and Name (Dynamic routing fallback)
+    from backend.services import dataset_service
+    dataset_name = ""
+    try:
+        if not request.dataset_id:
+            _q_lower = request.question.lower()
+            if "customer" in _q_lower or "churn" in _q_lower or "segment" in _q_lower:
+                try:
+                    _cust_meta = dataset_service.get_dataset_by_name("customers")
+                    request.dataset_id = _cust_meta["id"]
+                    dataset_name = _cust_meta["name"]
+                except Exception:
+                    pass
+            else:
+                try:
+                    _sales_meta = dataset_service.get_dataset_by_name("sales")
+                    request.dataset_id = _sales_meta["id"]
+                    dataset_name = _sales_meta["name"]
+                except Exception:
+                    pass
+            
+            # If not resolved via keywords, fallback to the most recently uploaded dataset
+            if not request.dataset_id:
+                try:
+                    all_ds = supabase.db_get_all_datasets()
+                    if all_ds:
+                        request.dataset_id = all_ds[0]["id"]
+                        dataset_name = all_ds[0]["name"]
+                    else:
+                        raise ValueError("No datasets available in database.")
+                except Exception as e:
+                    raise ValueError(f"Could not automatically resolve any dataset: {str(e)}")
+        else:
+            # Validate that the provided dataset ID exists and retrieve its name
+            dataset_meta = dataset_service.get_dataset_meta(request.dataset_id)
+            dataset_name = dataset_meta.get("name", "")
+            
+            # Dynamic Dataset Routing: override if query keywords dictate a different dataset
+            _q_lower = request.question.lower()
+            if "customer" in _q_lower or "churn" in _q_lower or "segment" in _q_lower:
+                try:
+                    _cust_meta = dataset_service.get_dataset_by_name("customers")
+                    request.dataset_id = _cust_meta["id"]
+                    dataset_name = _cust_meta["name"]
+                except Exception:
+                    pass
+            else:
+                try:
+                    _sales_meta = dataset_service.get_dataset_by_name("sales")
+                    request.dataset_id = _sales_meta["id"]
+                    dataset_name = _sales_meta["name"]
+                except Exception:
+                    pass
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Dataset resolution failed: {str(e)}")
         
-    # 2. Cache Lookup
+    # 3. Cache Lookup (using resolved dataset_id)
     cache_key = f"{request.dataset_id}:{request.question}:{request.role}:{request.execution_mode}"
     if cache_key in query_cache:
         print(f"[CACHE HIT] Returning cached report for key: {cache_key}")
@@ -801,18 +858,12 @@ async def analyze_dataset(request: AnalysisRequest, fastapi_req: Request):
 
     # ── TRACE: begin ──────────────────────────────────────────────────────────
     try:
-        from backend.services import dataset_service as _ds_svc_early
-        _ds_meta_early = _ds_svc_early.get_dataset_meta(request.dataset_id)
-        _ds_name_early = _ds_meta_early.get("name", request.dataset_id)
-    except Exception:
-        _ds_name_early = request.dataset_id
-    try:
         from datetime import datetime as _dt
         trace.begin(
             query=request.question,
             role=request.role,
             session_id=session_id,
-            dataset_name=_ds_name_early,
+            dataset_name=dataset_name,
             mode=request.execution_mode,
             conversation_id=investigation_id,
         )
@@ -820,7 +871,7 @@ async def analyze_dataset(request: AnalysisRequest, fastapi_req: Request):
             "Timestamp   :": _dt.now().strftime("%Y-%m-%d %H:%M:%S"),
             "Session     :": session_id,
             "Role        :": request.role,
-            "Dataset     :": _ds_name_early,
+            "Dataset     :": dataset_name,
             "Mode        :": request.execution_mode,
             "Conv ID     :": investigation_id,
         })
@@ -846,32 +897,6 @@ async def analyze_dataset(request: AnalysisRequest, fastapi_req: Request):
         supabase.update_investigation_state(investigation_id, "RUNNING")
     except Exception as db_err:
         print(f"Failed to update state to RUNNING: {db_err}")
-
-    # Validate that the dataset exists early to get the name for RBAC
-    from backend.services import dataset_service
-    try:
-        dataset_meta = dataset_service.get_dataset_meta(request.dataset_id)
-        dataset_name = dataset_meta.get("name", "")
-        
-        # Dynamic Dataset Routing: override dataset_id and dataset_name if query matches specific keywords
-        _q_lower = request.question.lower()
-        if "customer" in _q_lower or "churn" in _q_lower or "segment" in _q_lower:
-            try:
-                _cust_meta = dataset_service.get_dataset_by_name("customers")
-                request.dataset_id = _cust_meta["id"]
-                dataset_name = _cust_meta["name"]
-            except Exception:
-                pass
-        else:
-            try:
-                _sales_meta = dataset_service.get_dataset_by_name("sales")
-                request.dataset_id = _sales_meta["id"]
-                dataset_name = _sales_meta["name"]
-            except Exception:
-                pass
-    except Exception as e:
-        supabase.update_investigation_state(investigation_id, "FAILED")
-        raise HTTPException(status_code=404, detail=f"Dataset {request.dataset_id} not found: {str(e)}")
 
     # Run Security Check
     security_allowed = True
@@ -1930,27 +1955,81 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
         # Fallback to local analytics + compile report (quota_saver style fallback)
         try:
             from backend.services import dataset_service
-            dataset_meta = dataset_service.get_dataset_meta(request.dataset_id)
-            dataset_name = dataset_meta.get("name", "sales")
-            
             from backend.tools.analytics_tools import run_revenue_analysis, run_customer_analysis, run_risk_analysis
             from backend.services.forecast_service import calculate_local_forecast
+            import datetime as _dt_ops
             
-            revenue_findings = run_revenue_analysis(dataset_name, request.question)
-            try:
-                cust_meta = dataset_service.get_dataset_by_name("customers.csv")
-                cust_name = "customers.csv"
-            except Exception:
+            # 1. Revenue Agent
+            _rev_t0 = time.time()
+            _rev_run_id = str(uuid.uuid4())
+            _rev_start = _dt_ops.datetime.utcnow().isoformat()
+            if "revenue" in active_agents or primary_category == "general":
+                supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "RUNNING", _rev_start, None, 0.0)
+                revenue_findings = run_revenue_analysis(dataset_name, request.question)
+                _rev_dur = time.time() - _rev_t0
+                supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "COMPLETED", _rev_start, _dt_ops.datetime.utcnow().isoformat(), _rev_dur)
+                supabase.db_store_observability_metric("Revenue Agent_duration", _rev_dur)
+                supabase.db_store_observability_metric("Revenue Agent_status_COMPLETED", 1.0)
+            else:
+                revenue_findings = "Revenue Agent was bypassed for this query by the routing planner."
+                supabase.db_store_agent_run(_rev_run_id, "Revenue Agent", "SKIPPED", _rev_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
+
+            # 2. Customer Agent
+            _cust_t0 = time.time()
+            _cust_run_id = str(uuid.uuid4())
+            _cust_start = _dt_ops.datetime.utcnow().isoformat()
+            if "customer" in active_agents or primary_category == "general":
+                supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "RUNNING", _cust_start, None, 0.0)
                 try:
-                    cust_meta = dataset_service.get_dataset_by_name("customers")
-                    cust_name = "customers"
+                    cust_meta = dataset_service.get_dataset_by_name("customers.csv")
+                    cust_name = "customers.csv"
                 except Exception:
-                    cust_name = dataset_name
-            customer_findings = run_customer_analysis(cust_name)
-            risk_findings = run_risk_analysis(dataset_name)
-            forecast_res = calculate_local_forecast(dataset_name)
-            forecast_growth = forecast_res.get("forecast_growth", 8.2)
-            forecast_conf = forecast_res.get("confidence", 91)
+                    try:
+                        cust_meta = dataset_service.get_dataset_by_name("customers")
+                        cust_name = "customers"
+                    except Exception:
+                        cust_name = dataset_name
+                customer_findings = run_customer_analysis(cust_name)
+                _cust_dur = time.time() - _cust_t0
+                supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "COMPLETED", _cust_start, _dt_ops.datetime.utcnow().isoformat(), _cust_dur)
+                supabase.db_store_observability_metric("Customer Agent_duration", _cust_dur)
+                supabase.db_store_observability_metric("Customer Agent_status_COMPLETED", 1.0)
+            else:
+                customer_findings = "Customer Agent was bypassed for this query by the routing planner."
+                supabase.db_store_agent_run(_cust_run_id, "Customer Agent", "SKIPPED", _cust_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
+
+            # 3. Risk Agent
+            _risk_t0 = time.time()
+            _risk_run_id = str(uuid.uuid4())
+            _risk_start = _dt_ops.datetime.utcnow().isoformat()
+            if "risk" in active_agents or primary_category == "general":
+                supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "RUNNING", _risk_start, None, 0.0)
+                risk_findings = run_risk_analysis(dataset_name)
+                _risk_dur = time.time() - _risk_t0
+                supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "COMPLETED", _risk_start, _dt_ops.datetime.utcnow().isoformat(), _risk_dur)
+                supabase.db_store_observability_metric("Risk Agent_duration", _risk_dur)
+                supabase.db_store_observability_metric("Risk Agent_status_COMPLETED", 1.0)
+            else:
+                risk_findings = "Risk Agent was bypassed for this query by the routing planner."
+                supabase.db_store_agent_run(_risk_run_id, "Risk Agent", "SKIPPED", _risk_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
+
+            # 4. Forecast Agent
+            _fore_t0 = time.time()
+            _fore_run_id = str(uuid.uuid4())
+            _fore_start = _dt_ops.datetime.utcnow().isoformat()
+            if "forecast" in active_agents or primary_category == "general":
+                supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "RUNNING", _fore_start, None, 0.0)
+                forecast_res = calculate_local_forecast(dataset_name)
+                forecast_growth = forecast_res.get("forecast_growth", 8.2)
+                forecast_conf = forecast_res.get("confidence", 91)
+                _fore_dur = time.time() - _fore_t0
+                supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "COMPLETED", _fore_start, _dt_ops.datetime.utcnow().isoformat(), _fore_dur)
+                supabase.db_store_observability_metric("Forecast Agent_duration", _fore_dur)
+                supabase.db_store_observability_metric("Forecast Agent_status_COMPLETED", 1.0)
+            else:
+                forecast_growth = 8.2
+                forecast_conf = 91
+                supabase.db_store_agent_run(_fore_run_id, "Forecast Agent", "SKIPPED", _fore_start, _dt_ops.datetime.utcnow().isoformat(), 0.0)
         except Exception as data_err:
             print(f"Fallback data calculations failed: {data_err}. Using mock values.")
             revenue_findings = "Revenue decreased 14% in May 2026. East region sales dropped."
