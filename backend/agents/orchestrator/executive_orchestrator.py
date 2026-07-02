@@ -257,10 +257,10 @@ from backend import config
 
 from google.adk import Workflow, Event
 
-def security_checkpoint(node_input: str):
+async def security_checkpoint(node_input: str):
     import re
     from backend.config import user_role_var
-    from backend.agents.security.security_agent import scan_safety_heuristics, is_role_allowed_for_dataset
+    from backend.agents.security.security_agent import run_security_check
     
     # 1. Dynamically extract role from input query if specified (e.g. "role: sales manager", "[Sales Manager]")
     role_match = re.search(
@@ -280,46 +280,35 @@ def security_checkpoint(node_input: str):
     
     role = user_role_var.get()
     
-    # 2. Extract dataset ID to check if role is allowed
-    dataset_name = ""
-    dataset_id_match = re.search(r'Dataset ID:\s*([a-zA-Z0-9_-]+)', node_input)
-    if dataset_id_match:
-        dataset_id = dataset_id_match.group(1).strip()
-        try:
-            from backend.services import dataset_service
-            dataset_meta = dataset_service.get_dataset_meta(dataset_id)
-            dataset_name = dataset_meta.get("name", "")
-        except Exception:
-            pass
-
     # Extract the user's actual question to prevent false positive length/injection blocks on assembled_context
     question_text = node_input
     if "Question:" in node_input:
         question_text = node_input.split("Question:", 1)[1].strip()
 
-    # Simple check for Viewer role
-    is_viewer = role == "Viewer" or "role: viewer" in question_text.lower() or "viewer role" in question_text.lower()
-    role_allowed = is_role_allowed_for_dataset(role, dataset_name)
-    heur_res = scan_safety_heuristics(question_text)
-    
-    if is_viewer or not role_allowed or heur_res:
-        reason = "unauthorized_access" if (is_viewer or not role_allowed) else (heur_res.get("reason", "prompt_injection") if heur_res else "safety_violation")
+    # Preserve explicit viewer override checks
+    if "role: viewer" in question_text.lower() or "viewer role" in question_text.lower():
+        role = "Viewer"
+        user_role_var.set("Viewer")
+
+    # 2. Extract dataset ID
+    dataset_id = None
+    dataset_id_match = re.search(r'Dataset ID:\s*([a-zA-Z0-9_-]+)', node_input)
+    if dataset_id_match:
+        dataset_id = dataset_id_match.group(1).strip()
+
+    # Run the unified security check (includes RBAC, heuristics, and model-based check)
+    sec_res = await run_security_check(question_text, role, dataset_id)
+
+    if not sec_res.get("allowed", True):
+        reason = sec_res.get("reason", "safety_violation")
+        msg = sec_res.get("message", "Model-based security check blocked the request.")
+        
         # Store security event in DB
         try:
             from backend.database.supabase import db_store_security_event
             db_store_security_event(reason, "HIGH", f"Safety block in workflow: {node_input[:200]}")
         except Exception:
             pass
-            
-        if reason == "unauthorized_access":
-            if role == "Viewer":
-                msg = "Viewers do not have permissions to run investigations."
-            else:
-                msg = f"User with role '{role}' does not have permissions to access dataset '{dataset_name}'."
-        elif heur_res and heur_res.get("message"):
-            msg = heur_res.get("message")
-        else:
-            msg = "Request context violation."
             
         return Event(route="SECURITY_EVENT", output=f"⚠️ SECURITY BLOCK: Access Denied. Reason: {reason}. {msg}")
         

@@ -1565,7 +1565,7 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
             # Append Forecast Card
             forecast_card = f"""
 ---
-### 🔮 Revenue Forecast
+### 🔮 A2A Revenue Forecast (Forecast Agent)
 {forecast_card_content}
  
 *Calculated locally via Boardroom statistical engines.*
@@ -2055,7 +2055,7 @@ For the question: **"{request.question}"**, the Boardroom AI sub-agent fleet sim
         if "forecast" in active_agents or primary_category == "general":
             forecast_card = f"""
 ---
-### 🔮 Revenue Forecast
+### 🔮 A2A Revenue Forecast (Forecast Agent)
 * **Projected Revenue Growth**: +{forecast_growth}% (Heuristic Estimate)
 * **Model Confidence**: {forecast_conf}% (Heuristic Estimate)
 
